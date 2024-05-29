@@ -92,8 +92,11 @@ for lineIndex, line in enumerate(inputFileLines):
         textBlock = ""
 
 
+    codeBlockHeader = "<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-swift\" data-lang=\"Swift\"><code>"
+    codeBlockFooter = "</code></pre></div>"
+
     if previousState == "code" and state == "code-end":
-        outputFileDescriptor.write(f"<pre><code>\n{textBlock}</code></pre>\n")
+        outputFileDescriptor.write(f"{codeBlockHeader}{textBlock.lstrip()}{codeBlockFooter}\n")
         textBlock = ""
 
     if state == "link":
