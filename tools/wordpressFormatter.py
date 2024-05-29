@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from googletrans import Translator
-
-translator = Translator()
+import os
 
 inputFile = sys.argv[1]
 outputFile = sys.argv[2]
@@ -14,12 +12,34 @@ englishTranslationNeeded = "--translate-to-english" in sys.argv
 inputFileLines = open(inputFile, "r").readlines()
 outputFileDescriptor = open(outputFile, "w")
 
+translationEngineType = "google"
 state = "text"
 previousState = "text"
 textBlock = ""
 outputText = ""
 
-translator = Translator()
+def translate(text, type):
+    if type == "google":
+        from googletrans import Translator
+        translator = Translator()
+        return translator.translate(text).text
+
+    elif type == "openai":
+        from openai import OpenAI
+
+        client = OpenAI(
+            api_key=open("./private/openAI_api_key", "r").read().strip()
+        )        
+        chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": "Say this is a test",
+            }
+        ],
+        model="gpt-3.5-turbo",
+        )
+        return chat_completion['choices'][0]['message']['content'].strip()
 
 codeEscapedSymbols = [
     ("<","&lt;"),
@@ -64,7 +84,7 @@ for lineIndex, line in enumerate(inputFileLines):
 
     if previousState == "text" and state != "text":
         if englishTranslationNeeded and len(textBlock) > 0:
-            outputText = translator.translate(textBlock).text.rstrip('\n') + '\n'
+            outputText = translate(textBlock, translationEngineType).rstrip('\n') + '\n'
         else:
             outputText = textBlock
 
