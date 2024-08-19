@@ -1,0 +1,45 @@
+Title: {:en}Build bgfx Emscripten Application{:}{:ru}Сборка bgfx Emscripten приложения{:}
+Slug: bgfx-emscripten
+В этой заметке я опишу способ сборки bgfx приложений для веба (WebAssembly) через Emscripten.
+
+Платформа для установки это Linux x86-64, например Arch Linux.
+
+Для начала установим Emscripten версии 3.1.51, иначе у вас ничего не получится, всё из-за изменения типа динамических библотек в последней версии Emscripten. Подробнее можно прочитать здесь:
+https://github.com/bkaradzic/bgfx/discussions/3266
+
+Делается это так:
+<pre><code>Language: Bash
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install 3.1.51
+./emsdk activate 3.1.51
+source ./emsdk_env.sh
+</code></pre>
+
+Соберем bgfx для WebAssembly - Emscripten:
+<pre><code>Language: Bash
+mkdir bgfx-build-test
+cd bgfx-build-test
+git clone https://github.com/bkaradzic/bx.git
+git clone https://github.com/bkaradzic/bimg.git
+git clone https://github.com/bkaradzic/bgfx.git
+cd bgfx
+emmake make wasm-debug
+</code></pre>
+
+В результате в папке .build у вас будут файлы bitcode с расширением .bc, которые нужно будет линковать с вашим bgfx приложением.
+Должны быть bgfx.bc, bx.bc, bimg.bc; в разных сборках разное название для этих файлов, в зависимости от типа сборки (release/debug)
+
+Добавляем в CMakeLists.txt файл линковку с .bc файлами, для примера абсолютные пути к файлам из проекта bgfx-experiments:
+<pre><code>Language: Bash
+target_link_libraries(${PROJECT_NAME} SDL2 GL /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bgfxDebug.bc /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bxDebug.bc /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bimgDebug.bc)
+</code></pre>
+
+Далее собирайте свой Emscripten проект по обычному, всё должно работать.
+Из интересного - в сборке Emscripten 3.1.51 похоже отсутствует OpenAL.
+
+Источники
+
+https://github.com/bkaradzic/bgfx/discussions/3266
+https://bkaradzic.github.io/bgfx/build.html
+https://emscripten.org/docs/getting_started/downloads.html
