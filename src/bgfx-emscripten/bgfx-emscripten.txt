@@ -1,0 +1,16 @@
+В этой заметке я опишу способ сборки bgfx приложений для веба (WebAssembly) через Emscripten.
+
+Платформа для установки это Linux x86-64, например Arch Linux.
+
+Для начала установим Emscripten версии 3.1.51, иначе у вас ничего не получится, всё из-за изменения типа динамических библотек в последней версии Emscripten. Подробнее можно прочитать здесь:
+https://github.com/bkaradzic/bgfx/discussions/3266
+
+
+Делается это так:
+<pre><code>
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install 3.1.51
+./emsdk activate 3.1.51
+source ./emsdk_env.sh
+</code></pre>
