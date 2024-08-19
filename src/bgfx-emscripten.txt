@@ -60,12 +60,25 @@ if (!bgfx::init(init))
 }
 </code></pre>
 
+Перекомпилируйте шейдеры GLSL под 110:
+<pre><code>Language: Bash
+shaderc -f "VertexShader.vs" -o "VertexShader.glsl" --type "v" -p "120"
+shaderc -f "FragmentShader.fs" -o "FragmentShader.glsl" --type "f" -p "120"
+</code></pre>
+Ес-но .glsl файлы надо добавить к CMakeLists.txt как --preload-file:
+<pre><code>Language: CMake
+set(CMAKE_CXX_FLAGS ... <Остальная часть>
+--preload-file VertexShader.glsl \
+--preload-file FragmentShader.glsl \
+</code></pre>
+
 Осталось заменить основной цикл рендера в вашем приложении с while на вызов функции через emscripten_set_main_loop.
+
 Об этом можно прочитать здесь:  
 https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/
 
 Далее собирайте свой Emscripten проект по обычному, всё должно работать.
-Из интересного - в сборке Emscripten 3.1.51 похоже отсутствует OpenAL.
+Из интересного - в сборке Emscripten 3.1.51 похоже отсутствует OpenAL (или только у меня).
 
 Исходный код проекта который корректно собирается с bgfx и Emscripten:
 https://github.com/demensdeum/bgfx-experiments/tree/main/2-emscripten-build 
