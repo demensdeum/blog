@@ -1,3 +1,3 @@
 # blog
-DemensDeum blog
-Source and tools for WordPress
+DemensDeum blog  
+Source and tools for WordPress  
