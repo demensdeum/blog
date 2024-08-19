@@ -35,11 +35,45 @@ emmake make wasm-debug
 target_link_libraries(${PROJECT_NAME} SDL2 GL /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bgfxDebug.bc /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bxDebug.bc /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bimgDebug.bc)
 </code></pre>
 
+Теперь поменяйте native window handle в platform data на инициализации bgfx:
+<pre><code>Language: CPP
+bgfx::PlatformData platformData{};
+platformData.context = NULL;
+platformData.backBuffer = NULL;
+platformData.backBufferDS = NULL;
+platformData.nwh = (void*)"#canvas";
+</code></pre>
+
+Также надо заменить тип рендера на OpenGL:
+<pre><code>Language: CPP
+bgfx::Init init;
+init.type = bgfx::RendererType::OpenGL;
+
+init.resolution.width = screenWidth;
+init.resolution.height = screenHeight;
+init.resolution.reset = BGFX_RESET_VSYNC;
+init.platformData = platformData;
+
+if (!bgfx::init(init))
+{
+    throw std::runtime_error("Failed to initialize bgfx");
+}
+</code></pre>
+
+Осталось заменить основной цикл рендера в вашем приложении с while на вызов функции через emscripten_set_main_loop.
+Об этом можно прочитать здесь:  
+https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/
+
 Далее собирайте свой Emscripten проект по обычному, всё должно работать.
 Из интересного - в сборке Emscripten 3.1.51 похоже отсутствует OpenAL.
+
+Исходный код проекта который корректно собирается с bgfx и Emscripten:
+https://github.com/demensdeum/bgfx-experiments/tree/main/2-emscripten-build 
 
 Источники
 
 https://github.com/bkaradzic/bgfx/discussions/3266
 https://bkaradzic.github.io/bgfx/build.html
 https://emscripten.org/docs/getting_started/downloads.html
+https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/
+https://llvm.org/docs/BitCodeFormat.html
