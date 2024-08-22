@@ -4,7 +4,7 @@ Slug: bgfx-emscripten
 
 Платформа для установки это Linux x86-64, например Arch Linux.
 
-Для начала установим Emscripten версии 3.1.51, иначе у вас ничего не получится, всё из-за изменения типа динамических библотек в последней версии Emscripten. Подробнее можно прочитать здесь:
+Для начала установим Emscripten версии 3.1.51, иначе у вас ничего не получится, всё из-за изменения типа динамических библиотек в последней версии Emscripten. Подробнее можно прочитать здесь:
 https://github.com/bkaradzic/bgfx/discussions/3266
 
 Делается это так:
@@ -60,7 +60,7 @@ if (!bgfx::init(init))
 }
 </code></pre>
 
-Перекомпилируйте шейдеры GLSL под 110:
+Перекомпилируйте шейдеры GLSL под 120:
 <pre><code>Language: Bash
 shaderc -f "VertexShader.vs" -o "VertexShader.glsl" --type "v" -p "120"
 shaderc -f "FragmentShader.fs" -o "FragmentShader.glsl" --type "f" -p "120"
