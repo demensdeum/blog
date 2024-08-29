@@ -46,11 +46,11 @@ previousState = "text"
 textBlock = ""
 outputText = ""
 
-def translate(text, type):
+def translate(text, type, source, destination):
     if type == "google":
         from googletrans import Translator
         translator = Translator()
-        return translator.translate(text).text
+        return translator.translate(text, src=source, dest=destination).text
 
     elif type == "openai":
         from openai import OpenAI
@@ -98,10 +98,13 @@ outputFileDescriptor.write("\n")
 outputFileDescriptor.write(title)
 outputFileDescriptor.write("\n")
 
-for i in range(2):
+for i in range(3):
     englishTranslationNeeded = i == 0
+    chineseTranslationNeeded = i == 1
     if englishTranslationNeeded:
         outputFileDescriptor.write("{:en}")
+    elif chineseTranslationNeeded:
+        outputFileDescriptor.write("{:zh}")
     else:
         outputFileDescriptor.write("{:ru}")
     for lineIndex, line in enumerate(inputFileLines):
@@ -125,7 +128,9 @@ for i in range(2):
 
         if previousState == "text" and state != "text":
             if englishTranslationNeeded and len(textBlock) > 0:
-                outputText = translate(textBlock, translationEngineType).rstrip('\n') + '\n'
+                outputText = translate(textBlock, translationEngineType, "ru", "en").rstrip('\n') + '\n'
+            elif chineseTranslationNeeded and len(textBlock) > 0:
+                outputText = translate(textBlock, translationEngineType, "ru", "zh-cn").rstrip('\n') + '\n'
             else:
                 outputText = textBlock
 

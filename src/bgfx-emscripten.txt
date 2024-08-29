@@ -1,4 +1,4 @@
-Title: {:en}Build bgfx Emscripten Application{:}{:ru}Сборка bgfx Emscripten приложения{:}
+Title: {:en}Build bgfx Emscripten Application{:}{:ru}Сборка bgfx Emscripten приложения{:}{:zh}构建 bgfx Emscripten 应用程序{:}
 Slug: bgfx-emscripten
 В этой заметке я опишу способ сборки bgfx приложений для веба (WebAssembly) через Emscripten.
 
