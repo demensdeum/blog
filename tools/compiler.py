@@ -1,8 +1,56 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 import argparse
+import re
+import difflib
+
+def separate_latin_and_non_latin(text):
+    latin_pattern = re.compile(r'[A-Za-z]+')
+    non_latin_pattern = re.compile(r'[^\x00-\x7F]+')
+
+    result = []
+    i = 0
+
+    while i < len(text):
+        if text[i].isascii() and text[i].isalpha():
+            match = latin_pattern.match(text, i)
+            if match:
+                result.append(match.group())
+                i = match.end()
+        elif not text[i].isascii():
+            match = non_latin_pattern.match(text, i)
+            if match:
+                result.append(match.group())
+                i = match.end()
+        else:
+            result.append(text[i])
+            i += 1
+
+    return ' '.join(result).strip()
+
+def replace_similar_latin_words(text1, text2):
+    text1_words = text1.split()
+    text2_words = text2.split()
+    latin_pattern = re.compile(r'^[a-zA-Z]+$')
+    text1_latin_words = [word for word in text1_words if latin_pattern.match(word)]
+    result = []
+    for word2 in text2_words:
+        if latin_pattern.match(word2):
+            print("ok1")
+            print(word2)
+            print(text1_latin_words)
+            matches = difflib.get_close_matches(word2.lower(), text1_latin_words, n=1, cutoff=0.3)
+            if matches:
+                print(f"ok2: {matches[0]}")
+                result.append(matches[0])
+            else:
+                print("ok3")
+                result.append(word2)
+        else:
+            print("ok4")
+            result.append(word2)
+    return ' '.join(result)
 
 parser = argparse.ArgumentParser(description="Wordpress post compiler.")
 parser.add_argument("--input", required=True, help="Input file path.")
@@ -14,14 +62,29 @@ outputFile = args.output
 
 inputFileLines = open(inputFile, "r").readlines()
 
-if len(inputFileLines) < 3:
-    print("Post must contains at least 3 lines.\nTitle: Post title\nSlug: post_slug\nPost content")
+if len(inputFileLines) < 5:
+    print("\
+          Post must contains at least 5 lines.\n\
+          Format: format code\n\
+          Language: post language code\n\
+          Title: post title\n\
+          Slug: post_slug\n\
+          Post content\
+          ")
     exit(1)
 
-title = inputFileLines[0].strip()
-slug = inputFileLines[1].strip()
+supportingFormatCode = "Fall24"
 
-inputFileLines = inputFileLines[2:]
+formatCode = inputFileLines[0].strip()[len("Format: "):]
+language = inputFileLines[1].strip()[len("Language: "):]
+title = inputFileLines[2].strip()
+slug = inputFileLines[3].strip()
+
+if formatCode != supportingFormatCode:
+    print(f"Can't process file with formatCode: \"{formatCode}\", because compiler supports \"{supportingFormatCode}\" only")
+    exit(1)
+
+inputFileLines = inputFileLines[4:]
 
 print(f"Post_title: {title}")
 print(f"Slug: {slug}")
@@ -93,20 +156,29 @@ def processLink(line):
 
 lastLineIndex = len(inputFileLines) - 1
 
+languageCodes = ["ru", "en", "zh", "de"]
+googleTranslateLanguageCodes = ["ru", "en", "zh-cn", "de"]
+originalLanguageCode = "ru"
+
+def translateTitle(title):
+    output = f"{{:{originalLanguageCode}}}{title}{{:}}"
+    for i in range(len(languageCodes)):
+        if languageCodes[i] == originalLanguageCode:
+            continue
+        output += f"{{:{languageCodes[i]}}}"
+        output += replace_similar_latin_words(title, separate_latin_and_non_latin(translate(title, translationEngineType, originalLanguageCode, googleTranslateLanguageCodes[i])))
+        output += "{:}"
+    return output
+
 outputFileDescriptor.write(slug)
 outputFileDescriptor.write("\n")
-outputFileDescriptor.write(title)
+outputFileDescriptor.write(translateTitle(title))
 outputFileDescriptor.write("\n")
 
-for i in range(3):
-    englishTranslationNeeded = i == 0
-    chineseTranslationNeeded = i == 1
-    if englishTranslationNeeded:
-        outputFileDescriptor.write("{:en}")
-    elif chineseTranslationNeeded:
-        outputFileDescriptor.write("{:zh}")
-    else:
-        outputFileDescriptor.write("{:ru}")
+
+for i in range(len(languageCodes)):
+    targetLanguageCode = languageCodes[i]
+    outputFileDescriptor.write(f"{{:{targetLanguageCode}}}")
     for lineIndex, line in enumerate(inputFileLines):
         if line.startswith("<pre><code>"):
             state = "code-start"
@@ -127,10 +199,8 @@ for i in range(3):
             state = "link"
 
         if previousState == "text" and state != "text":
-            if englishTranslationNeeded and len(textBlock) > 0:
-                outputText = translate(textBlock, translationEngineType, "ru", "en").rstrip('\n') + '\n'
-            elif chineseTranslationNeeded and len(textBlock) > 0:
-                outputText = translate(textBlock, translationEngineType, "ru", "zh-cn").rstrip('\n') + '\n'
+            if targetLanguageCode != originalLanguageCode:
+                outputText = translate(textBlock, translationEngineType, originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
             else:
                 outputText = textBlock
 
