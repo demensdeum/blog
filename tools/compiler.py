@@ -5,6 +5,32 @@ import argparse
 import re
 import difflib
 
+def askOllama(prompt):
+    import requests
+
+    base_url = 'http://localhost:11434'
+    endpoint = '/api/generate'
+
+    prompt = prompt.strip()
+
+    payload = {
+        "model": "llama3.1:latest", 
+        "stream": False,                            
+        "prompt": prompt
+    }
+    response = requests.post(base_url + endpoint, json=payload)
+    if response.status_code == 200:
+        answer = response.json().get("response")
+        if answer[0] == '"':
+            answer = answer[1:]
+        if answer[-1] == '"':
+            answer = answer[0:-1]
+        return str(answer)
+    else:
+        print("ollama error")
+        exit(1)
+        return None
+
 def separate_latin_and_non_latin(text):
     latin_pattern = re.compile(r'[A-Za-z]+')
     non_latin_pattern = re.compile(r'[^\x00-\x7F]+')
@@ -37,18 +63,12 @@ def replace_similar_latin_words(text1, text2):
     result = []
     for word2 in text2_words:
         if latin_pattern.match(word2):
-            print("ok1")
-            print(word2)
-            print(text1_latin_words)
             matches = difflib.get_close_matches(word2.lower(), text1_latin_words, n=1, cutoff=0.3)
             if matches:
-                print(f"ok2: {matches[0]}")
                 result.append(matches[0])
             else:
-                print("ok3")
                 result.append(word2)
         else:
-            print("ok4")
             result.append(word2)
     return ' '.join(result)
 
@@ -102,7 +122,6 @@ slug = slug[len("Slug: "):]
 
 outputFileDescriptor = open(outputFile, "w")
 
-translationEngineType = "google"
 state = "text"
 codeStateLanguage = "Bash"
 previousState = "text"
@@ -110,6 +129,8 @@ textBlock = ""
 outputText = ""
 
 def translate(text, type, source, destination):
+    print(f"translate {source} -> {destination} by {type}")
+
     if type == "google":
         from googletrans import Translator
         translator = Translator()
@@ -131,6 +152,14 @@ def translate(text, type, source, destination):
         model="gpt-3.5-turbo",
         )
         return chat_completion['choices'][0]['message']['content'].strip()
+    
+    elif type == "ollama":
+        prompt = f"""
+            Translate text: \"{text}\" from \"{source}" to \"{destination}". Context is programmer blog. I need only translation, without additional comments from your side, also no additional quotes, so I can copy and paste your output directly into file.       
+            """    
+        answer = askOllama(prompt)    
+        print(answer)
+        return answer
 
 codeEscapedSymbols = [
     ("<","&lt;"),
@@ -166,7 +195,8 @@ def translateTitle(title):
         if languageCodes[i] == originalLanguageCode:
             continue
         output += f"{{:{languageCodes[i]}}}"
-        output += replace_similar_latin_words(title, separate_latin_and_non_latin(translate(title, translationEngineType, originalLanguageCode, googleTranslateLanguageCodes[i])))
+        #output += replace_similar_latin_words(title, separate_latin_and_non_latin(translate(title, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i])))
+        output += translate(title, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i])
         output += "{:}"
     return output
 
@@ -200,7 +230,7 @@ for i in range(len(languageCodes)):
 
         if previousState == "text" and state != "text":
             if targetLanguageCode != originalLanguageCode:
-                outputText = translate(textBlock, translationEngineType, originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
+                outputText = translate(textBlock, "google", originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
             else:
                 outputText = textBlock
 
