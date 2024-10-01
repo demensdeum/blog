@@ -205,7 +205,6 @@ outputFileDescriptor.write("\n")
 outputFileDescriptor.write(translateTitle(title))
 outputFileDescriptor.write("\n")
 
-
 for i in range(len(languageCodes)):
     targetLanguageCode = languageCodes[i]
     outputFileDescriptor.write(f"{{:{targetLanguageCode}}}")
@@ -224,6 +223,11 @@ for i in range(len(languageCodes)):
             state = "text"
         elif state == "link":
             state = "text"
+        elif len(line) < 2:
+            print("len(line) < 2")
+            state = "text-end"
+        elif state == "text-end" and len(line) > 1:
+            state = "text"
         
         if line.startswith("http://") or line.startswith("https://"):
             state = "link"
@@ -234,9 +238,9 @@ for i in range(len(languageCodes)):
             else:
                 outputText = textBlock
 
+            print(outputText)
             outputFileDescriptor.write(outputText)
             textBlock = ""
-
 
         codeBlockHeader = f"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-{codeStateLanguage.lower()}\" data-lang=\"{codeStateLanguage}\"><code>"
         codeBlockFooter = "</code></pre></div>"
