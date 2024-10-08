@@ -1,0 +1,7 @@
+Format: Fall24
+Language: ru
+Title: CryptoBBS
+Slug: cryptobbs
+Создал BBS чтобы люди могли писать про обменники которые кидают людей на деньги. Bestchange вообще перестал работать и защищает мошенников.
+
+https://demensdeum.com/cryptoBBS
