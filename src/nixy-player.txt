@@ -1,0 +1,16 @@
+Format: Fall24-October10
+Language: ru
+Title: [DO NOT PROCESS LINE]Nixy Player
+Slug: nixy-player
+Categories: software
+
+Nixy Player - Небольшой, расширяемый, кросс-платформенный JavaScript-runtime.
+
+[DO NOT PROCESS LINE] <img src="https://demensdeum.com/blog/wp-content/uploads/2024/10/medianixy-player-screenshot.png" alt="Интерфейс RaidenVideoRipper">
+
+Кросс-платформенный: доступен на Windows, macOS и Linux, а также на любой другой платформе с поддержкой C++ и динамических библиотек.
+Легковесный: минимальное потребление ресурсов с эффективной производительностью.
+Расширяемый: создан для легкого расширения с помощью плагинов и дополнительных библиотек.
+
+Пожалуйста, посетите страницу "Релизы", чтобы быть в курсе последних выпусков и обновлений:
+https://github.com/demensdeum/NixyPlayer/releases/

@@ -1,7 +1,15 @@
-Format: Fall24
+Format: Fall24-October10
 Language: ru
-Title: Raiden Video Ripper
-Slug: cryptobbs
-Создал BBS чтобы люди могли писать про обменники которые кидают людей на деньги. Bestchange вообще перестал работать и защищает мошенников.
+Title: [DO NOT PROCESS LINE]Raiden Video Ripper
+Slug: raiden-video-ripper
+Categories: software
 
-https://demensdeum.com/cryptoBBS
+Raiden Video Ripper - это проект с открытым исходным кодом, предназначенный для редактирования видео и конвертации форматов. Он создан с использованием Qt 6 (Qt Creator) и позволяет обрезать и конвертировать видео в форматы MP4, GIF и WebM. Вы также можете извлекать аудио из видео и конвертировать его в формат MP3.
+
+[DO NOT PROCESS LINE]<img src="https://demensdeum.com/blog/wp-content/uploads/2024/10/mediaraiden-video-ripper-screenshot.png" alt="Интерфейс RaidenVideoRipper">
+
+Кадр из COSTA RICA IN 4K 60fps HDR (ULTRA HD)
+https://www.youtube.com/watch?v=LXb3EKWsInQ
+
+Пожалуйста, посетите страницу "Релизы", чтобы быть в курсе последних выпусков и обновлений:
+https://github.com/demensdeum/RaidenVideoRipper/releases
