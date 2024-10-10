@@ -89,22 +89,24 @@ if len(inputFileLines) < 5:
           Language: post language code\n\
           Title: post title\n\
           Slug: post_slug\n\
+          Categories: categories separated by comma\n\
           Post content\
           ")
     exit(1)
 
-supportingFormatCode = "Fall24"
+supportingFormatCode = "Fall24-October10"
 
 formatCode = inputFileLines[0].strip()[len("Format: "):]
-language = inputFileLines[1].strip()[len("Language: "):]
-title = inputFileLines[2].strip()
-slug = inputFileLines[3].strip()
 
 if formatCode != supportingFormatCode:
     print(f"Can't process file with formatCode: \"{formatCode}\", because compiler supports \"{supportingFormatCode}\" only")
     exit(1)
 
-inputFileLines = inputFileLines[4:]
+language = inputFileLines[1].strip()[len("Language: "):]
+title = inputFileLines[2].strip()
+slug = inputFileLines[3].strip()
+categories = inputFileLines[4].strip()[len("Categories: "):].split(",")
+inputFileLines = inputFileLines[5:]
 
 print(f"Post_title: {title}")
 print(f"Slug: {slug}")
@@ -134,7 +136,14 @@ def translate(text, type, source, destination):
     if type == "google":
         from googletrans import Translator
         translator = Translator()
-        return translator.translate(text, src=source, dest=destination).text
+        for i in range(0, 10):
+            try:
+                outputText = translator.translate(text, src=source, dest=destination).text
+                break
+            except Exception as error:
+                print(error)
+                
+        return outputText
 
     elif type == "openai":
         from openai import OpenAI
@@ -206,6 +215,8 @@ def translateTitle(title):
 outputFileDescriptor.write(slug)
 outputFileDescriptor.write("\n")
 outputFileDescriptor.write(translateTitle(title))
+outputFileDescriptor.write("\n")
+outputFileDescriptor.write(",".join(categories))
 outputFileDescriptor.write("\n")
 
 for i in range(len(languageCodes)):

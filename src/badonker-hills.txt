@@ -1,7 +1,8 @@
-Format: Fall24
+Format: Fall24-October10
 Language: ru
 Title: [DO NOT PROCESS LINE]Badonker Hills
 Slug: badonker-hills
+Categories: games
 За месяц сделал забавный гэг, игру-пародию с помощью движка Unreal Engine 5. Разработка велась на Twitch стриме.
 
 [DO NOT PROCESS LINE][video src="https://demensdeum.com/blog/wp-content/uploads/2024/10/mediabadonkerHillsIntro.mp4"]
