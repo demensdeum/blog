@@ -1,0 +1,15 @@
+Format: Fall24
+Language: ru
+Title: [DO NOT PROCESS LINE]Badonker Hills
+Slug: badonker-hills
+За месяц сделал забавный гэг, игру-пародию с помощью движка Unreal Engine 5. Разработка велась на Twitch стриме.
+
+[DO NOT PROCESS LINE][video src="https://demensdeum.com/blog/wp-content/uploads/2024/10/mediabadonkerHillsIntro.mp4"]
+
+История этой игры рассказывает об обычном русском парне Джеймсе, который нашел девушку Марию в Тиндере, но из-за санкций и прекращения работы Тиндера в России потерял связь с ней. Теперь единственное что у него осталось это скриншот с ее фото, с помощью гугл мапс он находит место где сделано фото - село Тихие Доньки под Новосибирском. Джеймс отправляется туда на поиски Марии...
+
+Скачать можно на Dropbox:
+https://www.dropbox.com/scl/fo/il1ez1cuz8ncxuvv2luqu/ADq-Ynie-Rn89XBn3TKy69g?rlkey=g1ecr4xuzij83x6pdbdbw3ekq&st=40ee718m&dl=0
+
+Yandex Disk:
+https://disk.yandex.ru/d/LilMle4ulQRXVw

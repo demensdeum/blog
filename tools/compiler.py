@@ -190,6 +190,9 @@ googleTranslateLanguageCodes = ["ru", "en", "zh-cn", "de"]
 originalLanguageCode = "ru"
 
 def translateTitle(title):
+    if title.startswith("[DO NOT PROCESS LINE]"):
+        return title[len("[DO NOT PROCESS LINE]"):]
+    
     output = f"{{:{originalLanguageCode}}}{title}{{:}}"
     for i in range(len(languageCodes)):
         if languageCodes[i] == originalLanguageCode:
@@ -209,7 +212,11 @@ for i in range(len(languageCodes)):
     targetLanguageCode = languageCodes[i]
     outputFileDescriptor.write(f"{{:{targetLanguageCode}}}")
     for lineIndex, line in enumerate(inputFileLines):
-        if line.startswith("<pre><code>"):
+        print(f"line: {line}")
+        if line.startswith("[DO NOT PROCESS LINE]"):
+            outputFileDescriptor.write(line[len("[DO NOT PROCESS LINE]"):])  
+            continue        
+        elif line.startswith("<pre><code>"):
             state = "code-start"
             if len(line.split("<pre><code>Language: ")) != 2:
                 print("Code line header must contains Language name!")
@@ -228,6 +235,7 @@ for i in range(len(languageCodes)):
             state = "text-end"
         elif state == "text-end" and len(line) > 1:
             state = "text"
+            outputFileDescriptor.write("\n")
         
         if line.startswith("http://") or line.startswith("https://"):
             state = "link"
