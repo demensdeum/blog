@@ -6,7 +6,7 @@ Categories: software
 
 Nixy Player - Небольшой, расширяемый, кросс-платформенный JavaScript-runtime.
 
-[DO NOT PROCESS LINE] <img src="https://demensdeum.com/blog/wp-content/uploads/2024/10/medianixy-player-screenshot.png" alt="Интерфейс RaidenVideoRipper">
+[DO NOT PROCESS LINE] <img src="https://demensdeum.com/blog/wp-content/uploads/2024/10/medianixy-player-screenshot.png">
 
 Кросс-платформенный: доступен на Windows, macOS и Linux, а также на любой другой платформе с поддержкой C++ и динамических библиотек.
 Легковесный: минимальное потребление ресурсов с эффективной производительностью.

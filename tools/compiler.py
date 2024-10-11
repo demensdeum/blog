@@ -198,9 +198,13 @@ languageCodes = ["ru", "en", "zh", "de"]
 googleTranslateLanguageCodes = ["ru", "en", "zh-cn", "de"]
 originalLanguageCode = "ru"
 
+doNotProcessPrefixes = ["[DO NOT PROCESS LINE]", "<img src=", "[video src="]
+
 def translateTitle(title):
-    if title.startswith("[DO NOT PROCESS LINE]"):
-        return title[len("[DO NOT PROCESS LINE]"):]
+    if any(title.startswith(prefix) for prefix in doNotProcessPrefixes):
+        if title.startswith("[DO NOT PROCESS LINE]"):
+            return title[len("[DO NOT PROCESS LINE]"):]
+        return title
     
     output = f"{{:{originalLanguageCode}}}{title}{{:}}"
     for i in range(len(languageCodes)):
