@@ -130,8 +130,16 @@ previousState = "text"
 textBlock = ""
 outputText = ""
 
+doNotProcessPrefixes = ["[DO NOT PROCESS LINE]", "<img src=", "[video src="]
+
 def translate(text, type, source, destination):
+    if any(text.strip().startswith(prefix) for prefix in doNotProcessPrefixes):
+        if text.strip().startswith("[DO NOT PROCESS LINE]"):
+            return text[len("[DO NOT PROCESS LINE]"):]
+        return text
+        
     print(f"translate {source} -> {destination} by {type}")
+    print(f"text: \"{text}\"")
 
     if type == "google":
         from googletrans import Translator
@@ -198,14 +206,12 @@ languageCodes = ["ru", "en", "zh", "de"]
 googleTranslateLanguageCodes = ["ru", "en", "zh-cn", "de"]
 originalLanguageCode = "ru"
 
-doNotProcessPrefixes = ["[DO NOT PROCESS LINE]", "<img src=", "[video src="]
-
-def translateTitle(title):
+def translateTitle(title):  
     if any(title.startswith(prefix) for prefix in doNotProcessPrefixes):
         if title.startswith("[DO NOT PROCESS LINE]"):
             return title[len("[DO NOT PROCESS LINE]"):]
         return title
-    
+          
     output = f"{{:{originalLanguageCode}}}{title}{{:}}"
     for i in range(len(languageCodes)):
         if languageCodes[i] == originalLanguageCode:
@@ -214,6 +220,7 @@ def translateTitle(title):
         #output += replace_similar_latin_words(title, separate_latin_and_non_latin(translate(title, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i])))
         output += translate(title, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i])
         output += "{:}"
+
     return output
 
 outputFileDescriptor.write(slug)
@@ -257,6 +264,7 @@ for i in range(len(languageCodes)):
 
         if previousState == "text" and state != "text":
             if targetLanguageCode != originalLanguageCode:
+                print(f"pre textBlock: {textBlock}")
                 outputText = translate(textBlock, "google", originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
             else:
                 outputText = textBlock

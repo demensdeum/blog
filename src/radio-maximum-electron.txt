@@ -1,0 +1,20 @@
+Format: Fall24-October10
+Language: ru
+Title: [DO NOT PROCESS LINE]Radio-Maximum-Electron
+Slug: radio-maximum-electron
+Categories: software
+
+Радио Максимум Electron — это мощное и удобное приложение, предназначенное для прослушивания потока радиостанции "Радио Максимум" на вашем компьютере под управлением операционных систем Windows, Linux и macOS. Этот плеер сочетает в себе простоту использования с высокой функциональностью, обеспечивая вам доступ к потоку в реальном времени с минимальными усилиями.
+
+<img src="https://demensdeum.com/blog/wp-content/uploads/2024/10/mediaradio-maximum-electron.png">
+
+Просто скачайте приложение с GitHub:
+
+https://github.com/demensdeum/Radio-Maximum-Electron/releases
+
+Автор не имеет отношение к Радио Максимум, ему просто очень нравится это радио.
+Основной функционал реализован проектом Nativifier
+
+https://github.com/nativefier/nativefier
+
+Лицензия на скрипты сборки MIT, у рантайма своя лицензия!
