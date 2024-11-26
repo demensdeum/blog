@@ -51,10 +51,15 @@ def get_all_categories():
 
 def get_category_ids(category_names):
     all_categories = get_all_categories()
+    print(category_names)
+    print("---")
+    print(all_categories)
     category_ids = []
     for name in category_names:
+        print(f"name: {name} from {category_names}")
         found = False
         for category in all_categories:
+            print(f"Searching for {name}")
             if category['slug'].lower() == name.lower().strip():
                 category_ids.append(category['id'])
                 found = True

@@ -14,7 +14,7 @@ def askOllama(prompt):
     prompt = prompt.strip()
 
     payload = {
-        "model": "llama3.1:latest", 
+        "model": "llama3.2", 
         "stream": False,                            
         "prompt": prompt
     }
@@ -80,7 +80,7 @@ args = parser.parse_args()
 inputFile = args.input
 outputFile = args.output
 
-inputFileLines = open(inputFile, "r").readlines()
+inputFileLines = open(inputFile, "r", encoding="utf-8").readlines()
 
 if len(inputFileLines) < 5:
     print("\
@@ -122,7 +122,7 @@ if slug.startswith("Slug: ") == False:
 title = title[len("Title: "):]
 slug = slug[len("Slug: "):]
 
-outputFileDescriptor = open(outputFile, "w")
+outputFileDescriptor = open(outputFile, "w", encoding="utf-8")
 
 state = "text"
 codeStateLanguage = "Bash"
@@ -151,6 +151,7 @@ def translate(text, type, source, destination):
             except Exception as error:
                 print(error)
                 
+        outputText = text
         return outputText
 
     elif type == "openai":
@@ -221,11 +222,11 @@ def translateTitle(title):
         output += translate(title, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i])
         output += "{:}"
 
-    return output
+    return output.replace("\n"," ")
 
-outputFileDescriptor.write(slug)
+outputFileDescriptor.write(slug.strip())
 outputFileDescriptor.write("\n")
-outputFileDescriptor.write(translateTitle(title))
+outputFileDescriptor.write(translateTitle(title).strip())
 outputFileDescriptor.write("\n")
 outputFileDescriptor.write(",".join(categories))
 outputFileDescriptor.write("\n")
@@ -265,7 +266,7 @@ for i in range(len(languageCodes)):
         if previousState == "text" and state != "text":
             if targetLanguageCode != originalLanguageCode:
                 print(f"pre textBlock: {textBlock}")
-                outputText = translate(textBlock, "google", originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
+                outputText = translate(textBlock, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
             else:
                 outputText = textBlock
 

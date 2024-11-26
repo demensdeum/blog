@@ -1,0 +1,15 @@
+Format: Fall24-October10
+Language: ru
+Title: Исправление мобильного меню в Wordpress
+Slug: wordpress-theme-mobile-mode-fix
+Categories: software
+Если у вас тоже несколько лет не открывалось меню блога на iOS/Android в вашем блоге на Wordpress, при использовании темы Seedlet, то просто добавьте:
+<pre><code>Language: php
+document.addEventListener('DOMContentLoaded', function() {
+    new navMenu('primary');
+    new navMenu('woo');
+});
+</code></pre>
+В функцию замыкание файла wp-content/themes/seedlet/assets/js/primary-navigation.js, рядом с дефолтной подпиской window addEventListener 'load'.
+
+
