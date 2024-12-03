@@ -1,4 +1,5 @@
 #!/bin/bash
+source ~/.bash_profile
 
 # Check if the argument is provided
 if [ -z "$1" ]; then
@@ -8,7 +9,7 @@ if [ -z "$1" ]; then
 fi
 
 filename=$1
-python ./tools/compiler.py --input ./src/"$filename".txt --output ./build/"$filename".txt
+python3 ./tools/compiler.py --input ./src/"$filename".txt --output ./build/"$filename".txt
 if [ $? -eq 0 ]; then
     echo "Compile OK"
 else
@@ -16,4 +17,4 @@ else
     exit 1
 fi
 
-python ./tools/uploader.py --post ./build/"$filename".txt --blog ./private/wordpress
+python3.10 ./tools/uploader.py --post ./build/"$filename".txt --blog ./private/wordpress

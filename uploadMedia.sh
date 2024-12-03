@@ -1,3 +1,4 @@
+source ~/.bash_profile
 if [ -z "$1" ]; then
     echo "Error: No filename provided."
     echo "Usage: ./script_name.sh <filename>"

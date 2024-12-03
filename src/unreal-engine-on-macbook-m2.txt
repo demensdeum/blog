@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Unreal Engine на Macbook M2
+Slug: unreal-engine-on-macbook-m2
+Categories: blog
+Если вы смогли запустить Unreal Engine 5 Editor на Macbook с процессором Apple, то вы могли заметить что эта штука достаточо сильно тормозит.
+
+<img src="https://demensdeum.com/blog/wp-content/uploads/2024/11/mediaue_scalable.png">
+
+Чтобы увеличить производительность редактора и движка, проставьте Engine Scalability Settings -> Medium. После этого движок начнет рисовать все не так красиво, зато вы сможете нормально поработать с движком на своем макбуке. 

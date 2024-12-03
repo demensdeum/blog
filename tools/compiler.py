@@ -142,16 +142,19 @@ def translate(text, type, source, destination):
     print(f"text: \"{text}\"")
 
     if type == "google":
-        from googletrans import Translator
-        translator = Translator()
+        from deep_translator import GoogleTranslator
+        print(source)
+        print(destination)
+        translator = GoogleTranslator(source=source, target=destination)
+
         for i in range(0, 10):
             try:
-                outputText = translator.translate(text, src=source, dest=destination).text
+                outputText = translator.translate(text)
                 break
             except Exception as error:
                 print(error)
                 
-        outputText = text
+        #outputText = text
         return outputText
 
     elif type == "openai":
@@ -204,7 +207,7 @@ def processLink(line):
 lastLineIndex = len(inputFileLines) - 1
 
 languageCodes = ["ru", "en", "zh", "de"]
-googleTranslateLanguageCodes = ["ru", "en", "zh-cn", "de"]
+googleTranslateLanguageCodes = ["ru", "en", "zh-CN", "de"]
 originalLanguageCode = "ru"
 
 def translateTitle(title):  
@@ -219,7 +222,7 @@ def translateTitle(title):
             continue
         output += f"{{:{languageCodes[i]}}}"
         #output += replace_similar_latin_words(title, separate_latin_and_non_latin(translate(title, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i])))
-        output += translate(title, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i])
+        output += translate(title, "google", originalLanguageCode, googleTranslateLanguageCodes[i])
         output += "{:}"
 
     return output.replace("\n"," ")
@@ -266,7 +269,7 @@ for i in range(len(languageCodes)):
         if previousState == "text" and state != "text":
             if targetLanguageCode != originalLanguageCode:
                 print(f"pre textBlock: {textBlock}")
-                outputText = translate(textBlock, "ollama", originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
+                outputText = translate(textBlock, "google", originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
             else:
                 outputText = textBlock
 
