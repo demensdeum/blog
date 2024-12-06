@@ -206,8 +206,8 @@ def processLink(line):
 
 lastLineIndex = len(inputFileLines) - 1
 
-languageCodes = ["ru", "en", "zh", "de"]
-googleTranslateLanguageCodes = ["ru", "en", "zh-CN", "de"]
+languageCodes = ["ru", "en", "zh", "de", "ja", "fr", "pt"]
+googleTranslateLanguageCodes = ["ru", "en", "zh-CN", "de", "ja", "fr", "pt"]
 originalLanguageCode = "ru"
 
 def translateTitle(title):  
@@ -236,60 +236,48 @@ outputFileDescriptor.write("\n")
 
 for i in range(len(languageCodes)):
     targetLanguageCode = languageCodes[i]
+    textBlock = ""
+    state = "text"
+    previousState = "text"
+
     outputFileDescriptor.write(f"{{:{targetLanguageCode}}}")
+
     for lineIndex, line in enumerate(inputFileLines):
-        print(f"line: {line}")
+        line = line.strip()  # Убираем лишние пробелы
+        print(f"Processing line: {line}")
+
         if line.startswith("[DO NOT PROCESS LINE]"):
-            outputFileDescriptor.write(line[len("[DO NOT PROCESS LINE]"):])  
-            continue        
-        elif line.startswith("<pre><code>"):
-            state = "code-start"
-            if len(line.split("<pre><code>Language: ")) != 2:
-                print("Code line header must contains Language name!")
-                exit(1)                   
-            codeStateLanguage = line.split("<pre><code>Language: ")[1].strip()
-        elif state == "code-start":
+            outputFileDescriptor.write(line[len("[DO NOT PROCESS LINE]"):])
+            continue
+
+        if line.startswith("<pre><code>"):
             state = "code"
+            codeStateLanguage = line.split("Language: ")[1].strip() if "Language: " in line else "unknown"
+            continue
+
         elif line.startswith("</code></pre>"):
-            state = "code-end"
-        elif state == "code-end":
-            state = "text"
-        elif state == "link":
-            state = "text"
-        elif len(line) < 2:
-            print("len(line) < 2")
-            state = "text-end"
-        elif state == "text-end" and len(line) > 1:
-            state = "text"
-            outputFileDescriptor.write("\n")
-        
+            if state == "code":
+                codeBlockHeader = f"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-{codeStateLanguage.lower()}\" data-lang=\"{codeStateLanguage}\"><code>"
+                codeBlockFooter = "</code></pre></div>"
+                outputFileDescriptor.write(f"{codeBlockHeader}{textBlock.lstrip()}{codeBlockFooter}\n")
+                textBlock = ""
+                state = "text"
+            continue
+
         if line.startswith("http://") or line.startswith("https://"):
-            state = "link"
-
-        if previousState == "text" and state != "text":
-            if targetLanguageCode != originalLanguageCode:
-                print(f"pre textBlock: {textBlock}")
-                outputText = translate(textBlock, "google", originalLanguageCode, googleTranslateLanguageCodes[i]).rstrip('\n') + '\n'
-            else:
-                outputText = textBlock
-
-            print(outputText)
-            outputFileDescriptor.write(outputText)
-            textBlock = ""
-
-        codeBlockHeader = f"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-{codeStateLanguage.lower()}\" data-lang=\"{codeStateLanguage}\"><code>"
-        codeBlockFooter = "</code></pre></div>"
-
-        if previousState == "code" and state == "code-end":
-            outputFileDescriptor.write(f"{codeBlockHeader}{textBlock.lstrip()}{codeBlockFooter}\n")
-            textBlock = ""
-
-        if state == "link":
             outputFileDescriptor.write(processLink(line))
-            textBlock = ""
+            continue
 
-        if state != "code-start" and state !="code-end" and state != "link":
-            textBlock += processLine(line, state)
+        if state == "text":
+            textBlock += processLine(line, state) + "\n"
 
-        previousState = state
-    outputFileDescriptor.write("{:}")
+        if state != "text" or lineIndex == lastLineIndex:
+            if textBlock.strip():
+                if targetLanguageCode != originalLanguageCode:
+                    translatedText = translate(textBlock.strip(), "google", originalLanguageCode, googleTranslateLanguageCodes[i])
+                    outputFileDescriptor.write(translatedText + "\n")
+                else:
+                    outputFileDescriptor.write(textBlock.strip() + "\n")
+                textBlock = ""
+
+    outputFileDescriptor.write("{:}\n")
