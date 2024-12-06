@@ -237,17 +237,18 @@ outputFileDescriptor.write("\n")
 for i in range(len(languageCodes)):
     targetLanguageCode = languageCodes[i]
     textBlock = ""
+    codeBlock = ""
     state = "text"
     previousState = "text"
 
     outputFileDescriptor.write(f"{{:{targetLanguageCode}}}")
 
     for lineIndex, line in enumerate(inputFileLines):
-        line = line.strip()  # Убираем лишние пробелы
+        line = line.rstrip("\n")  # Удаляем только завершающие символы переноса строки
         print(f"Processing line: {line}")
 
         if line.startswith("[DO NOT PROCESS LINE]"):
-            outputFileDescriptor.write(line[len("[DO NOT PROCESS LINE]"):])
+            outputFileDescriptor.write(line[len("[DO NOT PROCESS LINE]"):] + "\n")
             continue
 
         if line.startswith("<pre><code>"):
@@ -255,23 +256,27 @@ for i in range(len(languageCodes)):
             codeStateLanguage = line.split("Language: ")[1].strip() if "Language: " in line else "unknown"
             continue
 
-        elif line.startswith("</code></pre>"):
+        if line.startswith("</code></pre>"):
             if state == "code":
                 codeBlockHeader = f"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-{codeStateLanguage.lower()}\" data-lang=\"{codeStateLanguage}\"><code>"
                 codeBlockFooter = "</code></pre></div>"
-                outputFileDescriptor.write(f"{codeBlockHeader}{textBlock.lstrip()}{codeBlockFooter}\n")
-                textBlock = ""
+                # Сохраняем отступы и форматирование внутри блока кода
+                outputFileDescriptor.write(f"{codeBlockHeader}\n{codeBlock}{codeBlockFooter}\n")
+                codeBlock = ""
                 state = "text"
             continue
 
-        if line.startswith("http://") or line.startswith("https://"):
-            outputFileDescriptor.write(processLink(line))
-            continue
+        if state == "code":
+            # Добавляем строки кода без изменения ведущих пробелов
+            codeBlock += line + "\n"
 
-        if state == "text":
-            textBlock += processLine(line, state) + "\n"
+        elif state == "text":
+            if line.startswith("http://") or line.startswith("https://"):
+                outputFileDescriptor.write(processLink(line))
+            else:
+                textBlock += processLine(line, state) + "\n"
 
-        if state != "text" or lineIndex == lastLineIndex:
+        if state == "text" and (lineIndex == lastLineIndex or line.startswith("</code></pre>")):
             if textBlock.strip():
                 if targetLanguageCode != originalLanguageCode:
                     translatedText = translate(textBlock.strip(), "google", originalLanguageCode, googleTranslateLanguageCodes[i])
@@ -281,3 +286,4 @@ for i in range(len(languageCodes)):
                 textBlock = ""
 
     outputFileDescriptor.write("{:}\n")
+
