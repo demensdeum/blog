@@ -88,10 +88,10 @@ posts = response.json()
 
 if posts:
     post_id = posts[0]["id"]
-    confirm = input(f"Post found: {post_id};\nURL: {site_url}?p={post_id}\nUpdate? (y/n) ")
-    if confirm != "y":
-        print("Not confirmed")
-        exit(1)
+    # confirm = input(f"Post found: {post_id};\nURL: {site_url}?p={post_id}\nUpdate? (y/n) ")
+    # if confirm != "y":
+    #     print("Not confirmed")
+    #     exit(1)
 
     update_data = {
         "title": post_title,
