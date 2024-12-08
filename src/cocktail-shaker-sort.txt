@@ -1,0 +1,64 @@
+Format: Fall24-October10
+Language: ru
+Title: Cocktail Shaker Sort
+Slug: cocktail-shaker-sort
+Categories: techie,tutorials
+<p>Cocktail Shaker Sort &#8211; сортировка в шейкере, вариант двунаправленной сортировки пузырьком.<br />
+Алгоритм работает следующим образом:</p>
+<ol>
+<li>Выбирается начальное направление перебора в цикле (обычно слева-направо)</li>
+<li>Далее в цикле попарно проверяются цифры</li>
+<li>Если следующий элемент больше, то они меняются местами</li>
+<li>По окончанию, процесс перебора запускается заново с инвертированием направления</li>
+<li>Перебор повторяется до тех пор, пока не закончатся перестановки</li>
+</ol>
+<p>Временная сложность алгоритма аналогична пузырьковой &#8211; <span class="ILfuVd" lang="en"><span class="hgKElc">O(n<sup>2</sup>)</span></span>.</p>
+<p>Пример реализации на языке PHP:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-php" data-lang="PHP"><code>#!/usr/bin/env php 
+&lt?php
+
+function cocktailShakeSort($numbers)
+{
+    echo implode(",", $numbers),"\n";
+    $direction = false;
+    $sorted = false;
+    do {
+        $direction = !$direction;        
+        $firstIndex = $direction == true ? 0 : count($numbers) - 1;
+        $lastIndex = $direction == true ? count($numbers) - 1 : 0;
+        
+        $sorted = true;
+        for (
+            $i = $firstIndex;
+            $direction == true ? $i < $lastIndex : $i > $lastIndex;
+            $direction == true ? $i++ : $i--
+        ) {
+            $lhsIndex = $direction ? $i : $i - 1;
+            $rhsIndex = $direction ? $i + 1 : $i;
+
+            $lhs = $numbers[$lhsIndex];
+            $rhs = $numbers[$rhsIndex];
+
+            if ($lhs > $rhs) {
+                $numbers[$lhsIndex] = $rhs;
+                $numbers[$rhsIndex] = $lhs;
+                $sorted = false;
+            }
+        }
+    } while ($sorted == false);
+
+    echo implode(",", $numbers);
+}
+
+$numbers = [2, 1, 4, 3, 69, 35, 55, 7, 7, 2, 6, 203, 9];
+cocktailShakeSort($numbers);
+
+?></code></pre>
+</div>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/blob/master/sortAlgorithms/cocktailShakerSort/cocktailShakerSort.php" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/blob/master/sortAlgorithms/cocktailShakerSort/cocktailShakerSort.php</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.youtube.com/watch?v=njClLBoEbfI" target="_blank" rel="noopener">https://www.youtube.com/watch?v=njClLBoEbfI</a><br />
+<a href="https://www.geeksforgeeks.org/cocktail-sort/" target="_blank" rel="noopener">https://www.geeksforgeeks.org/cocktail-sort/</a><br />
+<a href="https://rosettacode.org/wiki/Sorting_algorithms/Cocktail_sort" target="_blank" rel="noopener">https://rosettacode.org/wiki/Sorting_algorithms/Cocktail_sort</a></p>

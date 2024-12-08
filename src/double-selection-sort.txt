@@ -1,0 +1,70 @@
+Format: Fall24-October10
+Language: ru
+Title: Double Selection Sort
+Slug: double-selection-sort
+Categories: techie,tutorials
+<p>Double Selection Sort – подвид сортировки выбором, вроде как должен ускоряться в два раза. Ванильный алгоритм проходит двойным циклом по списку чисел, находит минимальное число и меняет местами с текущей цифрой на которую указывает цикл на уровне выше. Двойная сортировка выбором же ищет минимальное и максимальное число, далее происходит замена двух цифр, на которые указывает цикл на уровне выше &#8211; два числа слева и справа. Заканчивается вся эта вакханалия когда курсоры чисел для замены встречаются в середине списка, по итогу слева и справа от визуального центра получаются отсортированные числа.<br />
+Временная сложность алгоритма аналогична Selection Sort &#8211; <span class="ILfuVd" lang="en"><span class="hgKElc">O(n<sup>2</sup>)</span></span>, но якобы есть ускорение на 30%.</p>
+<h3>Пограничное состояние</h3>
+<p>Уже на этом этапе можно представить момент коллизии, например когда число левого курсора (минимального числа) будет указывать на максимальное число в списке, далее происходит перестановка минимального числа, перестановка максимального числа сразу ломается. Поэтому все реализации алгоритма содержат проверку таких случаев, замены индексов на корректные. В моей реализации оказалось достаточно одной проверки:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-c" data-lang="C"><code>if (leftCursor == maximalNumberIndex) {
+  maximalNumberIndex = minimalNumberIndex;
+}</code></pre>
+</div>
+<h3>Реализация на Cito</h3>
+<p>Cito – язык либ, язык транслятор. На нем можно писать для C, C++, C#, Java, JavaScript, Python, Swift, TypeScript, OpenCL C, при этом совершенно ничего не зная про эти языки. Исходный код на языке Cito транслируется в исходный код на поддерживаемых языках, далее можно использовать как библиотеку, либо напрямую, исправив сгенеренный код руками. Эдакий Write once – translate to anything.<br />
+Double Selection Sort на cito:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-c" data-lang="C"><code>public class DoubleSelectionSort
+{
+    public static int[] sort(int[]# numbers, int length)
+    {
+        int[]# sortedNumbers = new int[length];
+        for (int i = 0; i &lt; length; i++) {
+            sortedNumbers[i] = numbers[i];
+        }
+        for (int leftCursor = 0; leftCursor &lt; length / 2; leftCursor++) {
+            int minimalNumberIndex = leftCursor;
+            int minimalNumber = sortedNumbers[leftCursor];
+
+            int rightCursor = length - (leftCursor + 1);
+            int maximalNumberIndex = rightCursor;
+            int maximalNumber = sortedNumbers[maximalNumberIndex];
+
+            for (int cursor = leftCursor; cursor &lt;= rightCursor; cursor++) { int cursorNumber = sortedNumbers[cursor]; if (minimalNumber &gt; cursorNumber) {
+                    minimalNumber = cursorNumber;
+                    minimalNumberIndex = cursor;
+                }
+                if (maximalNumber &lt; cursorNumber) {
+                    maximalNumber = cursorNumber;
+                    maximalNumberIndex = cursor;
+                }
+            }
+
+            if (leftCursor == maximalNumberIndex) {
+                maximalNumberIndex = minimalNumberIndex;
+            }
+
+            int fromNumber = sortedNumbers[leftCursor];
+            int toNumber = sortedNumbers[minimalNumberIndex];
+            sortedNumbers[minimalNumberIndex] = fromNumber;
+            sortedNumbers[leftCursor] = toNumber;
+
+            fromNumber = sortedNumbers[rightCursor];
+            toNumber = sortedNumbers[maximalNumberIndex];
+            sortedNumbers[maximalNumberIndex] = fromNumber;
+            sortedNumbers[rightCursor] = toNumber;
+        }
+        return sortedNumbers;
+    }
+} 
+</code></pre>
+</div>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/doubleSelectionSort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/doubleSelectionSort</a><br />
+<a href="https://github.com/pfusik/cito" target="_blank" rel="noopener">https://github.com/pfusik/cito</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.researchgate.net/publication/330084245_Improved_Double_Selection_Sort_using_Algorithm" target="_blank" rel="noopener">https://www.researchgate.net/publication/330084245_Improved_Double_Selection_Sort_using_Algorithm</a><br />
+<a href="http://algolab.valemak.com/selection-double" target="_blank" rel="noopener">http://algolab.valemak.com/selection-double</a><br />
+<a href="https://www.geeksforgeeks.org/sorting-algorithm-slightly-improves-selection-sort/" target="_blank" rel="noopener">https://www.geeksforgeeks.org/sorting-algorithm-slightly-improves-selection-sort/</a></p>

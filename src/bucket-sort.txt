@@ -1,0 +1,54 @@
+Format: Fall24-October10
+Language: ru
+Title: Bucket Sort
+Slug: bucket-sort
+Categories: techie,tutorials
+<p>Bucket Sort – сортировка ведрами. Алгоритм похож на сортировку подсчетом, с той разницей что числа собираются в «ведра»-диапазоны, затем ведра сортируются с помощью любого другого, достаточно производительного, алгоритма сортировки, и финальным аккордом делается разворачивание «ведер» поочередно, в результате чего получается отсортированный список.</p>
+<p>Временная сложность алгоритма O(nk). Алгоритм работает за линейное время для данных которые подчиняются равномерному закону распределения. Если говорить проще, то элементы должны быть в каком-то определенном диапазоне, без «вспесков»,  например числа от 0.0 до 1.0. Если среди таких чисел есть 4 или 999, то такой ряд по дворовым законам «ровным» уже не считается. </p>
+<p>Пример реализации на Julia:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-c" data-lang="Julia"><code>function bucketSort(numbers, bucketsCount)
+    buckets = Vector{Vector{Int}}()
+    
+    for i in 0:bucketsCount - 1
+        bucket = Vector{Int}()
+        push!(buckets, bucket)
+    end
+
+    maxNumber = maximum(numbers)
+
+    for i in 0:length(numbers) - 1
+        bucketIndex = 1 + Int(floor(bucketsCount * numbers[1 + i] / (maxNumber + 1)))
+        push!(buckets[bucketIndex], numbers[1 + i])
+    end
+
+    for i in 0:length(buckets) - 1
+        bucketIndex = 1 + i
+        buckets[bucketIndex] = sort(buckets[bucketIndex])
+    end
+
+    flat = [(buckets...)...]
+    print(flat, "\n")
+
+end
+
+numbersCount = 10
+maxNumber = 10
+numbers = rand(1:maxNumber, numbersCount)
+print(numbers,"\n")
+bucketsCount = 10
+bucketSort(numbers, bucketsCount)</code></pre>
+</div>
+<p>На производительность алгоритма также  влияет число ведер, для большего количества чисел лучше взять большее число ведер (Algorithms in a nutshell by George T. Heineman)</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/bucketSort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/bucketSort</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.youtube.com/watch?v=VuXbEb5ywrU" rel="noopener" target="_blank">https://www.youtube.com/watch?v=VuXbEb5ywrU</a><br />
+<a href="https://www.youtube.com/watch?v=ELrhrrCjDOA" rel="noopener" target="_blank">https://www.youtube.com/watch?v=ELrhrrCjDOA</a><br />
+<a href="https://medium.com/karuna-sehgal/an-introduction-to-bucket-sort-62aa5325d124" rel="noopener" target="_blank">https://medium.com/karuna-sehgal/an-introduction-to-bucket-sort-62aa5325d124</a><br />
+<a href="https://www.geeksforgeeks.org/bucket-sort-2/" rel="noopener" target="_blank">https://www.geeksforgeeks.org/bucket-sort-2/</a><br />
+<a href="https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D0%BE%D1%87%D0%BD%D0%B0%D1%8F_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0" rel="noopener" target="_blank">https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D0%BE%D1%87%D0%BD%D0%B0%D1%8F_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0</a><br />
+<a href="https://www.youtube.com/watch?v=LPrF9yEKTks" rel="noopener" target="_blank">https://www.youtube.com/watch?v=LPrF9yEKTks</a><br />
+<a href="https://en.wikipedia.org/wiki/Bucket_sort" rel="noopener" target="_blank">https://en.wikipedia.org/wiki/Bucket_sort</a><br />
+<a href="https://julialang.org/" rel="noopener" target="_blank">https://julialang.org/</a><br />
+<a href="https://www.oreilly.com/library/view/algorithms-in-a/9780596516246/ch04s08.html" rel="noopener" target="_blank">https://www.oreilly.com/library/view/algorithms-in-a/9780596516246/ch04s08.html</a></p>

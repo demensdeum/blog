@@ -1,0 +1,62 @@
+Format: Fall24-October10
+Language: ru
+Title: Sleep Sort
+Slug: sleep-sort
+Categories: techie,tutorials
+<p>Sleep Sort &#8211; сортировка сном, еще один представитель детерменированных странных алгоритмов сортировки.</p>
+<p>Работает следующим образом:</p>
+<ol>
+<li>Проходит циклом по списку элементов</li>
+<li>Для каждого цикла запускается отдельный поток</li>
+<li>В потоке шедулится сон (sleep) потока на время &#8211; значение элемента и вывод значения после сна</li>
+<li>По окончанию цикла, ждем ожидания завершения самого долгого сна потока, выводим отсортированный список</li>
+</ol>
+<p>Пример кода алгоритма сортировки сном на C:</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;unistd.h&gt;
+
+typedef struct {
+    int number;
+} ThreadPayload;
+
+void *sortNumber(void *args) {
+    ThreadPayload *payload = (ThreadPayload*) args;
+    const int number = payload-&gt;number;
+    free(payload);
+    usleep(number * 1000);
+    printf("%d ", number);
+    return NULL;
+}
+
+int main(int argc, char *argv[]) {
+    const int numbers[] = {2, 42, 1, 87, 7, 9, 5, 35};
+    const int length = sizeof(numbers) / sizeof(int);
+
+    int maximal = 0;
+    pthread_t maximalThreadID;
+
+    printf("Sorting: ");
+    for (int i = 0; i &lt; length; i++) { pthread_t threadID; int number = numbers[i]; printf("%d ", number); ThreadPayload *payload = malloc(sizeof(ThreadPayload)); payload-&gt;number = number;
+        pthread_create(&amp;threadID, NULL, sortNumber, (void *) payload);
+        if (maximal &lt; number) {
+            maximal = number;
+            maximalThreadID = threadID;
+        }
+    }
+    printf("\n");
+    printf("Sorted: ");
+    pthread_join(maximalThreadID, NULL);
+    printf("\n");
+    return 0;
+}
+</code></pre>
+<p>В этой реализации я использовал функцию usleep на микросекундах с умножением значения на 1000, т.е. на миллисекундах.<br />
+Временная сложность алгоритма &#8211; <strong>O(оч. долго)</strong></p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/sleepSort" rel="noopener" target="_blank">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/sleepSort</a></p>
+<h3>Источники</h3>
+<p><a href="https://codoholicconfessions.wordpress.com/2017/05/21/strangest-sorting-algorithms/" rel="noopener" target="_blank">https://codoholicconfessions.wordpress.com/2017/05/21/strangest-sorting-algorithms/</a><br />
+<a href="https://twitter.com/javascriptdaily/status/856267407106682880?lang=en" rel="noopener" target="_blank">https://twitter.com/javascriptdaily/status/856267407106682880?lang=en</a><br />
+<a href="https://stackoverflow.com/questions/6474318/what-is-the-time-complexity-of-the-sleep-sort" rel="noopener" target="_blank">https://stackoverflow.com/questions/6474318/what-is-the-time-complexity-of-the-sleep-sort</a></p>

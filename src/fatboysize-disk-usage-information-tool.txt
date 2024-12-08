@@ -1,0 +1,23 @@
+Format: Fall24-October10
+Language: ru
+Title: FatBoySize &#8211; утилита для вывода размера папок и файлов
+Slug: fatboysize-disk-usage-information-tool
+Categories: software
+<p>FatBoySize &#8211; утилита для вывода размера папок и файлов в терминале.<br />
+Работает на любой системе с поддержкой Python 3.</p>
+<p><code>Запуск: python3 fbs.py<br />
+Режим вывода 1: python3 fbs.py -v<br />
+Режим вывода 2: python3 fbs.py --version<br />
+</code></p>
+<p>Работает только для текущего открытого пути в терминале.</p>
+<p>Пример результата:<br />
+<code>python3 ~/Sources/my/fatboysize/fbs.py<br />
+.local                         -&gt; 145. GB<br />
+Downloads                      -&gt; 103. GB<br />
+.cache                         -&gt; 37.0 GB<br />
+.android                       -&gt; 11.6 GB<br />
+Sources                        -&gt; 8.63 GB<br />
+</code><br />
+Как можно увидеть, папочка Downloads достато<strong>ш</strong>но большая</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/fatboysize/" target="_blank" rel="noopener">https://gitlab.com/demensdeum/fatboysize/</a></p>
