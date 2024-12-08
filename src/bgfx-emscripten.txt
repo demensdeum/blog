@@ -1,94 +1,129 @@
-Format: Fall24
+Format: Fall24-October10
 Language: ru
 Title: Сборка bgfx Emscripten приложения
 Slug: bgfx-emscripten
-В этой заметке я опишу способ сборки bgfx приложений для веба (WebAssembly) через Emscripten.
-
-Платформа для установки это Linux x86-64, например Arch Linux.
-
-Для начала установим Emscripten версии 3.1.51, иначе у вас ничего не получится, всё из-за изменения типа динамических библиотек в последней версии Emscripten. Подробнее можно прочитать здесь:
-https://github.com/bkaradzic/bgfx/discussions/3266
-
-Делается это так:
-<pre><code>Language: Bash
+Categories: misc
+<p>В этой заметке я опишу способ сборки bgfx приложений для веба (WebAssembly) через Emscripten.</p>
+<p>Платформа для установки это Linux x86-64, например Arch Linux.</p>
+<p>Для начала установим Emscripten версии 3.1.51, иначе у вас ничего не получится, всё из-за изменения типа динамических библиотек в последней версии Emscripten. Подробнее можно прочитать здесь:<br />
+<a href="https://github.com/bkaradzic/bgfx/discussions/3266" rel="noopener" target="_blank">https://github.com/bkaradzic/bgfx/discussions/3266</a></p>
+<p>Делается это так:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-bash" data-lang="Bash"><code>
 git clone https://github.com/emscripten-core/emsdk.git
+
 cd emsdk
+
 ./emsdk install 3.1.51
+
 ./emsdk activate 3.1.51
+
 source ./emsdk_env.sh
-</code></pre>
 
-Соберем bgfx для WebAssembly - Emscripten:
-<pre><code>Language: Bash
+</code></pre>
+</div>
+<p>Соберем bgfx для WebAssembly &#8211; Emscripten:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-bash" data-lang="Bash"><code>
 mkdir bgfx-build-test
+
 cd bgfx-build-test
+
 git clone https://github.com/bkaradzic/bx.git
+
 git clone https://github.com/bkaradzic/bimg.git
+
 git clone https://github.com/bkaradzic/bgfx.git
+
 cd bgfx
+
 emmake make wasm-debug
+
 </code></pre>
-
-В результате в папке .build у вас будут файлы bitcode с расширением .bc, которые нужно будет линковать с вашим bgfx приложением.
-Должны быть bgfx.bc, bx.bc, bimg.bc; в разных сборках разное название для этих файлов, в зависимости от типа сборки (release/debug)
-
-Добавляем в CMakeLists.txt файл линковку с .bc файлами, для примера абсолютные пути к файлам из проекта bgfx-experiments:
-<pre><code>Language: Bash
+</div>
+<p>В результате в папке .build у вас будут файлы bitcode с расширением .bc, которые нужно будет линковать с вашим bgfx приложением.<br />
+Должны быть bgfx.bc, bx.bc, bimg.bc; в разных сборках разное название для этих файлов, в зависимости от типа сборки (release/debug)</p>
+<p>Добавляем в CMakeLists.txt файл линковку с .bc файлами, для примера абсолютные пути к файлам из проекта bgfx-experiments:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-bash" data-lang="Bash"><code>
 target_link_libraries(${PROJECT_NAME} SDL2 GL /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bgfxDebug.bc /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bxDebug.bc /home/demensdeum_stream/Sources/bgfx-build/bgfx/.build/wasm/bin/bimgDebug.bc)
-</code></pre>
 
-Теперь поменяйте native window handle в platform data на инициализации bgfx:
-<pre><code>Language: CPP
+</code></pre>
+</div>
+<p>Теперь поменяйте native window handle в platform data на инициализации bgfx:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-cpp" data-lang="CPP"><code>
 bgfx::PlatformData platformData{};
-platformData.context = NULL;
-platformData.backBuffer = NULL;
-platformData.backBufferDS = NULL;
-platformData.nwh = (void*)"#canvas";
-</code></pre>
 
-Также надо заменить тип рендера на OpenGL:
-<pre><code>Language: CPP
+platformData.context = NULL;
+
+platformData.backBuffer = NULL;
+
+platformData.backBufferDS = NULL;
+
+platformData.nwh = (void*)"#canvas";
+
+</code></pre>
+</div>
+<p>Также надо заменить тип рендера на OpenGL:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-cpp" data-lang="CPP"><code>
 bgfx::Init init;
+
 init.type = bgfx::RendererType::OpenGL;
 
+
+
 init.resolution.width = screenWidth;
+
 init.resolution.height = screenHeight;
+
 init.resolution.reset = BGFX_RESET_VSYNC;
+
 init.platformData = platformData;
 
+
+
 if (!bgfx::init(init))
+
 {
+
     throw std::runtime_error("Failed to initialize bgfx");
+
 }
-</code></pre>
 
-Перекомпилируйте шейдеры GLSL под 120:
-<pre><code>Language: Bash
+</code></pre>
+</div>
+<p>Перекомпилируйте шейдеры GLSL под 120:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-bash" data-lang="Bash"><code>
 shaderc -f "VertexShader.vs" -o "VertexShader.glsl" --type "v" -p "120"
+
 shaderc -f "FragmentShader.fs" -o "FragmentShader.glsl" --type "f" -p "120"
+
 </code></pre>
-Ес-но .glsl файлы надо добавить к CMakeLists.txt как --preload-file:
-<pre><code>Language: CMake
+</div>
+<p>Ес-но .glsl файлы надо добавить к CMakeLists.txt как &#8211;preload-file:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-cmake" data-lang="CMake"><code>
 set(CMAKE_CXX_FLAGS ... <Остальная часть>
+
 --preload-file VertexShader.glsl \
+
 --preload-file FragmentShader.glsl \
+
 </code></pre>
-
-Осталось заменить основной цикл рендера в вашем приложении с while на вызов функции через emscripten_set_main_loop.
-
-Об этом можно прочитать здесь:  
-https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/
-
-Далее собирайте свой Emscripten проект по обычному, всё должно работать.
-Из интересного - в сборке Emscripten 3.1.51 похоже отсутствует OpenAL (или только у меня).
-
-Исходный код проекта который корректно собирается с bgfx и Emscripten:
-https://github.com/demensdeum/bgfx-experiments/tree/main/2-emscripten-build 
-
-Источники
-
-https://github.com/bkaradzic/bgfx/discussions/3266
-https://bkaradzic.github.io/bgfx/build.html
-https://emscripten.org/docs/getting_started/downloads.html
-https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/
-https://llvm.org/docs/BitCodeFormat.html
+</div>
+<p>Осталось заменить основной цикл рендера в вашем приложении с while на вызов функции через emscripten_set_main_loop.</p>
+<p>Об этом можно прочитать здесь:<br />
+<a href="https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/" rel="noopener" target="_blank">https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/</a></p>
+<p>Далее собирайте свой Emscripten проект по обычному, всё должно работать.<br />
+Из интересного &#8211; в сборке Emscripten 3.1.51 похоже отсутствует OpenAL (или только у меня).</p>
+<p>Исходный код проекта который корректно собирается с bgfx и Emscripten:<br />
+<a href="https://github.com/demensdeum/bgfx-experiments/tree/main/2-emscripten-build" rel="noopener" target="_blank">https://github.com/demensdeum/bgfx-experiments/tree/main/2-emscripten-build</a></p>
+<p>Источники</p>
+<p><a href="https://github.com/bkaradzic/bgfx/discussions/3266" rel="noopener" target="_blank">https://github.com/bkaradzic/bgfx/discussions/3266</a><br />
+<a href="https://bkaradzic.github.io/bgfx/build.html" rel="noopener" target="_blank">https://bkaradzic.github.io/bgfx/build.html</a><br />
+<a href="https://emscripten.org/docs/getting_started/downloads.html" rel="noopener" target="_blank">https://emscripten.org/docs/getting_started/downloads.html</a><br />
+<a href="https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/" rel="noopener" target="_blank">https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/</a><br />
+<a href="https://llvm.org/docs/BitCodeFormat.html" rel="noopener" target="_blank">https://llvm.org/docs/BitCodeFormat.html</a></p>

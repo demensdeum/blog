@@ -241,17 +241,20 @@ for languageIndex in range(len(languageCodes)):
         if line.startswith("[DO NOT PROCESS LINE]"):
             outputFileDescriptor.write(line)
 
-        elif line.startswith("<pre><code>"):
+        elif line.startswith("</") and "code" in line and "pre" in line:
+            shouldTranslateLine = True
+            outputFileDescriptor.write("</code></pre></div>")
+
+        elif line.startswith("<") and "pre" in line and "code" in line:
             shouldTranslateLine = False
             codeStateLanguage = line.split("Language: ")[1].strip() if "Language: " in line else "unknown"
             outputFileDescriptor.write(f"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-{codeStateLanguage.lower()}\" data-lang=\"{codeStateLanguage}\"><code>")
 
-        elif line.startswith("</code></pre>"):
-            shouldTranslateLine = True
-            outputFileDescriptor.write("</code></pre></div>")
-
         elif line.startswith("http://") or line.startswith("https://"):
             outputFileDescriptor.write(processLink(line))
+
+        elif line.startswith("<") and "img " in line:
+            outputFileDescriptor.write(line)
 
         else:
             if shouldTranslateLine:

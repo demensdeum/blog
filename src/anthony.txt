@@ -1,0 +1,13 @@
+Format: Fall24-October10
+Language: ru
+Title: Anthony
+Slug: anthony
+Categories: company
+<p style="text-align: center;"><img loading="lazy" decoding="async" class="image-shadow alignnone wp-image-62 size-medium" src="https://demensdeum.com/blog/wp-content/uploads/2015/12/antonio-300x275.jpg" alt="antonio" width="300" height="275" srcset="https://demensdeum.com/blog/wp-content/uploads/2015/12/antonio.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2015/12/antonio-164x150.jpg 164w" sizes="auto, (max-width: 300px) 100vw, 300px" /></p>
+<p><span style="font-family: Calibri,serif;"><span style="font-size: small;"><span lang="ru-RU"><em>Главное знать, что ты можешь, а чему еще предстоит научиться. Говоря о качестве — я забываю о времени. Этот приоритет, который нужно научиться правильно ставить.</em> </span></span></span></p>
+<p><span style="font-family: Calibri,serif;"><span style="font-size: small;"><span lang="ru-RU">Привет всем, меня зовут Антон и я дизайнер. В основном я занимаюсь </span></span></span><span style="font-family: Calibri,serif;"><span style="font-size: small;"><span lang="pl-PL">3D </span></span></span><span style="font-family: Calibri,serif;"><span style="font-size: small;"><span lang="ru-RU">графикой, но нередко люблю разрабатывать и </span></span></span><span style="font-family: Calibri,serif;"><span style="font-size: small;"><span lang="pl-PL">UI </span></span></span><span style="font-family: Calibri,serif;"><span style="font-size: small;"><span lang="ru-RU">дизайны. Мое хобби — музыка и фентези.</span></span></span></p>
+<p><span style="font-family: Calibri,serif;"><span style="font-size: small;"><span lang="pl-PL">e-mail: <a href="mailto:anthony.dmitriev@yahoo.com">anthony.dmitriev@yahoo.com</a></p>
+<p>linkedin: <a href="https://www.linkedin.com/in/anthony-dmitriev-86075172">https://www.linkedin.com/in/anthony-dmitriev-86075172<br />
+</a></span></span></span><span style="font-family: Calibri,serif;"><span style="font-size: small;"><span lang="pl-PL"><span style="font-family: Calibri,serif;"><span style="font-size: small;">vk: <a href="http://vk.com/coolspotdreamer">/coolspotdreamer</a></p>
+<p>fb: <a href="http://facebook.com/coolspotdreamer">/coolspotdreamer</a></span></span><br />
+tw: <a href="https://twitter.com/coolspotdreamer">/coolspotdreamer</a></span></span></span></p>
