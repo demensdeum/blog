@@ -1,0 +1,52 @@
+Format: Fall24-October10
+Language: ru
+Title: Counting Sort
+Slug: counting-sort
+Categories: techie,tutorials
+<p>Counting sort &#8211; алгоритм сортировки подсчетом. Всмысле? Да! Прям так!</p>
+<p>В алгоритме участвуют минимум два массива, первый &#8211; список целых чисел которые надо отсортировать, второй &#8211; массив размером = (максимальное число &#8211; минимальное число) + 1, изначально содержащий одни нули. Далее перебираются цифры из первого массива, по элементу-числу получается индекс во втором массиве, который инкрементируют на единицу. После прохода по всему списку у нас получится полностью заполненный второй массив с количеством повторений чисел из первого. <strong>У алгоритма есть серьезная издержка &#8211; второй массив также содержит нули для чисел которых в первом списке нет, т.н. оверхед по памяти.</strong></p>
+<p>После получения второго массива, перебираем его и записываем отсортированный вариант числа по индексу, декрементируя счетчик до нуля. Изначально нулевой счетчик игнорируется.</p>
+<p>Пример неоптимизированной работы алгоритма сортировки подсчетом:</p>
+<ol>
+<li>Входой массив 1,9,1,4,6,4,4</li>
+<li>Тогда массив для подсчета будет 0,1,2,3,4,5,6,7,8,9 (минимальное число 0, максимальное 9)</li>
+<li>С итоговыми счетчиками 0,2,0,0,3,0,1,0,0,1</li>
+<li>Итого отсортированный массив 1,1,4,4,4,6,9</li>
+</ol>
+<p>Код алгоритма на языке Python 3:</p>
+<pre><code>print("Counting Sort")
+
+numbers = [42, 89, 69, 777, 22, 35, 42, 69, 42, 90, 777]
+
+minimal = min(numbers)
+maximal = max(numbers)
+countListRange = maximal - minimal
+countListRange += 1
+countList = [0] * countListRange
+
+print(numbers)
+print(f"Minimal number: {minimal}")
+print(f"Maximal number: {maximal}")
+print(f"Count list size: {countListRange}")
+
+for number in numbers:
+    index = number - minimal
+    countList[index] += 1
+
+replacingIndex = 0
+for index, count in enumerate(countList):
+    for i in range(count):
+        outputNumber = minimal + index
+        numbers[replacingIndex] = outputNumber
+        replacingIndex += 1
+
+print(numbers)</code></pre>
+<p>Из-за использования двух массивов, временная сложность алгоритма <strong>O</strong>(<strong>n</strong> + <strong>k</strong>)</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/countingSort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/countingSort</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.youtube.com/watch?v=6dk_csyWif0" target="_blank" rel="noopener">https://www.youtube.com/watch?v=6dk_csyWif0 </a><br />
+<a href="https://www.youtube.com/watch?v=OKd534EWcdk" target="_blank" rel="noopener">https://www.youtube.com/watch?v=OKd534EWcdk </a><br />
+<a href="https://en.wikipedia.org/wiki/Counting_sort" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Counting_sort</a><br />
+<a href="https://rosettacode.org/wiki/Sorting_algorithms/Counting_sort" target="_blank" rel="noopener">https://rosettacode.org/wiki/Sorting_algorithms/Counting_sort</a><br />
+<a href="https://pro-prof.com/forums/topic/%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B8-%D0%BF%D0%BE%D0%B4%D1%81%D1%87%D0%B5%D1%82%D0%BE%D0%BC" target="_blank" rel="noopener">https://pro-prof.com/forums/topic/%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B8-%D0%BF%D0%BE%D0%B4%D1%81%D1%87%D0%B5%D1%82%D0%BE%D0%BC</a></p>
