@@ -1,0 +1,68 @@
+Format: Fall24-October10
+Language: ru
+Title: Radixsort
+Slug: radix-sort
+Categories: techie,tutorials
+<p>Radix Sort – поразрядная сортировка. Алгоритм схож с сортировкой подсчетом тем, что отсутствует сравнение элементов, вместо этого элементы *посимвольно* группируются в *ведра* (buckets), ведро выбирается по индексу текущего числа-символа. Временная сложность &#8211; O(nd).</p>
+<p>Работает примерно так:</p>
+<ul>
+<li>На вход получим числа 6, 12, 44, 9</li>
+<li>Создадим 10 ведер списков (0-9), в которые будем поразрядно складывать/сортировать числа.</li>
+</ul>
+<p>Далее:</p>
+<ol>
+<li>Запускаем цикл со счетчиком i до максимального количества символов в числе</li>
+<li>По индексу i справа налево получаем один символ для каждого числа, если символа нет, то считаем что это ноль</li>
+<li>Символ преобразовываем в число</li>
+<li>Выбираем ведро по индексу – числу, кладем туда число полностью</li>
+<li>После окончания перебора чисел, преобразовываем все ведра назад в список чисел</li>
+<li>Получаем числа отсортированные по разряду</li>
+<li>Повторяем пока не кончатся все разряды</li>
+</ol>
+<p>Пример Radix Sort на Scala:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-swift" data-lang="Scala"><code>import scala.collection.mutable.ListBuffer
+import scala.util.Random.nextInt
+
+object RadixSort {
+    def main(args: Array[String]) = {
+        var maxNumber = 200
+        var numbersCount = 30
+        var maxLength = maxNumber.toString.length() - 1
+
+        var referenceNumbers = LazyList.continually(nextInt(maxNumber + 1)).take(numbersCount).toList
+        var numbers = referenceNumbers
+        
+        var buckets = List.fill(10)(ListBuffer[Int]())
+
+        for( i &lt;- 0 to maxLength) { numbers.foreach( number =&gt; {
+                    var numberString = number.toString
+                    if (numberString.length() &gt; i) {
+                        var index = numberString.length() - i - 1
+                        var character = numberString.charAt(index).toString
+                        var characterInteger = character.toInt  
+                        buckets.apply(characterInteger) += number
+                    }
+                    else {
+                        buckets.apply(0) += number
+                    }
+                }
+            )
+            numbers = buckets.flatten
+            buckets.foreach(x =&gt; x.clear())
+        }
+        println(referenceNumbers)
+        println(numbers)
+        println(s"Validation result: ${numbers == referenceNumbers.sorted}")
+    }
+}
+</code></pre>
+</div>
+<p>Алгоритм также имеет версию для параллельного выполнения, например на GPU; также существует вариант битовой сортировки, что наверное,<strong> очень интересно и поистине захватывает дух!</strong></p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/blob/master/sortAlgorithms/radixSort/radixSort.scala" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/blob/master/sortAlgorithms/radixSort/radixSort.scala</a></p>
+<h3>Источники</h3>
+<p><a href="https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%80%D0%B0%D0%B7%D1%80%D1%8F%D0%B4%D0%BD%D0%B0%D1%8F_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0" target="_blank" rel="noopener">https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%80%D0%B0%D0%B7%D1%80%D1%8F%D0%B4%D0%BD%D0%B0%D1%8F_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0</a><br />
+<a href="https://www.geeksforgeeks.org/radix-sort/" target="_blank" rel="noopener">https://www.geeksforgeeks.org/radix-sort/</a><br />
+<a href="https://www.youtube.com/watch?v=toAlAJKojos" target="_blank" rel="noopener">https://www.youtube.com/watch?v=toAlAJKojos</a><br />
+<a href="https://github.com/gyatskov/radix-sort" target="_blank" rel="noopener">https://github.com/gyatskov/radix-sort</a></p>

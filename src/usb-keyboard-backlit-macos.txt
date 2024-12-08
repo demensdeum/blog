@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Включаем подсветку USB клавиатуры на macOS
+Slug: usb-keyboard-backlit-macos
+Categories: techie,tutorials
+<p>Недавно купил очень недорогую USB-клавиатуру Getorix GK-45X, с RGB подсветкой. Подключив ее к Макбуку Pro на процессоре M1 стало понятно что RGB подсветка не работает. Даже нажимая волшебную комбинацию Fn + Scroll Lock включить подсветку не удалось, менялся только уровень подсветки экрана макбука.<br />
+Решений этой проблемы несколько, а именно OpenRGB (не работает), HID LED Test (не работает). Cработала только утилита kvmswitch:<br />
+<a href="https://github.com/stoutput/OSX-KVM" rel="noopener" target="_blank">https://github.com/stoutput/OSX-KVM</a></p>
+<p>Надо ее скачать из гитхаба и разрешить для запуска из терминала в Security панели System Settings.<br />
+Как я понял из описания, после запуска утилита отправляет нажатие Fn + Scroll Lock, таким образом включая/выключая подсветку на клавиатуре.</p>

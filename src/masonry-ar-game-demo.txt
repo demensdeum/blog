@@ -1,0 +1,13 @@
+Format: Fall24-October10
+Language: ru
+Title: Масоны-ДР Демо Игры
+Slug: masonry-ar-game-demo
+Categories: demos,games
+<p>Масоны-ДР (Masonry-AR) это игра в дополненной реальности, где нужно перемещаться по городу в реальном мире и собирать масонские знания из книг, добывая валюту и захватывая территорию за свой масонский орден. Игра не имеет отношения к каким либо реальным организациям, все совпадения случайны.</p>
+<p><img loading="lazy" decoding="async" src="https://demensdeum.com/blog/wp-content/uploads/2024/06/Screenshot-2024-06-03-at-14.29.51.png" alt="" width="1258" height="682" class="alignnone size-full wp-image-3564" srcset="https://demensdeum.com/blog/wp-content/uploads/2024/06/Screenshot-2024-06-03-at-14.29.51.png 1258w, https://demensdeum.com/blog/wp-content/uploads/2024/06/Screenshot-2024-06-03-at-14.29.51-300x163.png 300w, https://demensdeum.com/blog/wp-content/uploads/2024/06/Screenshot-2024-06-03-at-14.29.51-1024x555.png 1024w, https://demensdeum.com/blog/wp-content/uploads/2024/06/Screenshot-2024-06-03-at-14.29.51-768x416.png 768w" sizes="auto, (max-width: 1258px) 100vw, 1258px" /></p>
+<p>Демо игры:<br />
+<a href="https://demensdeum.com/demos/masonry-ar/client" rel="noopener" target="_blank">https://demensdeum.com/demos/masonry-ar/client</a></p>
+<p>Вики:<br />
+<a href="https://demensdeum.com/masonry-ar-wiki-ru/" rel="noopener" target="_blank">https://demensdeum.com/masonry-ar-wiki-ru/</a></p>
+<p>Исходный код:<br />
+<a href="https://github.com/demensdeum/Masonry-AR" rel="noopener" target="_blank">https://github.com/demensdeum/Masonry-AR</a></p>

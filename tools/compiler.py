@@ -241,6 +241,9 @@ for languageIndex in range(len(languageCodes)):
         if line.startswith("[DO NOT PROCESS LINE]"):
             outputFileDescriptor.write(line)
 
+        elif line.startswith("<") and "frame" in line:
+            outputFileDescriptor.write(line)
+
         elif line.startswith("<a href"):
             outputFileDescriptor.write(line)
 
@@ -265,7 +268,9 @@ for languageIndex in range(len(languageCodes)):
                 outputFileDescriptor.write(translatedText)
             else:
                 outputFileDescriptor.write(line)
-        outputFileDescriptor.write("\n")
+
+        if '\n' not in line and '\r' not in line:
+            outputFileDescriptor.write("\n")
 
     outputFileDescriptor.write("{:}\n")
 
