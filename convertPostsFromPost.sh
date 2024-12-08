@@ -10,7 +10,7 @@ API_URL=$(sed -n '1p' "$CONFIG_FILE")
 USERNAME=$(sed -n '2p' "$CONFIG_FILE")
 PASSWORD=$(sed -n '3p' "$CONFIG_FILE")
 
-TARGET_SLUG="gof-patterns"
+TARGET_SLUG="decorator-pattern"
 
 target_post=$(curl -s --user "$USERNAME:$PASSWORD" "${API_URL}/wp-json/wp/v2/posts?slug=${TARGET_SLUG}")
 target_date=$(echo "$target_post" | jq -r '.[0].date')

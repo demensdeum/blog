@@ -1,0 +1,115 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Мост
+Slug: bridge-pattern
+Categories: techie,tutorials
+<p>Паттерн Мост относится к структурным паттернам проектирования. Он позволяет абстрагировать реализацию логики класса, с помощью переноса логики в отдельный абстрактный класс. Звучит просто, да?</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2053" src="https://demensdeum.com/blog/wp-content/uploads/2019/06/bridge.jpg" alt="" width="380" height="323" /></p>
+<p>Допустим мы реализуем спам-бота который должен уметь отправлять сообщения в разные типы мессенджеров.<br />
+Реализуем с помощью общего протокола:</p>
+<pre><code>
+protocol User {
+    let token: String
+    let username: String
+}
+
+protocol Messenger {
+    var authorize(login: String, password: String)
+    var send(message: String, to user: User)
+}
+
+class iSeekUUser: User {
+    let token: String
+    let username: String
+}
+
+class iSeekU: Messenger {
+
+    var authorizedUser: User?
+    var requestSender: RequestSender?
+    var requestFactory: RequestFactory?
+
+    func authorize(login: String, password: String) {
+        authorizedUser = requestSender?.perform(requestFactory.loginRequest(login: login, password: password))
+    }
+    
+    func send(message: String, to user: User) {
+        requestSender?.perform(requestFactory.messageRequest(message: message, to: user)
+    }
+}
+
+class SpamBot {
+    func start(usersList: [User]) {
+        let iSeekUMessenger = iSeekU()
+        iSeekUMessenger.authorize(login: "SpamBot", password: "SpamPassword")
+        
+        for user in usersList {
+            iSeekUMessennger.send(message: "Hey checkout demensdeum blog! http://demensdeum.com", to: user)
+        }
+    }
+}
+</code></pre>
+<p>Теперь представим ситуацию выхода нового более быстрого протокола отправки сообщений для мессенджера iSekU. Для добавления нового протокола нужно будет продублировать имплементацию бота iSekU, изменив лишь малую его часть. Непонятно зачем это делать если изменилась лишь малая часть логики класса. При таком подходе нарушается принцип DRY, при дальнейшем развитии продукта, отсутствие гибкости даст о себе знать ошибками и задержками в имплементации новых возможностей.<br />
+Вынесем логику работы протокола в абстрактный класс, таким образом реализовав паттерн Мост:</p>
+<pre><code>
+protocol User {
+    let token: String
+    let username: String
+}
+
+protocol Messenger {
+    var authorize(login: String, password: String)
+    var send(message: String, to user: User)
+}
+
+protocol MessagesSender {
+    func send(message: String, to user: User)
+}
+
+class iSeekUUser: User {
+    let token: String
+    let username: String
+}
+
+class iSeekUFastMessengerSender: MessagesSender {
+    func send(message: String, to user: User) {
+        requestSender?.perform(requestFactory.messageRequest(message: message, to: user)
+    }
+}
+
+class iSeekU: Messenger {
+
+    var authorizedUser: User?
+    var requestSender: RequestSender?
+    var requestFactory: RequestFactory?
+    var messagesSender: MessengerMessagesSender?
+
+    func authorize(login: String, password: String) {
+        authorizedUser = requestSender?.perform(requestFactory.loginRequest(login: login, password: password))
+    }
+    
+    func send(message: String, to user: User) {
+        messagesSender?.send(message: message, to: user)
+    }
+}
+
+class SpamBot {
+
+    var messagesSender: MessagesSender?
+
+    func start(usersList: [User]) {
+        let iSeekUMessenger = iSeekU()
+        iSeekUMessenger.authorize(login: "SpamBot", password: "SpamPassword")
+        
+        for user in usersList {
+            messagesSender.send(message: "Hey checkout demensdeum blog! http://demensdeum.com", to: user)
+        }
+    }
+}
+</code></pre>
+<p>Одним из плюсов такого подхода несомненно является возможность расширять функционал приложения, с помощью написания плагинов/библиотек, реализующих абстрагированную логику, не изменяя при этом кода основного приложения.<br />
+В чем разница с паттерном Стратегия? Оба паттерны очень похожи, однако Стратегия описывает переключения *алгоритмов*, в то время как Мост позволяет переключать большие части *любой сколь сложной логики*.</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/bridge" target="_blank" rel="noopener">https://refactoring.guru/ru/design-patterns/bridge</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns/" target="_blank" rel="noopener">https://gitlab.com/demensdeum/patterns/</a></p>

@@ -1,0 +1,158 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Декоратор
+Slug: decorator-pattern
+Categories: techie,tutorials
+<p>Паттерн Декоратор относится к структурным паттернам проектирования.<br />
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-2012" src="https://demensdeum.com/blog/wp-content/uploads/2019/05/pexels-photo-348601.jpeg" alt="" width="380" height="252" /><br />
+Декоратор используется как альтернатива наследованию для расширения функционала классов.<br />
+Имеется задача расширения функционала приложения в зависимости от типа продукта. Заказчику необходимы три типа продукта &#8211; Basic, Professional, Ultimate.<br />
+Basic &#8211; считает количество символов, Professional &#8211; возможности Basic + печатает текст большими буквами, Ultimate &#8211; Basic + Professional + печатает текст с надписью ULTIMATE.<br />
+Реализуем с помощью наследования:</p>
+<pre><code>
+protocol Feature {
+	func textOperation(text: String)
+}
+
+class BasicVersionFeature: Feature {
+	func textOperation(text: String) {
+		print("\(text.count)")
+	}
+}
+
+class ProfessionalVersionFeature: BasicVersionFeature {
+	override func textOperation(text: String) {
+		super.textOperation(text: text)
+		print("\(text.uppercased())")
+	}
+}
+
+class UltimateVersionFeature: ProfessionalVersionFeature {
+	override func textOperation(text: String) {
+		super.textOperation(text: text)
+		print("ULTIMATE: \(text)")
+	}
+}
+
+let textToFormat = "Hello Decorator"
+
+let basicProduct = BasicVersionFeature()
+basicProduct.textOperation(text: textToFormat)
+
+let professionalProduct = ProfessionalVersionFeature()
+professionalProduct.textOperation(text: textToFormat)
+
+let ultimateProduct = UltimateVersionFeature()
+ultimateProduct.textOperation(text: textToFormat)
+</code></pre>
+<p>Теперь появляется требование реализовать продукт “Ultimate Light” &#8211; Basic + Ultimate но без возможностей Professional версии. Случается первый ОЙ!, т.к. придется создавать отдельный класс для такой простой задачи, дублировать код.<br />
+Продолжим реализацию с помощью наследования:</p>
+<pre><code>
+protocol Feature {
+	func textOperation(text: String)
+}
+
+class BasicVersionFeature: Feature {
+	func textOperation(text: String) {
+		print("\(text.count)")
+	}
+}
+
+class ProfessionalVersionFeature: BasicVersionFeature {
+	override func textOperation(text: String) {
+		super.textOperation(text: text)
+		print("\(text.uppercased())")
+	}
+}
+
+class UltimateVersionFeature: ProfessionalVersionFeature {
+	override func textOperation(text: String) {
+		super.textOperation(text: text)
+		print("ULTIMATE: \(text)")
+	}
+}
+
+class UltimateLightVersionFeature: BasicVersionFeature {
+	override func textOperation(text: String) {
+		super.textOperation(text: text)
+		print("ULTIMATE: \(text)")	
+	}
+}
+
+let textToFormat = "Hello Decorator"
+
+let basicProduct = BasicVersionFeature()
+basicProduct.textOperation(text: textToFormat)
+
+let professionalProduct = ProfessionalVersionFeature()
+professionalProduct.textOperation(text: textToFormat)
+
+let ultimateProduct = UltimateVersionFeature()
+ultimateProduct.textOperation(text: textToFormat)
+
+let ultimateLightProduct = UltimateLightVersionFeature()
+ultimateLightProduct.textOperation(text: textToFormat)
+</code></pre>
+<p>Пример можно развивать для наглядности и дальше, но уже и сейчас видна сложность поддержки системы основанной на базе наследования &#8211; громоздкость и отсутствие гибкости.<br />
+Декоратор представляет из себя совокупность протокола описывающего функционал, абстрактного класса содержащего референс на дочерний конкретный экземпляр класса декоратора который расширяет функционал.<br />
+Перепишем пример выше с использованием паттерна:</p>
+<pre><code>
+protocol Feature {
+	func textOperation(text: String)
+}
+
+class FeatureDecorator: Feature {
+	private var feature: Feature?
+	
+	init(feature: Feature? = nil) {
+		self.feature = feature
+	}
+	
+	func textOperation(text: String) {
+		feature?.textOperation(text: text)
+	}
+}
+
+class BasicVersionFeature: FeatureDecorator {
+	override func textOperation(text: String) {
+		super.textOperation(text: text)
+		print("\(text.count)")
+	}
+}
+
+class ProfessionalVersionFeature: FeatureDecorator {
+	override func textOperation(text: String) {
+		super.textOperation(text: text)
+		print("\(text.uppercased())")
+	}
+}
+
+class UltimateVersionFeature: FeatureDecorator {
+	override func textOperation(text: String) {
+		super.textOperation(text: text)
+		print("ULTIMATE: \(text)")
+	}
+}
+
+let textToFormat = "Hello Decorator"
+
+let basicProduct = BasicVersionFeature(feature: UltimateVersionFeature())
+basicProduct.textOperation(text: textToFormat)
+
+let professionalProduct = ProfessionalVersionFeature(feature: UltimateVersionFeature())
+professionalProduct.textOperation(text: textToFormat)
+
+let ultimateProduct = BasicVersionFeature(feature: UltimateVersionFeature(feature: ProfessionalVersionFeature()))
+ultimateProduct.textOperation(text: textToFormat)
+
+let ultimateLightProduct = BasicVersionFeature(feature: UltimateVersionFeature())
+ultimateLightProduct.textOperation(text: textToFormat)
+</code></pre>
+<p>Теперь мы можем создавать вариации продукта любого типа &#8211; достаточно инициализировать комбинированные типы на этапе запуска приложения, пример ниже представляет из себя создание Ultimate + Professional версии:</p>
+<pre><code>let ultimateProfessionalProduct = UltimateVersionFeature(feature: ProfessionalVersionFeature())
+ultimateProfessionalProduct.textOperation(text: textToFormat)
+</code></pre>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/decorator" target="_blank" rel="noopener">https://refactoring.guru/ru/design-patterns/decorator</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns" target="_blank" rel="noopener">https://gitlab.com/demensdeum/patterns</a></p>

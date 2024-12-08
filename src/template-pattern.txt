@@ -1,0 +1,110 @@
+Format: Fall24-October10
+Language: ru
+Title: Шаблонный метод
+Slug: template-pattern
+Categories: techie,tutorials
+<p>Шаблонный метод относится к поведенческим шаблонам проектирования. Паттерн описывает способ замены части логики класса по требованию, оставляя общую часть неизменяемой для потомков.</p>
+<figure id="attachment_2059" aria-describedby="caption-attachment-2059" style="width: 420px" class="wp-caption alignnone"><a href="https://www.flickr.com/photos/diphi/24449843465/" target="_blank" rel="noopener noreferrer"><img loading="lazy" decoding="async" class="size-full wp-image-2059" src="https://demensdeum.com/blog/wp-content/uploads/2019/06/cars-1.jpg" alt="" width="420" height="265" /></a><figcaption id="caption-attachment-2059" class="wp-caption-text"><a href="https://www.flickr.com/photos/diphi/24449843465/" target="_blank" rel="noopener noreferrer">Cuban Cars</a></figcaption></figure>
+<p>Допустим мы разрабатываем банк-клиент, рассмотрим задачу разработки модуля авторизации &#8211; пользователь должен иметь возможность авторизоваться в приложении используя абстрактные данные для входа.<br />
+Модуль авторизации должен быть кроссплатформенным, поддерживать разные технологии авторизации и хранения зашифрованных данных разных платформ. Для реализации модуля мы выбираем кроссплатформенный язык Kotlin, используя абстрактный класс (протокол) модуля авторизации, напишем реализацию для телефона MyPhone:</p>
+<pre><code>
+class MyPhoneSuperDuperSecretMyPhoneAuthorizationStorage {
+    fun loginAndPassword() : Pair<String, String> {
+        return Pair("admin", "qwerty65435")
+    }
+}
+
+class ServerApiClient {
+    fun authorize(authorizationData: AuthorizationData) : Unit {
+        println(authorizationData.login)
+        println(authorizationData.password)
+        println("Authorized")
+    }
+}
+
+class AuthorizationData {
+    var login: String? = null
+    var password: String? = null
+}
+
+interface AuthorizationModule {
+    abstract fun fetchAuthorizationData() : AuthorizationData
+    abstract fun authorize(authorizationData: AuthorizationData)
+}
+
+class MyPhoneAuthorizationModule: AuthorizationModule {
+    
+    override fun fetchAuthorizationData() : AuthorizationData {
+        val loginAndPassword = MyPhoneSuperDuperSecretMyPhoneAuthorizationStorage().loginAndPassword()
+        val authorizationData = AuthorizationData()
+        authorizationData.login = loginAndPassword.first
+        authorizationData.password = loginAndPassword.second
+        
+        return authorizationData
+    }
+    
+    override fun authorize(authorizationData: AuthorizationData) {
+        ServerApiClient().authorize(authorizationData)
+    }
+    
+}
+
+fun main() {
+    val authorizationModule = MyPhoneAuthorizationModule()
+    val authorizationData = authorizationModule.fetchAuthorizationData()
+    authorizationModule.authorize(authorizationData)
+}
+</code></pre>
+<p>Теперь для каждого телефона/платформы нам придется дублировать код отправки авторизации на сервер, налицо нарушение принципа DRY. Приведенный выше пример очень прост, в более комплексных классах дублирования будет еще больше. Для устранения дублирования кода следует использовать паттерн Шаблонный метод.<br />
+Вынесем общие части модуля в неизменяемые методы, функционал передачи зашифрованных данных переложим на конкретные классы платформ:</p>
+<pre><code>
+class MyPhoneSuperDuperSecretMyPhoneAuthorizationStorage {
+    fun loginAndPassword() : Pair<String, String> {
+        return Pair("admin", "qwerty65435")
+    }
+}
+
+class ServerApiClient {
+    fun authorize(authorizationData: AuthorizationData) : Unit {
+        println(authorizationData.login)
+        println(authorizationData.password)
+        println("Authorized")
+    }
+}
+
+class AuthorizationData {
+    var login: String? = null
+    var password: String? = null
+}
+
+interface AuthorizationModule {
+    abstract fun fetchAuthorizationData() : AuthorizationData
+    
+    fun authorize(authorizationData: AuthorizationData) {
+        ServerApiClient().authorize(authorizationData)
+    }
+}
+
+class MyPhoneAuthorizationModule: AuthorizationModule {
+    
+    override fun fetchAuthorizationData() : AuthorizationData {
+        val loginAndPassword = MyPhoneSuperDuperSecretMyPhoneAuthorizationStorage().loginAndPassword()
+        val authorizationData = AuthorizationData()
+        authorizationData.login = loginAndPassword.first
+        authorizationData.password = loginAndPassword.second
+        
+        return authorizationData
+    }
+    
+}
+
+fun main() {
+    val authorizationModule = MyPhoneAuthorizationModule()
+    val authorizationData = authorizationModule.fetchAuthorizationData()
+    authorizationModule.authorize(authorizationData)
+}
+</code></pre>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/template-method" rel="noopener noreferrer" target="_blank">https://refactoring.guru/ru/design-patterns/template-method</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns/" rel="noopener noreferrer" target="_blank">https://gitlab.com/demensdeum/patterns/</a></p>

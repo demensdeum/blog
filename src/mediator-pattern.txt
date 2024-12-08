@@ -1,0 +1,365 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Медиатор
+Slug: mediator-pattern
+Categories: techie,tutorials
+<p>Паттерн Медиатор относится к поведенческим паттернам проектирования.<br />
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-1995" src="https://demensdeum.com/blog/wp-content/uploads/2019/05/guitarPick.jpg" alt="" width="320" height="213" /><br />
+Однажды вам поступает заказ разработать приложение-шутку &#8211; пользователь нажимает на кнопку посредине экрана и раздается смешной звук кряканья утки.<br />
+После выгрузки в аппстор, приложение становится хитом: все крякают через ваше приложение, Илон Маск крякает в своем инстаграме на очередном запуске сверх-скоростного тоннеля на марсе, Хиллари Клинтон перекрякивает Дональда Трампа на дебатах и выигрывает выборы на Украине, успех!<br />
+Наивная имплементация приложения выглядит так:</p>
+<pre><code class="language-swift">
+class DuckButton {
+    func didPress() {
+        print("quack!")
+    }
+}
+
+let duckButton = DuckButton()
+duckButton.didPress()
+</code></pre>
+<p>Далее вы решаете добавить звук гавканья собачки, для этого вам надо показать две кнопки для выбора звука &#8211; с уточкой и собачкой. Создаем два класса кнопок DuckButton и DogButton.<br />
+Меняем код:</p>
+<pre><code class="language-swift">
+class DuckButton {
+    func didPress() {
+        print("quack!")
+    }
+}
+
+class DogButton {
+    func didPress() {
+        print("bark!")
+    }
+}
+
+let duckButton = DuckButton()
+duckButton.didPress()
+
+let dogButton = DogButton()
+dogButton.didPress()
+</code></pre>
+<p>После очередного успеха добавляем звук свинячьего визга, уже три класса кнопок:</p>
+<pre><code class="language-swift">
+class DuckButton {
+    func didPress() {
+        print("quack!")
+    }
+}
+
+class DogButton {
+    func didPress() {
+        print("bark!")
+    }
+}
+
+class PigButton {
+    func didPress() {
+        print("oink!")
+    }
+}
+
+let duckButton = DuckButton()
+duckButton.didPress()
+
+let dogButton = DogButton()
+dogButton.didPress()
+
+let pigButton = PigButton()
+pigButton.didPress()
+</code></pre>
+<p>Пользователи жалуются что звуки перекрывают друг друга.<br />
+Добавляем проверку чтобы того не происходило, попутно знакомим классы друг с другом:</p>
+<pre><code>
+class DuckButton {
+    var isMakingSound = false
+    var dogButton: DogButton?
+    var pigButton: PigButton?
+    func didPress() {
+        guard dogButton?.isMakingSound ?? false == false &&
+                pigButton?.isMakingSound ?? false == false else { return }
+        isMakingSound = true
+        print("quack!")
+        isMakingSound = false
+    }
+}
+
+class DogButton {
+    var isMakingSound = false
+    var duckButton: DuckButton?
+    var pigButton: PigButton?
+    func didPress() {
+        guard duckButton?.isMakingSound ?? false == false &&
+                pigButton?.isMakingSound ?? false == false else { return }
+        isMakingSound = true
+        print("bark!")
+        isMakingSound = false
+    }
+}
+
+class PigButton {
+    var isMakingSound = false
+    var duckButton: DuckButton?
+    var dogButton: DogButton?
+    func didPress() {
+        guard duckButton?.isMakingSound ?? false == false && 
+                dogButton?.isMakingSound ?? false == false else { return }
+        isMakingSound = true
+        print("oink!")
+        isMakingSound = false
+    }
+}
+
+let duckButton = DuckButton()
+duckButton.didPress()
+
+let dogButton = DogButton()
+dogButton.didPress()
+
+let pigButton = PigButton()
+pigButton.didPress()
+</code></pre>
+<p>На волне успеха вашего приложения, правительство решает сделать закон по которому крякать, гавкать и хрюкать на мобильных устройствах можно только с 9:00 утра и до 15:00 в будние дни, в остальное время пользователь вашего приложения рискует сесть в тюрьму на 5 лет за непристойное звукоизвлечение с использованием электронных средств личного пользования.<br />
+Меняем код:</p>
+<pre><code>
+import Foundation
+
+extension Date {
+    func mobileDeviceAllowedSoundTime() -> Bool {
+        let hour = Calendar.current.component(.hour, from: self)
+        let weekend = Calendar.current.isDateInWeekend(self)
+        
+        let result = hour >= 9 && hour <= 14 &#038;&#038; weekend == false
+        
+        return result
+    }
+}
+
+class DuckButton {
+    var isMakingSound = false
+    var dogButton: DogButton?
+    var pigButton: PigButton?
+    func didPress() {
+        guard dogButton?.isMakingSound ?? false == false &#038;&#038;
+                pigButton?.isMakingSound ?? false == false &#038;&#038;
+                 Date().mobileDeviceAllowedSoundTime() == true else { return }
+        isMakingSound = true
+        print("quack!")
+        isMakingSound = false
+    }
+}
+
+class DogButton {
+    var isMakingSound = false
+    var duckButton: DuckButton?
+    var pigButton: PigButton?
+    func didPress() {
+        guard duckButton?.isMakingSound ?? false == false &#038;&#038;
+                pigButton?.isMakingSound ?? false == false &#038;&#038;
+                 Date().mobileDeviceAllowedSoundTime() == true else { return }
+        isMakingSound = true
+        print("bark!")
+        isMakingSound = false
+    }
+}
+
+class PigButton {
+    var isMakingSound = false
+    var duckButton: DuckButton?
+    var dogButton: DogButton?
+    func didPress() {
+        guard duckButton?.isMakingSound ?? false == false &#038;&#038; 
+                dogButton?.isMakingSound ?? false == false &#038;&#038;
+                 Date().mobileDeviceAllowedSoundTime() == true else { return }
+        isMakingSound = true
+        print("oink!")
+        isMakingSound = false
+    }
+}
+
+let duckButton = DuckButton()
+let dogButton = DogButton()
+let pigButton = PigButton()
+
+duckButton.dogButton = dogButton
+duckButton.pigButton = pigButton
+
+dogButton.duckButton = duckButton
+dogButton.pigButton = pigButton
+
+pigButton.duckButton = duckButton
+pigButton.dogButton = dogButton
+
+duckButton.didPress()
+dogButton.didPress()
+pigButton.didPress()
+</code></pre>
+<p>Внезапно приложение-фонарик начинает вытеснять наше с рынка, не дадим ему победить нас и добавляем фонарик по нажатию на кнопку “хрю-хрю”, и остальным кнопкам со-но:</p>
+<pre><code>
+import Foundation
+
+extension Date {
+    func mobileDeviceAllowedSoundTime() -> Bool {
+        let hour = Calendar.current.component(.hour, from: self)
+        let weekend = Calendar.current.isDateInWeekend(self)
+        
+        let result = hour >= 9 && hour <= 14 &#038;&#038; weekend == false
+        
+        return result
+    }
+}
+
+class Flashlight {
+
+    var isOn = false
+
+    func turn(on: Bool) {
+        isOn = on
+    }
+}
+
+class DuckButton {
+    var isMakingSound = false
+    var dogButton: DogButton?
+    var pigButton: PigButton?
+    var flashlight: Flashlight?
+    func didPress() {
+        flashlight?.turn(on: true)
+        guard dogButton?.isMakingSound ?? false == false &#038;&#038;
+                pigButton?.isMakingSound ?? false == false &#038;&#038;
+                 Date().mobileDeviceAllowedSoundTime() == true else { return }
+        isMakingSound = true
+        print("quack!")
+        isMakingSound = false
+    }
+}
+
+class DogButton {
+    var isMakingSound = false
+    var duckButton: DuckButton?
+    var pigButton: PigButton?
+    var flashlight: Flashlight?
+    func didPress() {
+        flashlight?.turn(on: true)
+        guard duckButton?.isMakingSound ?? false == false &#038;&#038;
+                pigButton?.isMakingSound ?? false == false &#038;&#038;
+                 Date().mobileDeviceAllowedSoundTime() == true else { return }
+        isMakingSound = true
+        print("bark!")
+        isMakingSound = false
+    }
+}
+
+class PigButton {
+    var isMakingSound = false
+    var duckButton: DuckButton?
+    var dogButton: DogButton?
+    var flashlight: Flashlight?
+    func didPress() {
+        flashlight?.turn(on: true)
+        guard duckButton?.isMakingSound ?? false == false &#038;&#038; 
+                dogButton?.isMakingSound ?? false == false &#038;&#038;
+                 Date().mobileDeviceAllowedSoundTime() == true else { return }
+        isMakingSound = true
+        print("oink!")
+        isMakingSound = false
+    }
+}
+
+let flashlight = Flashlight()
+let duckButton = DuckButton()
+let dogButton = DogButton()
+let pigButton = PigButton()
+
+duckButton.dogButton = dogButton
+duckButton.pigButton = pigButton
+duckButton.flashlight = flashlight
+
+dogButton.duckButton = duckButton
+dogButton.pigButton = pigButton
+dogButton.flashlight = flashlight
+
+pigButton.duckButton = duckButton
+pigButton.dogButton = dogButton
+pigButton.flashlight = flashlight
+
+duckButton.didPress()
+dogButton.didPress()
+pigButton.didPress()
+</code></pre>
+<p>В итоге мы имеем огромное приложение которое содержит много copy-paste кода, классы внутри связаны друг с другом мертвой связкой - отсутствует слабая связанность, такое чудо очень сложно поддерживать и изменять в дальнейшем из-за высоких шансов допустить ошибку.</p>
+<h3>Используем Медиатор</h3>
+<p>Добавим промежуточный класс медиатор - ApplicationController. Данный класс будет обеспечивать слабую связанность объектов, обеспечивает разделение ответственности классов, позволит устранить дублирующий код.<br />
+Перепишем:</p>
+<pre><code class="language-swift">
+import Foundation
+
+class ApplicationController {
+
+    private var isMakingSound = false
+    private let flashlight = Flashlight()
+    private var soundButtons: [SoundButton] = []
+
+    func add(soundButton: SoundButton) {
+        soundButtons.append(soundButton)
+    }
+    
+    func didPress(soundButton: SoundButton) {
+        flashlight.turn(on: true)
+        guard Date().mobileDeviceAllowedSoundTime() && 
+                isMakingSound == false else { return }
+        isMakingSound = true
+        soundButton.didPress()
+        isMakingSound = false
+    }
+}
+
+class SoundButton {
+    let soundText: String
+    
+    init(soundText: String) {
+        self.soundText = soundText
+    }
+    
+    func didPress() {
+        print(soundText)
+    }
+}
+
+class Flashlight {
+    var isOn = false
+
+    func turn(on: Bool) {
+        isOn = on
+    }
+}
+
+extension Date {
+    func mobileDeviceAllowedSoundTime() -> Bool {
+        let hour = Calendar.current.component(.hour, from: self)
+        let weekend = Calendar.current.isDateInWeekend(self)
+        
+        let result = hour >= 9 && hour <= 14 &#038;&#038; weekend == false
+        
+        return result
+    }
+}
+
+let applicationController = ApplicationController()
+let pigButton = SoundButton(soundText: "oink!")
+let dogButton = SoundButton(soundText: "bark!")
+let duckButton = SoundButton(soundText: "quack!")
+
+applicationController.add(soundButton: pigButton)
+applicationController.add(soundButton: dogButton)
+applicationController.add(soundButton: duckButton)
+
+pigButton.didPress()
+dogButton.didPress()
+duckButton.didPress()
+</code></pre>
+<p>Во многих статьях посвященных архитектурам приложений с пользовательским интерфейсом описывается паттерн MVC и производные. Модель используется для работы с данными бизнес-логики, view или представление показывает информацию пользователю в интерфейсе/обеспечивает взаимодействие с пользователем, контроллер является медиатором обеспечивающим взаимодействие компонентов системы.</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/mediator" target="_blank" rel="noopener noreferrer">https://refactoring.guru/ru/design-patterns/mediator</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns/" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/patterns/</a></p>
