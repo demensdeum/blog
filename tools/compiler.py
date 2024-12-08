@@ -241,6 +241,9 @@ for languageIndex in range(len(languageCodes)):
         if line.startswith("[DO NOT PROCESS LINE]"):
             outputFileDescriptor.write(line)
 
+        elif line.startswith("<a href"):
+            outputFileDescriptor.write(line)
+
         elif line.startswith("</") and "code" in line and "pre" in line:
             shouldTranslateLine = True
             outputFileDescriptor.write("</code></pre></div>")
@@ -265,55 +268,4 @@ for languageIndex in range(len(languageCodes)):
         outputFileDescriptor.write("\n")
 
     outputFileDescriptor.write("{:}\n")
-        
-
-    # targetLanguageCode = languageCodes[i]
-    # textBlock = ""
-    # codeBlock = ""
-    # outputBlock = []
-    # state = "text"
-    # previousState = "text"
-
-    # outputFileDescriptor.write(f"{{:{targetLanguageCode}}}")
-
-    # for lineIndex, line in enumerate(inputFileLines):
-    #     line = line.rstrip("\n")
-
-    #     if line.startswith("[DO NOT PROCESS LINE]"):
-    #         outputBlock.append(line[len("[DO NOT PROCESS LINE]"):] + "\n")
-    #         continue
-
-    #     if line.startswith("<pre><code>"):
-    #         state = "code"
-    #         codeStateLanguage = line.split("Language: ")[1].strip() if "Language: " in line else "unknown"
-    #         continue
-
-    #     if line.startswith("</code></pre>"):
-    #         if state == "code":
-    #             codeBlockHeader = f"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-{codeStateLanguage.lower()}\" data-lang=\"{codeStateLanguage}\"><code>"
-    #             codeBlockFooter = "</code></pre></div>"
-    #             outputBlock.append(f"{codeBlockHeader}\n{codeBlock.strip()}\n{codeBlockFooter}\n")
-    #             codeBlock = ""
-    #             state = "text"
-    #         continue
-
-    #     if state == "code":
-    #         codeBlock += line + "\n"
-    #     elif state == "text":
-    #         if line.startswith("http://") or line.startswith("https://"):
-    #             outputBlock.append(processLink(line))
-    #         else:
-    #             textBlock += processLine(line, state) + "\n"
-
-    #     if lineIndex == lastLineIndex or line.startswith("</code></pre>"):
-    #         if textBlock.strip():
-    #             if targetLanguageCode != originalLanguageCode:
-    #                 translatedText = translate(textBlock.strip(), "google", originalLanguageCode, googleTranslateLanguageCodes[i])
-    #                 outputBlock.append(translatedText + "\n")
-    #             else:
-    #                 outputBlock.append(textBlock.strip() + "\n")
-    #             textBlock = ""
-
-    # outputFileDescriptor.write("".join(outputBlock))
-    # outputFileDescriptor.write("{:}\n")
 

@@ -1,0 +1,98 @@
+Format: Fall24-October10
+Language: ru
+Title: Портирование Surreal Engine C++ на WebAssembly
+Slug: surreal-engine-cpp-webassembly-port
+Categories: demos,techie,tutorials
+<p>В этой заметке я опишу то как я портировал игровой движок Surreal Engine на WebAssembly.
+<a href="https://demensdeum.com/demos/SurrealEngine/" rel="noopener" target="_blank"></a></p>
+<p>Surreal Engine &#8211; игровой движок который реализует большую часть функционала движка Unreal Engine 1, известные игры на этом движке &#8211; Unreal Tournament 99, Unreal, Deus Ex, Undying. Он относится к классическим движкам, которые работали преимущественно в однопоточной среде выполнения.</p>
+<p>Изначально у меня была идея взяться за проект который я не смогу выполнить в какой-либо разумный срок, таким образом показав своим подписчикам на Twitch, что есть проекты которые не могу сделать даже я. В первый же стрим я внезапно понял что задача портирования Surreal Engine C++ на WebAssembly с помощью Emscripten выполнима.</p>
+<p><img loading="lazy" decoding="async" src="https://demensdeum.com/blog/wp-content/uploads/2024/07/Screenshot_20240716_162120.png" alt="Surreal Engine Emscripten Demo" width="737" height="364" class="alignnone wp-image-3581" srcset="https://demensdeum.com/blog/wp-content/uploads/2024/07/Screenshot_20240716_162120.png 1555w, https://demensdeum.com/blog/wp-content/uploads/2024/07/Screenshot_20240716_162120-300x148.png 300w, https://demensdeum.com/blog/wp-content/uploads/2024/07/Screenshot_20240716_162120-1024x505.png 1024w, https://demensdeum.com/blog/wp-content/uploads/2024/07/Screenshot_20240716_162120-768x379.png 768w, https://demensdeum.com/blog/wp-content/uploads/2024/07/Screenshot_20240716_162120-1536x758.png 1536w" sizes="auto, (max-width: 737px) 100vw, 737px" /></p>
+<p>Спустя месяц я могу продемонстрировать свой форк и сборку движка на WebAssembly:<br />
+<a href="https://demensdeum.com/demos/SurrealEngine/" target="_blank" rel="noopener">https://demensdeum.com/demos/SurrealEngine/</a></p>
+<p>Управление как и в оригинале, осуществляется на стрелках клавиатуры. Далее планирую адаптацию под мобильное управление (тачи), добавление корректного освещения и прочие графические фишки рендера Unreal Tournament 99.</p>
+<h3>С чего начать?</h3>
+<p>Первое о чем хочется сказать, это то что любой проект можно портировать с C++ на WebAssembly с помощью Emscripten, вопрос лишь в том насколько полным получится функционал. Выбирайте проект порты библиотек которого уже доступны для Emscripten, в случае Surreal Engine очень сильно повезло, т.к. движок использует библиотеки SDL 2, OpenAL &#8211; они обе портированы под Emscripten. Однако в качестве графического API используется Vulkan, который на данный момент не доступен для HTML5, ведутся работы по реализации WebGPU, но он также находится в стадии черновика, также неизвестно насколько простым будет дальнейший порт из Vulkan на WebGPU, после полной стандартизации оного. Поэтому пришлось написать свой собственный базовый OpenGL-ES / WebGL рендер для Surreal Engine.</p>
+<h3>Сборка проекта</h3>
+<p>Система сборки в Surreal Engine &#8211; CMake, что тоже упрощает портирование, т.к. Emscripten предоставляет свои нативные сборщики &#8211; emcmake, emmake.<br />
+За основу порта Surreal Engine брался код моей последней игры на WebGL/OpenGL ES и C++ под названием Death-Mask, из-за этого разработка шла гораздо проще, все необходимые флаги сборки были с собой, примеры кода.</p>
+<p>Один из важнейших моментов в CMakeLists.txt это флаги сборки для Emscripten, ниже пример из файла проекта:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-cpp" data-lang="CPP"><code>set(CMAKE_CXX_FLAGS "-s MIN_WEBGL_VERSION=2 \
+-s MAX_WEBGL_VERSION=2 \
+-s EXCEPTION_DEBUG \
+-fexceptions \
+--preload-file UnrealTournament/ \
+--preload-file SurrealEngine.pk3 \
+--bind \
+--use-preload-plugins \
+-Wall \
+-Wextra \
+-Werror=return-type \
+-s USE_SDL=2 \
+-s ASSERTIONS=1 \
+-w \
+-g4 \
+-s DISABLE_EXCEPTION_CATCHING=0 \
+-O3 \
+--no-heap-copy \
+-s ALLOW_MEMORY_GROWTH=1 \
+-s EXIT_RUNTIME=1")
+</code></pre>
+</div>
+<p>Сам сборочный скрипт:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-bash" data-lang="Bash"><code>clear
+emmake make -j 16
+cp SurrealEngine.data /srv/http/SurrealEngine/SurrealEngine.data
+cp SurrealEngine.js /srv/http/SurrealEngine/SurrealEngine.js
+cp SurrealEngine.wasm /srv/http/SurrealEngine/SurrealEngine.wasm
+cp ../buildScripts/Emscripten/index.html /srv/http/SurrealEngine/index.html
+cp ../buildScripts/Emscripten/background.png /srv/http/SurrealEngine/background.png
+</code></pre>
+</div>
+<p>Далее подготовим <a href="https://github.com/demensdeum/SurrealEngine-Emscripten/blob/master/buildScripts/Emscripten/index.html" target="_blank" rel="noopener">index.html</a>, который включает в себя прелоадер файловой системы проекта. Для выкладывания в веб я использовал Unreal Tournament Demo версии 338. Как можно увидеть из файла CMake, распакованная папка игры была добавлена с сборочную директорию и прилинкована как preload-file для Emscripten.</p>
+<h3>Основные изменения кода</h3>
+<p>Затем предстояло поменять игровой цикл игры, запускать бесконечный цикл нельзя, это приводит к зависанию браузера, вместо этого нужно использовать emscripten_set_main_loop, об этой особенности я писал в своей заметке 2017 года “<a href="https://demensdeum.com/blog/ru/2017/03/29/porting-sdl-c-game-to-html5-emscripten/" rel="noopener" target="_blank">Портирование SDL C++ игры на HTML5 (Emscripten)</a>”<br />
+Код условия выхода из цикла while меняем на if, далее выводим основной класс игрового движка, который содержит игровой луп, в глобальный скоп, и пишем глобальную функцию которая будет вызывать шаг игрового цикла из глобального объекта:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-cpp" data-lang="C++"><code>#if __EMSCRIPTEN__
+#include &lt;emscripten.h&gt;
+Engine *EMSCRIPTEN_GLOBAL_GAME_ENGINE = nullptr;
+void emscripten_game_loop_step() {
+	EMSCRIPTEN_GLOBAL_GAME_ENGINE-&gt;Run();
+}
+#endif
+</code></pre>
+</div>
+<p>После этого нужно убедиться что в приложении отсутствуют фоновые потоки, если они есть, то приготовьтесь к переписываю их на однопоточное выполнение, либо использование библиотеки phtread в Emscripten.<br />
+Фоновый поток в Surreal Engine используется для проигрывания музыки, из главного потока движка приходят данные о текущем треке, о необходимости проигрывания музыки, либо ее отсутствии, затем фоновый поток по мьютексу получает новое состояние и начинает проигрывать новую музыку, либо приостанавливает. Фоновый поток также используется для буферизации музыки во время проигрывания.<br />
+Мои попытки собрать Surreal Engine под Emscripten с pthread не увенчались успехом, по той причине что порты SDL2 и OpenAL были собраны без поддержки pthread, а их пересборкой ради музыки я заниматься не хотел. Поэтому перенес функционал фонового потока музыки в однопоточное выполнение с помощью цикла. Удалив вызовы pthread из C++ кода, я перенес буферизацию, проигрывание музыки в основной поток, чтобы не было задержек я увеличил буфер на несколько секунд.</p>
+<p>Далее я опишу уже конкретные реализации графики и звука.</p>
+<h3>Vulkan не поддерживается!</h3>
+<p>Да Vulkan не поддерживается в HTML5, хотя все рекламные брошюры выдают кроссплатформенность и широкую поддержку на платформах как основное преимущество Vulkan. По этой причине пришлось написать свой базовый рендер графики для упрощенного типа OpenGL &#8211; ES, он используется на мобильных устройствах, иногда не содержит модных фишек современного OpenGL, зато он очень хорошо переносится на WebGL, именно это реализует Emscripten. Написание базового рендера тайлов, bsp рендеринга, для простейшего отображения GUI, и отрисовки моделей + карт, удалось за две недели. Это, пожалуй, была самая сложная часть проекта. Впереди еще очень много работы по имплементации полного функционала рендеринга Surreal Engine, поэтому любая помощь читателей приветствуется в виде кода и pull request’ов.</p>
+<h3>OpenAL поддерживается!</h3>
+<p>Большим везением стало то, что Surreal Engine использует OpenAL для вывода звука. Написав простой hello world на OpenAL, и собрав его на WebAssembly c помощью Emscripten, мне стало ясно насколько все просто, и я отправился портировать звук.<br />
+После нескольких часов дебага, стало очевидно что в OpenAL реализации Emscripten есть несколько багов, например при инициализации считывания количества моно каналов, метод возвращал бесконечную цифру, а после попытки инициализации вектора бесконечного размера, падает уже C++ с исключением vector::length_error.<br />
+Это удалось обойти сделав хардкод количества моно каналов на 2048:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-cpp" data-lang="CPP"><code>		alcGetIntegerv(alDevice, ALC_MONO_SOURCES, 1, &amp;monoSources);
+		alcGetIntegerv(alDevice, ALC_STEREO_SOURCES, 1, &amp;stereoSources);
+
+#if __EMSCRIPTEN__
+		monoSources = 2048; // for some reason Emscripten's OpenAL gives infinite monoSources count, bug?
+#endif
+
+</code></pre>
+</div>
+<h3>А сеть есть?</h3>
+<p>Surreal Engine сейчас не поддерживает сетевую игру, игра с ботами поддерживается, но нужен кто-то кто напишет ИИ для этих ботов. Теоретически реализовать сетевую игру на WebAssembly/Emscripten можно с помощью Websockets.</p>
+<h3>Заключение</h3>
+<p>В заключение хочется сказать что портирование Surreal Engine получилось достаточно гладким из-за использования библиотек для которых есть порты Emscripten, также мой прошлый опыт реализации игры на C++ для WebAssembly на Emscripten. Ниже ссылки на источники знаний, репозиториев по теме.<br />
+<strong>M-M-M-MONSTER KILL!</strong></p>
+<p>Также если вы хотите помочь проекту, желательно кодом рендера WebGL/OpenGL ES, то пишите мне в Telegram:<br />
+<a href="https://t.me/demenscave" target="_blank" rel="noopener">https://t.me/demenscave</a></p>
+<h3>Ссылки</h3>
+<p><a href="https://demensdeum.com/demos/SurrealEngine/" target="_blank" rel="noopener">https://demensdeum.com/demos/SurrealEngine/</a><br />
+<a href="https://github.com/demensdeum/SurrealEngine-Emscripten" target="_blank" rel="noopener">https://github.com/demensdeum/SurrealEngine-Emscripten</a><br />
+<a href="https://github.com/dpjudas/SurrealEngine" target="_blank" rel="noopener">https://github.com/dpjudas/SurrealEngine</a></p>
