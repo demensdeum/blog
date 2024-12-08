@@ -1,0 +1,38 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерны GoF
+Slug: gof-patterns
+Categories: techie,tutorials
+<p>Список паттернов банды четырех &#8211; те самые паттерны из-за которых вас могут валить на собеседовании.</p>
+<p>Порождающие паттерны</p>
+<ul>
+<li><a href="https://demensdeum.com/blog/ru/2019/11/06/abstract-factory-pattern/" target="_blank" rel="noopener">Абстрактная фабрика</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/09/23/builder-pattern/" target="_blank" rel="noopener">Строитель</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/11/05/factory-method-pattern/" target="_blank" rel="noopener">Фабричный метод</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/06/27/prototype-pattern/" target="_blank" rel="noopener">Прототип</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/04/05/the-good-the-bad-and-the-ugly-singleton/" target="_blank" rel="noopener">Синглтон</a></li>
+</ul>
+<p>Структурные паттерны</p>
+<ul>
+<li><a href="https://demensdeum.com/blog/ru/2019/09/10/adapter-pattern/" target="_blank" rel="noopener">Адаптер</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/06/01/bridge-pattern/" target="_blank" rel="noopener">Мост</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/09/16/composite-pattern/" target="_blank" rel="noopener">Компоновщик</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/05/27/decorator-pattern/" target="_blank" rel="noopener">Декоратор</a></li>
+<li><a href="https://demensdeum.com/blog/2019/11/06/facade-pattern/" target="_blank" rel="noopener">Фасад</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/04/07/flyweight-pattern/" target="_blank" rel="noopener">Приспособленец</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/08/04/proxy-pattern/" target="_blank" rel="noopener">Заместитель</a></li>
+</ul>
+<p>Паттерны поведения</p>
+<ul>
+<li><a href="https://demensdeum.com/blog/ru/2019/05/30/chain-of-responsibility-pattern/" target="_blank" rel="noopener">Цепочка обязанностей</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/11/04/command-pattern/" target="_blank" rel="noopener">Команда</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2022/06/24/pattern-interpreter/" target="_blank" rel="noopener">Интерпретатор</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/04/26/iterator-pattern/" target="_blank" rel="noopener">Итератор</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/05/26/mediator-pattern/" target="_blank" rel="noopener">Посредник</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/04/20/memento-pattern/" target="_blank" rel="noopener">Хранитель</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/08/24/observer-pattern/" target="_blank" rel="noopener">Наблюдатель</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/06/25/%d0%a1%d1%82%d0%b5%d0%b9%d1%82-%d0%bc%d0%b0%d1%88%d0%b8%d0%bd%d0%b0-%d0%b8-%d0%bf%d0%b0%d1%82%d1%82%d0%b5%d1%80%d0%bd-%d0%a1%d0%be%d1%81%d1%82%d0%be%d1%8f%d0%bd%d0%b8%d0%b5/" target="_blank" rel="noopener">Состояние</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/05/19/strategy-pattern/" target="_blank" rel="noopener">Стратегия</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/06/08/template-pattern/" target="_blank" rel="noopener">Шаблонный метод</a></li>
+<li><a href="https://demensdeum.com/blog/ru/2019/04/13/visitor-pattern/" target="_blank" rel="noopener">Посетитель</a></li>
+</ul>

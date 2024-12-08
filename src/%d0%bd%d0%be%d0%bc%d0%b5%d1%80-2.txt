@@ -1,0 +1,15 @@
+Format: Fall24-October10
+Language: ru
+Title: Номер 2
+Slug: %d0%bd%d0%be%d0%bc%d0%b5%d1%80-2
+Categories: blog,dev-diary
+<p>Товарищи, гордость берет за проекты которые были созданы на основе Flame Steel Framework 1 и конкретно на Flame Steel Engine 1, а именно Death-Mask, Cube Art Project, так как всё это задумывалось как большой эксперимент, создания мультимедия фреймворка в одиночку, способного работать на наибольшем количестве платформ. Считаю эксперимент завершился удачно сразу после выхода Cube Art Project.</p>
+<p>Теперь о решениях к которым я пришел в ходе разработки новых проектов на FSFramework 1</p>
+<p>Во время разработки Space Jaguar и шутера Space Jaguar Galaxy Bastards, стало понятно что инструменты Flame Steel Framework уже устарели, не успев даже стать хоть сколько-нибудь удобными.</p>
+<p>Поэтому я принял решение разрабатывать полностью новый Flame Steel Framework 2. Основным решением будет переход на свой язык-транспайлер Rise 2, также архитектурно больше не будет использоваться система компонентов (ECS), т.к. она оказалась нужна только в рамках игровой логики с большой динамикой. По этой причине во Flame Steel Framework 2 система компонентов будет возможна только во время использования скриптовых языков которые планируется внедрить (как минимум Lua и JavaScript), интересной особенностью является то, что эти языки динамичны по своей природе, поэтому дополнительное создание системы компонентов избыточно.</p>
+<p>Следить за развитием новых проектов можно в блоге и на Gitlab:</p>
+<p><a href="https://gitlab.com/demensdeum/rise2" target="_blank" rel="noopener">https://gitlab.com/demensdeum/rise2</a></p>
+<p><a href="https://gitlab.com/demensdeum/flamesteelengine2" target="_blank" rel="noopener">https://gitlab.com/demensdeum/flamesteelengine2</a></p>
+<p><a href="https://gitlab.com/demensdeum/flame-steel-engine-2-demo-projects" target="_blank" rel="noopener">https://gitlab.com/demensdeum/flame-steel-engine-2-demo-projects</a></p>
+<p><a href="https://gitlab.com/demensdeum/space-jaguar-action-rpg" target="_blank" rel="noopener">https://gitlab.com/demensdeum/space-jaguar-action-rpg</a></p>
+<p><a href="https://gitlab.com/demensdeum/space-jaguar-galaxy-bastards" target="_blank" rel="noopener">https://gitlab.com/demensdeum/space-jaguar-galaxy-bastards</a></p>
