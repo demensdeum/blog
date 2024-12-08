@@ -1,0 +1,14 @@
+Format: Fall24-October10
+Language: ru
+Title: Алгоритм лексикографического сравнения
+Slug: lexicompare
+Categories: techie,tutorials
+<p>Алгоритм лексикографического сравнения строк работает очень просто, в цикле происходит сравнение кодов символов и возвращается результат если символы не равны.</p>
+<p>Пример для языка Си можно посмотреть здесь:<br />
+<a href="https://github.com/gcc-mirror/gcc/blob/master/libiberty/memcmp.c">https://github.com/gcc-mirror/gcc/blob/master/libiberty/memcmp.c</a></p>
+<p>Следует учитывать что сравнивать символы нужно в единой статичной кодировке, например в Swift я использовал посимвольное сравнение на UTF-32. Вариант сортировки массива с использованием memcmp сработает точно для однобайтовых символов, в остальных случаях (кодировки переменной длины) возможно порядок будет некорректен. Не исключаю возможности реализации на основе кодировок переменной длины, но скорее всего будет на порядок сложнее.</p>
+<p>Временная сложность алгоритма в лучшем случае O(1), среднем и худшем O(n)</p>
+<h3>Источники</h3>
+<p><a href="https://ru.wikipedia.org/wiki/Лексикографический_порядок" target="_blank" rel="noopener">https://ru.wikipedia.org/wiki/Лексикографический_порядок</a></p>
+<h3>Исходники</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/blob/master/lexiCompare/lexiCompare.swift" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/blob/master/lexiCompare/lexiCompare.swift</a></p>

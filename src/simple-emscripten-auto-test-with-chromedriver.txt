@@ -1,0 +1,38 @@
+Format: Fall24-October10
+Language: ru
+Title: Простой Emscripten автотест для ChromeDriver
+Slug: simple-emscripten-auto-test-with-chromedriver
+Categories: techie,tutorials
+<p>В данной заметке я опишу реализацию запуска автотеста для ChromeDriver браузера Chrome, который запускает транслированный из C++ автотест модуля с помощью Emscripten, считывает вывод консоли и возвращает результат проверки.<br />
+Для начала нужно установить selenium, для питона3-убунту это делается так:</p>
+<pre><code>
+pip3 install selenium
+</code></pre>
+<p>Далее скачиваем ChromeDriver с официального сайта, кладем chromedriver например в /usr/local/bin, после этого можно приступать к реализации автотеста.<br />
+Ниже я приведу код автотеста, который запускает браузер Chrome с открытой страницей автотеста на Emscripten, проверяет наличие текста &#8220;Window test succeded&#8221;:</p>
+<pre><code>
+import time
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+capabilities = DesiredCapabilities.CHROME
+capabilities['goog:loggingPrefs'] = { 'browser':'ALL' }
+driver = webdriver.Chrome()
+driver.get("http://localhost/windowInitializeTest/indexFullscreen.html")
+
+time.sleep(2)
+
+exitCode = 1
+
+for entry in driver.get_log('browser'):
+    if entry["source"] == "console-api":
+        message = entry["message"]
+        if "Window test succeded" in message:
+            print("Test succeded")
+            exitCode = 0
+
+driver.close()
+exit(exitCode)
+</code></pre>
+<p>Сохраняем тест как main.py и запускаем python3 main.py</p>

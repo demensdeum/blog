@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Интерпретатор языка C++ &#8211; Cling
+Slug: cling-c-interpreter
+Categories: techie,tutorials
+<p>Не так давно наткнулся на один интересный проект под названием <strong>Cling</strong>, интерпретатор языка C++, который может работать в интерактивном режиме из консоли в том числе. Ознакомиться с проектом можно по ссылке: <a href="https://github.com/root-project/cling" target="_blank" rel="noopener noreferrer">https://github.com/root-project/cling</a><br />
+Установка для Ubuntu простейшая &#8211; скачать архив для нужно версии, распаковать, зайти в папку bin и запустить cling в терминале.<br />
+Далее пример загрузки библиотеки <a href="https://gitlab.com/demensdeum/FlameSteelCore" target="_blank" rel="noopener noreferrer">FlameSteelCore</a>, инициализация объекта, распечатка id:<br />
+<img loading="lazy" decoding="async" src="https://demensdeum.com/blog/wp-content/uploads/2019/09/cling-1.png" alt="" width="536" height="94" class="alignnone size-full wp-image-2252" srcset="https://demensdeum.com/blog/wp-content/uploads/2019/09/cling-1.png 536w, https://demensdeum.com/blog/wp-content/uploads/2019/09/cling-1-300x53.png 300w" sizes="auto, (max-width: 536px) 100vw, 536px" /></p>

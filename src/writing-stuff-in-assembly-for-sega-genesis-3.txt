@@ -1,0 +1,145 @@
+Format: Fall24-October10
+Language: ru
+Title: Пишем на Ассемблере для Sega Genesis #3
+Slug: writing-stuff-in-assembly-for-sega-genesis-3
+Categories: techie,tutorials
+<p>В этой заметке я опишу как выводить изображение из тайлов на эмуляторе Sega Genesis с помощью ассемблера.<br />
+Картинка сплэша <strong>Demens Deum</strong> в эмуляторе Exodus будет выглядеть так:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2983" src="https://demensdeum.com/blog/wp-content/uploads/2021/07/logo.png" alt="" width="804" height="652" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/07/logo.png 804w, https://demensdeum.com/blog/wp-content/uploads/2021/07/logo-300x243.png 300w, https://demensdeum.com/blog/wp-content/uploads/2021/07/logo-768x623.png 768w" sizes="auto, (max-width: 804px) 100vw, 804px" /></p>
+<p>Процесс вывода PNG картинки с помощью тайлов делается по пунктам:</p>
+<ol>
+<li>Уменьшение изображения до размеров экрана Сеги</li>
+<li>Конвертация PNG в ассемблерный дата-код, с разделением на цвета и тайлы</li>
+<li>Загрузка палитры цветов в CRAM</li>
+<li>Загрузка тайлов/паттернов в VRAM</li>
+<li>Загрузка индексов тайлов по адресам Plane A/B в VRAM</li>
+<li>Уменьшить изображение до размеров экрана Сеги можно с помощью любимого графического редактора, например Blender.</li>
+</ol>
+<h3>Конвертация PNG</h3>
+<p>Для конвертации изображений можно использовать тул ImaGenesis, для работы под wine требуются библиотеки Visual Basic 6, их можно установить с помощью winetricks (winetricks vb6run), либу RICHTX32.OCX можно скачать в интернете и положить в папку приложения для корректной работы.</p>
+<p>В ImaGenesis нужно выбрать 4 битную цветность, экспортировать цвета и тайлы в два файла формата ассемблера. Далее в файле с цветами нужно каждый цвет положить в слово (2 байта), для этого используется опкод dc.w.</p>
+<p>Для примера CRAM сплэш скрина:</p>
+<pre><code> Colors: 
+  dc.w $0000 
+  dc.w $0000 
+  dc.w $0222 
+  dc.w $000A 
+  dc.w $0226 
+  dc.w $000C 
+  dc.w $0220 
+  dc.w $08AA 
+  dc.w $0446 
+  dc.w $0EEE 
+  dc.w $0244 
+  dc.w $0668 
+  dc.w $0688 
+  dc.w $08AC 
+  dc.w $0200 
+  dc.w $0000 
+</code></pre>
+<p>Файл тайлов оставить как есть, он и так содержит корректный формат для загрузки. Пример части файла тайлов:</p>
+<pre><code> Tiles: 
+	dc.l	$11111111	; Tile #0 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111	; Tile #1 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+</code></pre>
+<p>Как можно увидеть из примера выше, тайлы представляют из себя сетку 8&#215;8, состоящую из индексов цветовой палитры CRAM.</p>
+<h3>Цвета в CRAM</h3>
+<p>Загрузка в CRAM производится с помощью выставления команды загрузки цвета по конкретному адресу CRAM в порт контроля (vdp control). Формат команды описан в Sega Genesis Software Manual (1989), добавлю лишь что достаточно прибавлять к адресу 0x20000 для перехода к следующему цвету.</p>
+<p>Далее нужно загрузить цвет в порт данных (vdp data); Проще всего понять загрузку на примере ниже:</p>
+<pre><code>VDPCRAMFillLoop: 
+    lea Colors,a0 ; pointer to Colors label 
+    move.l #15,d7; colors counter 
+VDPCRAMFillLoopStep: 
+    move.l  d0,vdp_control_port ;  
+    move.w  (a0)+,d1; 
+    move.w  d1,(vdp_data_port); 
+    add.l #$20000,d0 ; increment CRAM address 
+    dbra d7,VDPCRAMFillLoopStep 
+</code></pre>
+<h3>Тайлы в VRAM</h3>
+<p>Далее следует загрузка тайлов/паттернов в видеопамять VRAM. Для этого выберем адрес в VRAM, например 0x00000000. По аналогии с CRAM, обращаемся в порт контроля VDP с командой на запись в VRAM и стартовым адресом.</p>
+<p>После этого можно заливать лонгворды в VRAM, по сравнению с CRAM не нужно указывать адрес для каждого лонгворда, так как есть режим автоинкремента VRAM. Включить его можно с помощью флага регистра VDP 0x0F (dc.b $02)</p>
+<pre><code>TilesVRAM: 
+  lea Tiles,a0 
+  move.l #$40200000,vdp_control_port; write to VRAM command 
+  move.w #6136,d0 ; (767 tiles * 8 rows) counter 
+TilesVRAMLoop: 
+  move.l (a0)+,vdp_data_port; 
+  dbra d0,TilesVRAMLoop 
+</code></pre>
+<h3>Индексы тайлов в Plane A/B</h3>
+<p>Теперь предстоит заполнение экрана тайлами по их индексу. Для этого заполняется VRAM по адресу Plane A/B который проставляется в регистрах VDP (0x02, 0x04). Подробнее об хитрой адресации есть в мануале Сеги, в моем примере проставлен адрес VRAM 0xC000, выгрузим индексы туда.</p>
+<p>Ваша картинка в любом случае заполнит за-экранное пространство VRAM, поэтому отрисовав экранное пространство, ваш рендер должен остановить отрисовку и продолжить заново когда курсор перейдет на новую строку. Вариантов как реализовать это множество, я использовал простейший вариант подсчета на двух регистрах счетчика ширины изображения, счетчика позиции курсора.</p>
+<p>Пример кода:</p>
+<pre><code> FillBackground: 
+  move.w #0,d0     ; column index 
+  move.w #1,d1     ; tile index 
+  move.l #$40000003,(vdp_control_port) ; initial drawing location 
+  move.l #2500,d7     ; how many tiles to draw (entire screen ~2500) 
+
+imageWidth = 31 
+screenWidth = 64 
+
+FillBackgroundStep: 
+  cmp.w	#imageWidth,d0 
+  ble.w	FillBackgroundStepFill 
+FillBackgroundStep2: 
+  cmp.w	#imageWidth,d0 
+  bgt.w	FillBackgroundStepSkip 
+FillBackgroundStep3: 
+  add #1,d0 
+  cmp.w	#screenWidth,d0 
+  bge.w	FillBackgroundStepNewRow 
+FillBackgroundStep4: 
+  dbra d7,FillBackgroundStep    ; loop to next tile 
+
+Stuck: 
+  nop 
+  jmp Stuck 
+
+FillBackgroundStepNewRow: 
+  move.w #0,d0 
+  jmp FillBackgroundStep4 
+FillBackgroundStepFill: 
+  move.w d1,(vdp_data_port)    ; copy the pattern to VPD 
+  add #1,d1 
+  jmp FillBackgroundStep2 
+FillBackgroundStepSkip: 
+  move.w #0,(vdp_data_port)    ; copy the pattern to VPD 
+  jmp FillBackgroundStep3 
+</code></pre>
+<p>После этого остается только собрать ром с помощью vasm, запустив симулятор, увидеть картинку.</p>
+<h3>Отладка</h3>
+<p>Не все получится сразу, поэтому хочу посоветовать следующие инструменты эмулятора Exodus:</p>
+<ol>
+<li>Дебаггер процессора m68k</li>
+<li>Изменение количества тактов процессора m68k (для slow-mo режима в дебаггере)</li>
+<li>Вьюверы CRAM, VRAM, Plane A/B</li>
+<li>Внимательно читать документацию к m68k, используемым опкодам (не все так очевидно, как кажется на первый взгляд)</li>
+<li>Смотреть примеры кода/дизассемблинга игр на github</li>
+<li>Реализовать сабрутины эксепшенов процессора, обрабатывать их</li>
+</ol>
+<p>Указатели на сабрутины эксепшенов процессора проставляются в заголовке рома, также на GitHub есть проект с интерактивным рантайм дебаггером для Сеги, под названием genesis-debugger.</p>
+<p>Используйте все доступные инструменты, приятного олдскул-кодинга и да прибудет с вами <strong>Blast Processing</strong>!</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/segagenesissamples/-/tree/main/6Image/vasm" target="_blank" rel="noopener">https://gitlab.com/demensdeum/segagenesissamples/-/tree/main/6Image/vasm</a><br />
+<a href="http://devster.monkeeh.com/sega/imagenesis/" target="_blank" rel="noopener">http://devster.monkeeh.com/sega/imagenesis/</a><br />
+<a href="https://github.com/flamewing/genesis-debugger" target="_blank" rel="noopener">https://github.com/flamewing/genesis-debugger</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.chibiakumas.com/68000/helloworld.php#LessonH5" target="_blank" rel="noopener">https://www.chibiakumas.com/68000/helloworld.php#LessonH5</a><br />
+<a href="https://huguesjohnson.com/programming/genesis/tiles-sprites/" target="_blank" rel="noopener">https://huguesjohnson.com/programming/genesis/tiles-sprites/</a></p>
+<p>&nbsp;</p>

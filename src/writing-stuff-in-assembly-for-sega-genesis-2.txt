@@ -1,0 +1,118 @@
+Format: Fall24-October10
+Language: ru
+Title: Пишем на Ассемблере для Sega Genesis #2
+Slug: writing-stuff-in-assembly-for-sega-genesis-2
+Categories: techie,tutorials
+<p>В этой заметке я опишу как загружать цвета в палитру Сеги на ассемблере.<br />
+Итоговый результат в эмуляторе Exodus будет выглядеть так:<br />
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-2964" src="https://demensdeum.com/blog/wp-content/uploads/2021/07/result.png" alt="" width="804" height="652" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/07/result.png 804w, https://demensdeum.com/blog/wp-content/uploads/2021/07/result-300x243.png 300w, https://demensdeum.com/blog/wp-content/uploads/2021/07/result-768x623.png 768w" sizes="auto, (max-width: 804px) 100vw, 804px" /><br />
+Чтобы процесс происходил проще, найдите в интернете pdf под названием <strong>Genesis Software Manual (1989)</strong>, в нем описывается весь процесс в мельчайших деталях, по сути, эта заметка является комментариями к оригинальному мануалу.</p>
+<p>Для того чтобы записывать цвета в VDP чип эмулятора Сеги, нужно сделать следующие вещи:</p>
+<ul>
+<li>Отключить систему защиты TMSS</li>
+<li>Записать правильные параметры в регистры VDP</li>
+<li>Записать нужные цвета в CRAM</li>
+</ul>
+<p>Для сборки будем использовать vasmm68k_mot и любимый текстовый редактор, например echo. Сборка осуществляется командой:</p>
+<pre><code>vasmm68k_mot -Fbin minimal.asm -o minimal.gen</code></pre>
+<h3>Порты VDP</h3>
+<p>VDP чип общается с M68K через два порта в оперативной памяти &#8211; порт контроля и порт данных.<br />
+По сути:</p>
+<ol>
+<li>Через порт контроля можно выставлять значения регистрам VDP.</li>
+<li>Также порт контроля является указателем на ту часть VDP (VRAM, CRAM, VSRAM etc.) через которую передаются данные через порт данных</li>
+</ol>
+<p><em>Интересная информация: Сега сохранила совместимость с играми Master System, на что указывает MODE 4 из мануала разработчика, в нем VDP переключается в режим Master System.</em></p>
+<p>Объявим порты контроля и данных:</p>
+<pre><code>vdp_control_port = $C00004
+vdp_data_port        = $C00000</code></pre>
+<h3>Отключить систему защиты TMSS</h3>
+<p>Защита от нелицензионных игр TMSS имеет несколько вариантов разблокировки, например требуется чтобы до обращения к VDP в адресном регистре A1 лежала строка “SEGA”.</p>
+<pre><code> 
+MOVE.B A1,D0; Получаем версию хардвары цифрой из A1 в регистр D0 
+ANDI.B 0x0F,D0; По маске берем последние биты, чтобы ничего не сломать 
+BEQ.B SkipTmss; Если версия равна 0, скорее всего это японка или эмулятор без включенного TMSS, тогда идем в сабрутину SkipTmss 
+MOVE.L "SEGA",A1; Или записываем строку SEGA в A1 
+</code></pre>
+<h3>Записать правильные параметры в регистры VDP</h3>
+<p>Зачем вообще выставлять правильные параметры в регистры VDP? Идея в том, что VDP может многое, поэтому перед отрисовкой нужно проинициализировать его с нужными фичами, иначе он просто не поймет, что от него хотят.</p>
+<p>Каждый регистр отвечает за определенную настройку/режим работы. В Сеговском мануале указаны все биты/флажки для каждого из 24 регистров, описание самих регистров.</p>
+<p>Возьмем готовые параметры с комментариями из блога bigevilcorporation:</p>
+<pre><code>VDPRegisters: 
+
+VDPReg0:   dc.b $14 ;  0: H interrupt on, palettes on 
+VDPReg1:   dc.b $74 ;  1: V interrupt on, display on, DMA on, Genesis mode on 
+VDPReg2:   dc.b $30 ;  2: Pattern table for Scroll Plane A at VRAM $C000 
+                    ;     (bits 3-5 = bits 13-15) 
+VDPReg3:   dc.b $00 ;  3: Pattern table for Window Plane at VRAM $0000 
+                    ;     (disabled) (bits 1-5 = bits 11-15) 
+VDPReg4:   dc.b $07 ;  4: Pattern table for Scroll Plane B at VRAM $E000 
+                    ;     (bits 0-2 = bits 11-15) 
+VDPReg5:   dc.b $78 ;  5: Sprite table at VRAM $F000 (bits 0-6 = bits 9-15) 
+VDPReg6:   dc.b $00 ;  6: Unused 
+VDPReg7:   dc.b $00 ;  7: Background colour - bits 0-3 = colour, 
+                    ;     bits 4-5 = palette 
+VDPReg8:   dc.b $00 ;  8: Unused 
+VDPReg9:   dc.b $00 ;  9: Unused 
+VDPRegA:   dc.b $FF ; 10: Frequency of Horiz. interrupt in Rasters 
+                    ;     (number of lines travelled by the beam) 
+VDPRegB:   dc.b $00 ; 11: External interrupts off, V scroll fullscreen, 
+                    ;     H scroll fullscreen 
+VDPRegC:   dc.b $81 ; 12: Shadows and highlights off, interlace off, 
+                    ;     H40 mode (320 x 224 screen res) 
+VDPRegD:   dc.b $3F ; 13: Horiz. scroll table at VRAM $FC00 (bits 0-5) 
+VDPRegE:   dc.b $00 ; 14: Unused 
+VDPRegF:   dc.b $02 ; 15: Autoincrement 2 bytes 
+VDPReg10:  dc.b $01 ; 16: Vert. scroll 32, Horiz. scroll 64 
+VDPReg11:  dc.b $00 ; 17: Window Plane X pos 0 left 
+                    ;     (pos in bits 0-4, left/right in bit 7) 
+VDPReg12:  dc.b $00 ; 18: Window Plane Y pos 0 up 
+                    ;     (pos in bits 0-4, up/down in bit 7) 
+VDPReg13:  dc.b $FF ; 19: DMA length lo byte 
+VDPReg14:  dc.b $FF ; 20: DMA length hi byte 
+VDPReg15:  dc.b $00 ; 21: DMA source address lo byte 
+VDPReg16:  dc.b $00 ; 22: DMA source address mid byte 
+VDPReg17:  dc.b $80 ; 23: DMA source address hi byte, 
+                    ;     memory-to-VRAM mode (bits 6-7)  
+</code></pre>
+<p>Ок, теперь пойдем в порт контроля и запишем все флажки в регистры VDP:</p>
+<pre><code>PrepareToFillVDPRegisters: 
+    move.l  #VDPRegisters,a0 ; Пишем адрес таблицы параметров в A1 
+    move.l  #$18,d0          ; Счетчик цикла - 24 = 18 (HEX) в D0 
+    move.l  #$00008000,d1    ; Готовим команду на запись в регистр VDP по индексу 0, по мануалу - 1000 0000 0000 0000 (BIN) = 8000 (HEX) 
+
+FillInitialStateForVDPRegistersLoop: 
+    move.b  (a0)+,d1         ; Записываем в D1 итоговое значение регистра VDP из таблицы параметров, на отправку в порт контроля VDP  
+    move.w  d1,vdp_control_port     ; Отправляем итоговую команду + значение из D1 в порт контроля VDP 
+    add.w   #$0100,d1        ; Поднимаем индекс регистра VDP на 1 (бинарное сложение +1 к индексу по мануалу Сеги) 
+    dbra    d0,FillInitialStateForVDPRegistersLoop ; Уменьшаем счетчик регистров, продолжаем цикл если необходимо</code></pre>
+<p>Самое сложное это прочитать мануал и понять в каком формате подаются данные на порт контроля, опытные разработчики разберутся сразу, а вот неопытные&#8230; Немного подумают и поймут, что синтаксис для записи регистров такой:</p>
+<p>0B100(5 бит &#8211; индекс регистра)(8 бит/байт &#8211; значение)</p>
+<p>0B1000001001000101 &#8211; записать в регистр VDP 2 (00010), значение флажков 01000101.</p>
+<h3>Записать нужные цвета в CRAM</h3>
+<p>Далее идем писать два цвета в память цветов CRAM (Color RAM). Для этого пишем в порт контроля команду на доступ к цвету по индексу 0 в CRAM и отправляем по дата порту цвет. Все!</p>
+<p>Пример:</p>
+<pre><code>VDPControlPortEnableCRAMWriteAccessGreenColorAtIndex0: 
+    move.l  #$C0000000,vdp_control_port ; Доступ к цвету по индексу 0 в CRAM через порт контроля  
+    move.w  #228,d0; Цвет в D0 
+    move.w  d0,vdp_data_port; Отправляем цвет в порт данных 
+</code></pre>
+<p>После сборки и запуска в эмуляторе в Exodus, у вас должен быть залит экран цветом 228.</p>
+<p>Давайте зальем еще вторым цветом, по последнему байту 127.</p>
+<p><code></code></p>
+<pre><code>VDPControlPortEnableCRAMWriteAccessGreenColorAtIndex127: 
+  move.l  #$C07f0000,vdp_control_port ; Доступ к цвету по байту 127 в CRAM через порт контроля 
+  move.w  #69,d0; Цвет в D0 
+  move.w  d0,vdp_data_port; Отправляем цвет в порт данных 
+</code></pre>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/segagenesissamples" target="_blank" rel="noopener">https://gitlab.com/demensdeum/segagenesissamples</a><br />
+<a href="https://www.exodusemulator.com/" target="_blank" rel="noopener">https://www.exodusemulator.com/</a><br />
+<a href="http://sun.hasenbraten.de/vasm/" target="_blank" rel="noopener">http://sun.hasenbraten.de/vasm/</a><br />
+<a href="https://tomeko.net/online_tools/bin_to_32bit_hex.php?lang=en" target="_blank" rel="noopener">https://tomeko.net/online_tools/bin_to_32bit_hex.php?lang=en</a></p>
+<h3>Источники</h3>
+<p><a href="https://namelessalgorithm.com/genesis/blog/genesis/" target="_blank" rel="noopener">https://namelessalgorithm.com/genesis/blog/genesis/</a><br />
+<a href="https://plutiedev.com/vdp-commands" target="_blank" rel="noopener">https://plutiedev.com/vdp-commands</a><br />
+<a href="https://huguesjohnson.com/programming/genesis/palettes/" target="_blank" rel="noopener">https://huguesjohnson.com/programming/genesis/palettes/</a><br />
+<a href="https://www.chibiakumas.com/68000/helloworld.php#LessonH5" target="_blank" rel="noopener">https://www.chibiakumas.com/68000/helloworld.php#LessonH5</a><br />
+<a href="https://blog.bigevilcorporation.co.uk/2012/03/09/sega-megadrive-3-awaking-the-beast/" target="_blank" rel="noopener">https://blog.bigevilcorporation.co.uk/2012/03/09/sega-megadrive-3-awaking-the-beast/</a></p>

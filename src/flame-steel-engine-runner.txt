@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Flame Steel Engine Runner
+Slug: flame-steel-engine-runner
+Categories: demos
+<p>Представляю вашему вниманию Flame Steel Engine Runner &#8211; платформа для запуска мультимедийных приложений на основе тулкита Flame Steel Engine. Поддерживаются платформы Windows, MacOS, Linux, Android, iOS, HTML 5. Акцент разработки кода приложений сместился в сторону скриптовых &#8211; на данный момент добавлена поддержка JavaScript с помощью TinyJS, сам тулкит и движок продолжит разрабатываться на языках близким к железу (C, C++, Rust и т.п.)<br />
+<a href="https://demensdeum.com/demos/FlameSteelEngineRunner/" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2919" src="https://desmensdeum.com/blog/wp-content/uploads/2021/05/fse.png" alt="Flame Steel Engine Runner Demo" width="1001" height="557" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/05/fse.png 1001w, https://demensdeum.com/blog/wp-content/uploads/2021/05/fse-300x167.png 300w, https://demensdeum.com/blog/wp-content/uploads/2021/05/fse-768x427.png 768w" sizes="auto, (max-width: 1001px) 100vw, 1001px" /></a><br />
+На странице ниже можно покрутить кубик, писать код на JavaScript, загружать модели, звуки, музыку, код с помощью кнопки Upload files, и стартовать из файла main.js с помощью кнопки Run.<br />
+<a href="https://demensdeum.com/demos/FlameSteelEngineRunner/" target="_blank" rel="noopener">https://demensdeum.com/demos/FlameSteelEngineRunner/</a></p>

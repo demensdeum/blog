@@ -1,0 +1,36 @@
+Format: Fall24-October10
+Language: ru
+Title: Работа с ресурсами в Android C++
+Slug: %d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0-%d1%81-%d1%80%d0%b5%d1%81%d1%83%d1%80%d1%81%d0%b0%d0%bc%d0%b8-%d0%b2-android-c
+Categories: techie,tutorials
+<p>Для работы с ресурсами в Android через ndk &#8211; C++ существует несколько вариантов:</p>
+<ol>
+<li>Использовать доступ к ресурсам из apk файла, с помощью AssetManager</li>
+<li>Загружать ресурсы из интернета и распаковав их в директорию приложения, использовать с помощью стандартных методов C++</li>
+<li>Комбинированный способ &#8211; получить доступ к архиву с ресурсами в apk через AssetManager, распаковать их в директорию приложения, далее использовать с помощью стандартных методов C++</li>
+</ol>
+<p>Далее я опишу комбинированный способ доступа, использующийся в игровом движке Flame Steel Engine.<br />
+При использовании SDL можно упростить доступ к ресурсам из apk, библиотека оборачивает вызовы к AssetManager, предлагая схожие с stdio интерфейсы (fopen, fread, fclose и т.д.)</p>
+<pre><code>
+SDL_RWops *io = SDL_RWFromFile("files.fschest", "r");
+
+</code></pre>
+<p>После загрузки архива из apk в буфер, нужно сменить текущую рабочую директорию на директорию приложения, она доступна для приложения без получения дополнительных разрешений. Для этого воспользуемся оберткой на SDL:</p>
+<pre><code> 
+chdir(SDL_AndroidGetInternalStoragePath());
+
+</code></pre>
+<p>Далее записываем архив из буфера в текущую рабочую директорию с помощью fopen, fwrite, fclose. После того как архив окажется в доступной для C++ директории, распакуем его. Архивы zip можно распаковывать с помощью комбинации двух библиотек &#8211; minizip и zlib, первая умеет работать со структурой архивов, вторая же распаковывает данные.<br />
+Для получения более полного контроля, простоты портирования, я реализовал собственный формат архивов с нулевым сжатием под названием FSChest (Flame Steel Chest). Данный формат поддерживает архивацию директории с файлами, и распаковку; Поддержка иерархии папок отсутствует, возможна работа только с файлами.<br />
+Подключаем header библиотеки FSChest, распаковываем архив:</p>
+<pre><code> 
+#include "fschest.h" 
+FSCHEST_extractChestToDirectory(archivePath, SDL_AndroidGetInternalStoragePath()); 
+
+</code></pre>
+<p>После распаковки интерфейсам C/C++ будут доступны файлы из архива. Таким образом мне не пришлось переписывать всю работу с файлами в движке, а лишь добавить распаковку файлов на этапе запуска.</p>
+<h3>Источники</h3>
+<p><a href="https://developer.android.com/ndk/reference/group/asset" target="_blank" rel="noopener noreferrer">https://developer.android.com/ndk/reference/group/asset</a></p>
+<h3>Исходный Код</h3>
+<p><a href="https://gitlab.com/demensdeum/space-jaguar-action-rpg" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/space-jaguar-action-rpg</a><br />
+<a href="https://gitlab.com/demensdeum/fschest" target="_blank" rel="noopener">https://gitlab.com/demensdeum/fschest</a></p>

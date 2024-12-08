@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Фасад
+Slug: facade-pattern
+Categories: techie,tutorials
+<p><img loading="lazy" decoding="async" src="https://demensdeum.com/blog/wp-content/uploads/2019/11/button.jpeg" alt="" width="198" height="255" class="alignnone size-full wp-image-2368" /><br />
+Фасад относится к структурным паттернам проектирования. Он предоставляет единый интерфейс, обеспечивающий работу со сложными системами, позволяя клиентам не обладать деталями реализации о данных системах, упрощать таким образом свой код, реализовывать слабую связанность между клиентами и системами нижнего уровня. В GoF есть хороший пример Фасада &#8211; компилятор языков программирования, предоставляющий разным клиентам, преследующим разные цели, возможность сборки кода через единый интерфейс фасада-компилятора.</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/facade" rel="noopener" target="_blank">https://refactoring.guru/ru/design-patterns/facade</a><br />
+<a href="https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612" rel="noopener" target="_blank">https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612</a></p>

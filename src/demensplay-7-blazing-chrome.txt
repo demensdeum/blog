@@ -1,0 +1,6 @@
+Format: Fall24-October10
+Language: ru
+Title: DemensPlay #7 Blazing Chrome
+Slug: demensplay-7-blazing-chrome
+Categories: streams
+<p><iframe loading="lazy" width="560" height="315" src="https://www.youtube.com/embed/aTsW0PGKsns" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>

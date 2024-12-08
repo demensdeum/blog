@@ -1,0 +1,13 @@
+Format: Fall24-October10
+Language: ru
+Title: Slowride бенчмарк блочных утройств
+Slug: slowride-storage-benchmark-utility
+Categories: software
+<p>Slowride &#8211; утилита для проверки скорости чтения блочных устройств для POSIX совместимых операционных систем с root доступом к /dev/sd*. Вы можете проверять производительность чтения блочных устройств с использованием порога по времени, для диагностики производительности чтения.<br />
+Команда чтения 100mb блоков на всем устройстве с выводом блоков выше порога 2 секунд:</p>
+<pre><code>
+sudo ./slowride /dev/sda 100 2000
+
+</code></pre>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/slowride" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/slowride</a></p>

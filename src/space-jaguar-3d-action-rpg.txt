@@ -1,0 +1,8 @@
+Format: Fall24-October10
+Language: ru
+Title: Space Jaguar 3D Action RPG
+Slug: space-jaguar-3d-action-rpg
+Categories: blog,dev-diary
+<p>Давно я не анонсировал новых проектов) Следующий проект над которым я начинаю работу &#8211; 3д экшн рпг под названием Space Jaguar (Космический Ягуар) История в sci-fi сеттинге про крутого парня по имени Джаг и его нелегкое приключение в поисках пропавшего отца. Будет 3D графика на движке Flame Steel Engine (или возможно на любом другом популярном), с использованием наработок прошлых проектов (Death Mask, Cube Art Project), комедийный сюжет со множеством отсылок, аркадными боями и боссами. О сроках релиза полной версии говорить не готов, планирую выпускать игру частями.</p>
+<p>Репозиторий проекта:<br />
+<a href="https://gitlab.com/demensdeum/space-jaguar-action-rpg" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/space-jaguar-action-rpg</a></p>

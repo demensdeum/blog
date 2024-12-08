@@ -1,0 +1,97 @@
+Format: Fall24-October10
+Language: ru
+Title: Пишем на Ассемблере для Sega Genesis #4
+Slug: writing-stuff-in-assembly-for-sega-genesis-4
+Categories: techie,tutorials
+<p>В этой заметке я опишу как рисовать спрайты с помощью VDP эмулятора приставки Sega Genesis.<br />
+Процесс отрисовки спрайтов очень схож с рендерингом тайлов:</p>
+<ol>
+<li>Загрузка цветов в CRAM</li>
+<li>Выгрузка частей спрайтов 8&#215;8 в VRAM</li>
+<li>Заполнение Sprite Table в VRAM</li>
+</ol>
+<p>Для примера возьмем спрайт скелета с мечом 32&#215;32 пикселя<br />
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-3001" src="https://demensdeum.com/blog/wp-content/uploads/2021/08/skull.png" alt="" width="32" height="32" /><br />
+<a href="https://opengameart.org/content/skeleton-guy-animated" target="_blank" rel="noopener">Skeleton Guy [Animated] by Disthorn</a></p>
+<h3>CRAM</h3>
+<p>С помощью ImaGenesis сконвертируем его в цвета CRAM и паттерны VRAM для ассемблера. После этого получим два файла а формате asm, далее переписываем цвета на размер word, а тайлы нужно положить в корректном порядке для отрисовки.<br />
+<em><strong>Интересная информация: можно переключить автоинкремент VDP через регистр 0xF на размер word, это позволит убрать инкремент адреса из кода заливки цветов CRAM.</strong></em></p>
+<h3>VRAM</h3>
+<p>В мануале сеги есть корректный порядок тайлов для больших спрайтов, но мы умнее, поэтому возьмем индексы из блога <a href="https://www.chibiakumas.com/68000/genesis.php" target="_blank" rel="noopener">ChibiAkumas</a>, начнем подсчет с индекса 0:</p>
+<p>0 4 8 12</p>
+<p>1 5 9 13</p>
+<p>2 6 10 14</p>
+<p>3 7 11 15</p>
+<p>Почему все кверх ногами? А что вы хотите, ведь приставка японская! Могло быть вообще справа налево!<br />
+Поменяем вручную порядок в asm файле спрайта:</p>
+<pre><code>Sprite: 
+	dc.l	$11111111	; Tile #0 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111	; Tile #4 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111
+	dc.l	$11111111	; Tile #8 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111111 
+	dc.l	$11111122 
+	dc.l	$11111122 
+	dc.l	$11111166 
+	dc.l	$11111166	; Tile #12 
+	dc.l	$11111166 
+	dc.l	$11111166 
+	и т.д. 
+</code></pre>
+<p>Прогрузим спрайт как обычные тайлы/паттерны:</p>
+<pre><code>SpriteVRAM: 
+  lea Sprite,a0 
+  move.l #$40200000,vdp_control_port; write to VRAM command 
+  move.w #128,d0 ; (16*8 rows of sprite) counter 
+SpriteVRAMLoop: 
+  move.l (a0)+,vdp_data_port; 
+  dbra d0,SpriteVRAMLoop 
+</code></pre>
+<p>Для отрисовки спрайта осталось заполнить таблицу спрайтов (Sprite Table)</p>
+<h3>Sprite Table</h3>
+<p>Таблица спрайтов заполняется в VRAM, адрес ее нахождения проставляется в VDP регистре 0x05, адрес опять хитрый, посмотреть можно в мануале, пример для адреса F000:</p>
+<pre><code>dc.b $78 ; 0x05:  Sprite table at VRAM 0xF000 (bits 0-6 = bits 9-15) 
+</code></pre>
+<p>Ок, теперь запишем наш спрайт в таблицу. Для этого нужно заполнить “структуру” данных состоящую из четырех word. Бинарное описание структуры вы можете найти в мануале. Лично я сделал проще, таблицу спрайтов можно редактировать вручную в эмуляторе Exodus.<img loading="lazy" decoding="async" class="alignnone size-full wp-image-3002" src="https://demensdeum.com/blog/wp-content/uploads/2021/08/spriteTable.png" alt="" width="804" height="652" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/08/spriteTable.png 804w, https://demensdeum.com/blog/wp-content/uploads/2021/08/spriteTable-300x243.png 300w, https://demensdeum.com/blog/wp-content/uploads/2021/08/spriteTable-768x623.png 768w" sizes="auto, (max-width: 804px) 100vw, 804px" /><br />
+Параметры структуры очевидны из названия, например XPos, YPos &#8211; координаты, Tiles &#8211; номер стартового тайла для отрисовки, HSize, VSize &#8211; размеры спрайта путем сложения частей 8&#215;8, HFlip, VFlip &#8211; аппаратные повороты спрайта по горизонтали и вертикали.<br />
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-3003" src="https://demensdeum.com/blog/wp-content/uploads/2021/08/spriteTableExample.png" alt="" width="805" height="660" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/08/spriteTableExample.png 805w, https://demensdeum.com/blog/wp-content/uploads/2021/08/spriteTableExample-300x246.png 300w, https://demensdeum.com/blog/wp-content/uploads/2021/08/spriteTableExample-768x630.png 768w" sizes="auto, (max-width: 805px) 100vw, 805px" /><br />
+<strong><em>Очень важно помнить что спрайты могут находиться вне экрана, это корректное поведение, т.к. выгружать из памяти спрайты вне экрана &#8211; достаточно ресурсоемкое занятие.</em></strong><br />
+После заполнения данных в эмуляторе, их нужно скопировать из VRAM по адресу 0xF000, Exodus также поддерживает эту возможность.<br />
+По аналогии с отрисовкой тайлов, сначала обращаемся в порт контроля VDP для начала записи по адресу 0xF000, затем в порт данных записываем структуру.<br />
+Напомню что описание адресации VRAM можно почитать в мануале, либо в блоге <a href="https://namelessalgorithm.com/genesis/blog/vdp/" target="_blank" rel="noopener">Nameless Algorithm</a>.</p>
+<p>Вкратце адресация VDP работает так:<br />
+[..DC BA98 7654 3210 &#8230;. &#8230;. &#8230;. ..FE]<br />
+Где hex это позиция бита в желаемом адресе. Первые два бита это тип запрашиваемой команды, например 01 &#8211; запись в VRAM. Тогда для адреса 0XF000 получается:<br />
+0111 0000 0000 0000 0000 0000 0000 0011 (70000003)</p>
+<p>В итоге получаем код:</p>
+<pre><code>SpriteTable: 
+  move.l #$70000003,vdp_control_port 
+  move.w #$0100,vdp_data_port 
+  move.w #$0F00,vdp_data_port 
+  move.w #$0001,vdp_data_port 
+  move.w #$0100,vdp_data_port 
+</code></pre>
+<p>После этого спрайт скелета отобразится в координатах 256, 256. Круто да?</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/segagenesissamples/-/tree/main/7Sprite/vasm" target="_blank" rel="noopener">https://gitlab.com/demensdeum/segagenesissamples/-/tree/main/7Sprite/vasm</a><br />
+<a href="https://opengameart.org/content/skeleton-guy-animated" target="_blank" rel="noopener">https://opengameart.org/content/skeleton-guy-animated</a></p>
+<h3>Источники</h3>
+<p><a href="https://namelessalgorithm.com/genesis/blog/vdp/" target="_blank" rel="noopener">https://namelessalgorithm.com/genesis/blog/vdp/</a><br />
+<a href="https://www.chibiakumas.com/68000/platform3.php#LessonP27" target="_blank" rel="noopener">https://www.chibiakumas.com/68000/platform3.php#LessonP27</a><br />
+<a href="https://plutiedev.com/sprites" target="_blank" rel="noopener">https://plutiedev.com/sprites</a></p>

@@ -1,0 +1,37 @@
+Format: Fall24-October10
+Language: ru
+Title: Угадай группу
+Slug: %d1%83%d0%b3%d0%b0%d0%b4%d0%b0%d0%b9-%d0%b3%d1%80%d1%83%d0%bf%d0%bf%d1%83
+Categories: techie,tutorials
+<p>В данной заметке я опишу работу с текстовым классификатором fasttext.</p>
+<p>Fasttext &#8211; библиотека машинного обучения для классификации текстов. Попробуем научить ее определять метал группу по названию песни. Для этого используем обучение с учителем при помощи датасета.</p>
+<p>Создадим датасет песен с названиями групп:</p>
+<pre><code>__label__metallica the house jack built
+__label__metallica fuel
+__label__metallica escape
+__label__black_sabbath gypsy
+__label__black_sabbath snowblind
+__label__black_sabbath am i going insane
+__label__anthrax anthrax
+__label__anthrax i'm alive
+__label__anthrax antisocial
+[и т.д.]</code></pre>
+<p>Формат обучающей выборки:</p>
+<pre><code>{__label__класс} {пример из класса}</code></pre>
+<p>Обучим fasttext и сохраним модель:</p>
+<pre><code>model = fasttext.train_supervised("train.txt")
+model.save_model("model.bin")
+</code></pre>
+<p>Загрузим обученную модель и попросим определить группу по названию песни:</p>
+<pre><code>model = fasttext.load_model("model.bin")
+predictResult = model.predict("Bleed")
+print(predictResult)</code></pre>
+<p>В результате мы получим список классов на которые похож данный пример, с указанием уровня похожести цифрой, в нашем случае похожесть названия песни Bleed на одну из групп датасета.<br />
+Для того чтобы модель fasttext умела работать с датасетом выходящим за границы обучающей выборки, используют режим autotune с использованием файла валидации (файл тест). Во время автотюна fasttext подбирает оптимальные гиперпараметры модели, проводя валидацию результата на выборке из тест файла. Время автотюна ограничивается пользователем в самостоятельно, с помощью передачи аргумента autotuneDuration.<br />
+Пример создания модели с использованием файла тест:</p>
+<pre><code>model = fasttext.train_supervised("train.txt", autotuneValidationFile="test.txt", autotuneDuration=10000)</code></pre>
+<h3>Источники</h3>
+<p><a href="https://fasttext.cc" target="_blank" rel="noopener noreferrer">https://fasttext.cc</a><br />
+<a href="https://gosha20777.github.io/tutorial/2018/04/12/fasttext-for-windows" target="_blank" rel="noopener noreferrer">https://gosha20777.github.io/tutorial/2018/04/12/fasttext-for-windows</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/MachineLearning/-/tree/master/6bandClassifier" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/MachineLearning/-/tree/master/6bandClassifier</a></p>

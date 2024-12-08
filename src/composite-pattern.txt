@@ -1,0 +1,85 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Композит
+Slug: composite-pattern
+Categories: techie,tutorials
+<p>Паттерн Композит относится к структурным паттернам проектирования, в отечественных источниках он известен как &#8220;Компоновщик&#8221;.<br />
+Допустим мы разрабатываем приложение &#8211; фотоальбом. Пользователь может создавать папки, добавлять туда фото, производить прочие манипуляции. Обязательно нужна возможность показывать количество файлов в папках, общее количество всех файлов и папок.<br />
+Очевидно что нужно использовать дерево, но как реализовать архитектуру древа, с простым и удобным интерфейсом? На помощь приходит паттерн Композит.</p>
+<p><a href="https://www.flickr.com/photos/8586177@N03/5075169756" target="_blank" rel="noopener noreferrer"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2185" src="https://demensdeum.com/blog/wp-content/uploads/2019/09/tree-1.jpg" alt="" width="400" height="423" /></a></p>
+<div class="attribution-info">
+<p><a class="owner-name truncate" title="Go to Sheila in Moonducks's photostream" href="https://www.flickr.com/photos/aspis7/" target="_blank" rel="noopener noreferrer" data-track="attributionNameClick">Sheila in Moonducks</a></p>
+<div id="yui_3_16_0_1_1568665128454_889" class="view follow-view clear-float photo-attribution">Реализуем интерфейс Component с нужным нам методом dataCount(), через него будем возвращать количество файлов/директорий. Создадим класс Directory, с интерфейсом позволяющим добавлять/удалять экземпляры классов реализующие интерфейс Component, по схеме паттерна это Composite. Также создадим класс File, там храним байты с фотокарточкой, наследуем от Component, через dataCount возвращаем 1, мол фото одно!</div>
+<div>Далее в Directory реализуем метод dataCount() &#8211; путем прохода по всем элементам лежащим в массиве компонентов, сложив все их dataCount&#8217;s.</div>
+<div>Все готово!</div>
+<div>Ниже пример на Go:</div>
+<pre><code>
+package main
+
+import "fmt"
+
+type component interface {
+
+dataCount() int
+
+}
+
+type file struct {
+
+}
+
+type directory struct {
+
+c []component
+
+}
+
+func (f file) dataCount() int {
+
+return 1
+
+}
+
+func (d directory) dataCount() int {
+
+var outputDataCount int = 0
+
+for _, v := range d.c {
+outputDataCount += v.dataCount()
+}
+
+return outputDataCount
+
+}
+
+func (d *directory) addComponent(c component) {
+
+d.c = append(d.c, c)
+
+}
+
+func main() {
+
+var f file
+var rd directory
+rd.addComponent(f)
+rd.addComponent(f)
+rd.addComponent(f)
+rd.addComponent(f)
+
+fmt.Println(rd.dataCount())
+
+var sd directory
+sd.addComponent(f)
+
+rd.addComponent(sd)
+rd.addComponent(sd)
+rd.addComponent(sd)
+
+fmt.Println(sd.dataCount())
+fmt.Println(rd.dataCount())
+
+}
+</code></pre>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/composite" target="_blank" rel="noopener noreferrer">https://refactoring.guru/ru/design-patterns/composite</a></p>

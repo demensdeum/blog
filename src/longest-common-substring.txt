@@ -1,0 +1,107 @@
+Format: Fall24-October10
+Language: ru
+Title: Longest Common Substring
+Slug: longest-common-substring
+Categories: techie,tutorials
+<p>В данной заметке я опишу алгоритм решения задачи наибольшей общей подстроки. Допустим мы пытаемся расшифровать зашифрованные бинарные данные, для начала попробуем найти общие паттерны с помощью поиска наибольшей подстроки.<br />
+Входная строка для примера:<br />
+<strong>adasDATAHEADER??jpjjwerthhkjbcvkDATAHEADER??kkasdf</strong><br />
+Мы ищем повторяющуюся дважды строку:<br />
+<strong>DATAHEADER??</strong></p>
+<h3>Префиксы</h3>
+<p>Для начала напишем метод для сравнения префиксов двух строк, пусть возвращает результирующую строку в которой символы левого префикса равны символам правого префикса.<br />
+Например для строк:</p>
+<pre><code>
+        val lhs = "asdfWUKI"
+        val rhs = "asdfIKUW"
+
+</code></pre>
+<p>Результирующая строка &#8211; asdf<br />
+Пример на Kotlin:</p>
+<pre><code>
+fun longestPrefix(lhs: String, rhs: String): String {
+        val maximalLength = min(lhs.length-1, rhs.length -1)
+        for (i in 0..maximalLength) {
+            val xChar = lhs.take(i)
+            val yChar = rhs.take(i)
+                if (xChar != yChar) {
+                    return lhs.substring(0, i-1)
+                }
+        }
+        return lhs.substring(0,maximalLength)
+}
+
+</code></pre>
+<h3>Brute Force</h3>
+<p>Когда не получается по хорошему, стоит прибегнуть к грубой силе. Используя метод longestPrefix пройдем по строке двумя циклами, первый берет строку от i до конца, второй от i + 1 до конца, передает их в поиск наибольшего префикса. Временная сложность данного алгоритма примерно равна O(n^2) ~ O(n*^3).<br />
+Пример на Kotlin:</p>
+<pre><code>
+fun searchLongestRepeatedSubstring(searchString: String): String {
+        var longestRepeatedSubstring = ""
+        for (x in 0..searchString.length-1) {
+            val lhs = searchString.substring(x)
+            for (y in x+1..searchString.length-1) {
+                val rhs = searchString.substring(y)
+                val longestPrefix = longestPrefix(lhs, rhs)
+                if (longestRepeatedSubstring.length < longestPrefix.length) {
+                    longestRepeatedSubstring = longestPrefix
+                }
+            }
+        }
+        return longestRepeatedSubstring
+}
+
+</code></pre>
+<h3>Суффиксный массив</h3>
+<p>Для более элегантного решения нам потребуется инструмент - структура данных под названием “Суффиксный массив”. Данная структура данных представляет из себя массив из подстрок заполняемых в цикле, где каждая подстрока начинается со следующего символа строки до конца.<br />
+Например для строки:</p>
+<pre><code>
+adasDATAHEADER??
+
+</code></pre>
+<p>Суффиксный массив выглядит так:</p>
+<pre><code>
+adasDATAHEADER??
+dasDATAHEADER??
+asDATAHEADER??
+sDATAHEADER??
+DATAHEADER??
+ATAHEADER??
+TAHEADER??
+AHEADER??
+HEADER??
+EADER??
+ADER??
+DER??
+ER??
+R??
+??
+?
+
+</code></pre>
+<h3>Решаем сортировкой</h3>
+<p>Отсортируем суффиксный массив, затем пройдем по всем элементам циклом где в левой руке (lhs) текущий элемент, в правой (rhs) следующий и вычислим самый длинный префикс с помощью метода longestPrefix.<br />
+Пример на Kotlin:</p>
+<pre><code>
+fun searchLongestRepeatedSubstring(searchString: String): String {
+    val suffixTree = suffixArray(searchString)
+    val sortedSuffixTree = suffixTree.sorted()
+
+    var longestRepeatedSubstring = ""
+    for (i in 0..sortedSuffixTree.count() - 2) {
+        val lhs = sortedSuffixTree[i]
+        val rhs = sortedSuffixTree[i+1]
+        val longestPrefix = longestPrefix(lhs, rhs)
+        if (longestRepeatedSubstring.length < longestPrefix.length) {
+            longestRepeatedSubstring = longestPrefix
+        }
+    }
+    return longestRepeatedSubstring
+}
+
+</code></pre>
+<p>Временная сложность алгоритма O(N log N), что гораздо лучше решения в лоб.</p>
+<h3>Источники</h3>
+<p><a href="https://en.wikipedia.org/wiki/Longest_common_substring_problem" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Longest_common_substring_problem</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms</a></p>

@@ -1,0 +1,82 @@
+Format: Fall24-October10
+Language: ru
+Title: Пишем на Ассемблере для Sega Genesis #5
+Slug: writing-stuff-in-assembly-for-sega-genesis-5
+Categories: techie,tutorials
+<p>В это заметке я опишу процесс чтения джойстика, изменение позиции спрайта, горизонтальный флип, эмулятора Sega Genesis и потенциально самой приставки.</p>
+<p>Чтение нажатий, обработка “событий” джойстика сеги происходит по следующей схеме:</p>
+<ol>
+<li>Запрос комбинации битов нажатых кнопок</li>
+<li>Считывание битов нажатых кнопок</li>
+<li>Обработка на уровне игровой логики</li>
+</ol>
+<p>Для перемещение спрайта скелета нам необходимо хранить переменные текущей позиции.</p>
+<h3>RAM</h3>
+<p>Переменные игровой логики хранятся в RAM, до сих пор люди не придумали ничего лучше. Объявим адреса переменных, изменим код отрисовки:</p>
+<pre><code>skeletonXpos = $FF0000
+skeletonYpos = $FF0002 
+frameCounter = $FF0004 
+skeletonHorizontalFlip = $FF0006
+
+    move.w #$0100,skeletonXpos 
+    move.w #$0100,skeletonYpos 
+    move.w #$0001,skeletonHorizontalFlip 
+
+FillSpriteTable: 
+    move.l #$70000003,vdp_control_port 
+    move.w skeletonYpos,vdp_data_port  
+    move.w #$0F00,vdp_data_port 
+    move.w skeletonHorizontalFlip,vdp_data_port 
+    move.w skeletonXpos,vdp_data_port 
+</code></pre>
+<p>Как можно заметить, адрес доступный для работы начинается с 0xFF0000, а заканчивается в 0xFFFFFF, итого нам доступно 64 кбайта памяти. Позиции скелета объявлены по адресам skeletonXpos, skeletonYpos, горизонтальный флип по адресу skeletonHorizontalFlip.</p>
+<h3>Joypad</h3>
+<p>По аналогии с VDP, работа с джойпадами происходит через два порта по отдельности &#8211; порт контроля и порт данных, для первого этого 0xA10009 и 0xA10003 со-но. При работе с джойпадом есть одна интересная особенность &#8211; сначала нужно запросить комбинацию кнопок для поллинга, а затем, подождав обновления по шине, прочитать нужные нажатия. Для кнопок C/B и крестовины это 0x40, пример далее:</p>
+<pre><code>ReadJoypad: 
+  move.b #$40,joypad_one_control_port; C/B/Dpad 
+  nop ; bus sync 
+  nop ; bus sync 
+  move.b joypad_one_data_port,d2 
+  rts 
+</code></pre>
+<p>В регистре d2 останется состояние нажатых кнопок, либо не нажатых, в общем что просили через дата порт, то и останется. После этого идем в просмотрщик регистров Motorola 68000 вашего любимого эмулятора, смотрим чему равен регистр d2 в зависимости от нажатий. По-умному это можно узнать в мануале, но мы не верим наслово. Далее обработка нажатых кнопок в регистре d2</p>
+<pre><code>HandleJoypad:  
+    cmp #$FFFFFF7B,d2; handle left 
+    beq MoveLeft  
+    cmp #$FFFFFF77,d2; handle right  
+    beq MoveRight  
+    cmp #$FFFFFF7E,d2; handle up  
+    beq MoveUp  
+    cmp #$FFFFFF7D,d2; handle down  
+    beq MoveDown  
+    rts</code></pre>
+<p>Проверять нужно конечно отдельные биты, а не целыми словами, но пока и так сойдет. Теперь осталось самое простое &#8211; написать обработчики всех событий перемещения по 4-м направлениям. Для этого меняем переменные в RAM, и запускаем процедуру перерисовки.</p>
+<p>Пример для перемещения влево + изменение горизонтального флипа:</p>
+<pre><code>MoveLeft:  
+    move.w skeletonXpos,d0 
+    sub.w #1,d0 
+    move.w d0,skeletonXpos 
+    move.w #$0801,skeletonHorizontalFlip 
+    jmp FillSpriteTable</code></pre>
+<p>После добавления всех обработчиков и сборки, вы увидите как скелет перемещается и поворачивается по экрану, но слишком быстро, быстрее самого ежа Соника.</p>
+<h3>Не так быстро!</h3>
+<p>Чтобы замедлить скорость игрового цикла, существуют несколько техник, я выбрал самую простую и не затрагивающую работу с внешними портами &#8211; подсчет цифры через регистр пока она не станет равна нулю.</p>
+<p>Пример замедляющего цикла и игрового цикла:</p>
+<pre><code>StartWaitFrame: 
+  move.w #512,frameCounter 
+WaitFrame: 
+  move.w frameCounter,d0 
+  sub.w #1,d0 
+  move.w d0,frameCounter 
+  dbra d0,WaitFrame 
+GameLoop: 
+  jsr ReadJoypad 
+  jsr HandleJoypad 
+  jmp GameLoop 
+</code></pre>
+<p>После этого скелет забегает медленее, что и требовалось. Как мне известно, наиболее распространенный вариант “замедления” это подсчет флага вертикальной синхронизации, можно подсчитывать сколько раз экран был отрисован, таким образом привязаться к конкретному fps.</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/segagenesissamples/-/blob/main/8Joypad/vasm/main.asm" target="_blank" rel="noopener">https://gitlab.com/demensdeum/segagenesissamples/-/blob/main/8Joypad/vasm/main.asm </a></p>
+<h3>Источники</h3>
+<p><a href="https://www.chibiakumas.com/68000/platform2.php" target="_blank" rel="noopener">https://www.chibiakumas.com/68000/platform2.php </a><br />
+<a href="https://huguesjohnson.com/programming/genesis/tiles-sprites/" target="_blank" rel="noopener">https://huguesjohnson.com/programming/genesis/tiles-sprites/</a></p>

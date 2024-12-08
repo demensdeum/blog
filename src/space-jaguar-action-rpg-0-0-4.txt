@@ -1,0 +1,22 @@
+Format: Fall24-October10
+Language: ru
+Title: Space Jaguar Action RPG 0.0.4
+Slug: space-jaguar-action-rpg-0-0-4
+Categories: demos
+<p>Первый прототип игры Space Jaguar Action RPG для Webassembly:</p>
+<p><a href="https://demensdeum.com/demos/SpaceJaguarActionRPG004/" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone wp-image-2897" src="https://demensdeum.com/blog/wp-content/uploads/2021/01/spaceJaguar1.jpg" alt="" width="611" height="343" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/01/spaceJaguar1.jpg 1222w, https://demensdeum.com/blog/wp-content/uploads/2021/01/spaceJaguar1-300x168.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2021/01/spaceJaguar1-1024x575.jpg 1024w, https://demensdeum.com/blog/wp-content/uploads/2021/01/spaceJaguar1-768x431.jpg 768w" sizes="auto, (max-width: 611px) 100vw, 611px" /></a></p>
+<p><em>Загружаться будет долго (53мб) без индикации загрузки.</em></p>
+<p>Space Jaguar Action RPG &#8211; симулятор жизни космического пирата. На данный момент доступны простейшие игровые механики:</p>
+<ul>
+<li>летать в космосе</li>
+<li>умирать</li>
+<li>кушать</li>
+<li>спать</li>
+<li>нанимать команду</li>
+<li>смотреть на неугомонный, быстролетящий поток времени</li>
+</ul>
+<p>Из-за плохой оптимизации отрисовки 3D сцен в веб версии, недоступна возможность гулять в трехмерном окружении. Оптимизация будет добавлена в следующих версиях.</p>
+<p>Исходный код движка, игры, скриптов доступен по лицензии MIT. Все предложения по улучшению принимаются крайне позитивно:</p>
+<p><a href="https://gitlab.com/demensdeum/space-jaguar-action-rpg" target="_blank" rel="noopener">https://gitlab.com/demensdeum/space-jaguar-action-rpg</a></p>
+<p>Скриншоты из нативной версии для Linux:</p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-2898" src="https://demensdeum.com/blog/wp-content/uploads/2021/01/4.jpeg" alt="" width="592" height="350" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/01/4.jpeg 1024w, https://demensdeum.com/blog/wp-content/uploads/2021/01/4-300x177.jpeg 300w, https://demensdeum.com/blog/wp-content/uploads/2021/01/4-768x454.jpeg 768w" sizes="auto, (max-width: 592px) 100vw, 592px" /> <img loading="lazy" decoding="async" class="alignnone wp-image-2899" src="https://demensdeum.com/blog/wp-content/uploads/2021/01/3.jpg" alt="" width="592" height="350" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/01/3.jpg 1024w, https://demensdeum.com/blog/wp-content/uploads/2021/01/3-300x177.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2021/01/3-768x454.jpg 768w" sizes="auto, (max-width: 592px) 100vw, 592px" /> <img loading="lazy" decoding="async" class="alignnone wp-image-2900" src="https://demensdeum.com/blog/wp-content/uploads/2021/01/2.jpg" alt="" width="591" height="349" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/01/2.jpg 1024w, https://demensdeum.com/blog/wp-content/uploads/2021/01/2-300x177.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2021/01/2-768x454.jpg 768w" sizes="auto, (max-width: 591px) 100vw, 591px" /></p>

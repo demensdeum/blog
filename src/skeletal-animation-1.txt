@@ -1,0 +1,57 @@
+Format: Fall24-October10
+Language: ru
+Title: Скелетная анимация (Часть 1 &#8211; шейдер)
+Slug: skeletal-animation-1
+Categories: techie,tutorials
+<p>В данной статье я опишу свое понимание скелетной анимации, которая используется во всех современных 3D движках для анимирования персонажей, игрового окружения и т.п.<br />
+Начну описание с наиболее осязаемой части &#8211; вертексного шейдера, ведь весь путь расчетов, сколь сложным он не был, заканчивается передачей подготовленных данных на отображение в вертексный шейдер.</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2080" src="https://demensdeum.com/blog/wp-content/uploads/2019/06/flower-love-friendship-human-body-illustration-skeleton-913687-pxhere.com_.jpg" alt="" width="360" height="228" /></p>
+<p>Скелетная анимация после обсчета на CPU попадает в вертексный шейдер.<br />
+Напомню формулу вертекса без скелетной анимации:<br />
+gl_Position = projectionMatrix * viewMatrix * modelMatrix * vertex;<br />
+Для тех кто не понимает как возникла эта формула, может почитать мою статью описывающую принцип работы с матрицами для отображения 3D контента в контексте OpenGL.<br />
+Для остальных &#8211; формула реализации скелетной анимации:<br />
+&#8221; vec4 animatedVertex = bone0matrix * vertex * bone0weight +&#8221;<br />
+&#8220;bone1matrix * vertex * bone1weight +&#8221;<br />
+&#8220;bone2matrix * vertex * bone2weight +&#8221;<br />
+&#8220;bone3matrix * vertex * bone3weight;\n&#8221;<br />
+&#8221; gl_Position = projectionMatrix * viewMatrix * modelMatrix * animatedVertex;\n&#8221;</p>
+<p>Тоесть конечную матрицу трансформации кости умножаем на вертекс и на вес этой матрицы относительно вертекса. Каждый вертекс может быть анимирован 4-мя костями, сила воздействия регулируется параметром веса кости, сумма воздействий должна равняться единице.<br />
+Что делать если на вертекс воздействуют меньше 4-х костей? Нужно поделить вес между ними, воздействие остальных сделать равным нулю.<br />
+Математически умножение веса на матрицу называется “Умножение матрицы на скаляр”. Умножение на скаляр позволяет суммировать воздействие матриц на итоговый вертекс.</p>
+<p><strong>Сами матрицы трансформации костей передаются массивом. </strong>Причем массив содержит матрицы для всей модели в целом, а не для каждого меша по отдельности.</p>
+<p>А вот для каждого вертекса отдельно передается следующая информация:<br />
+&#8211; Индекс матрицы которая воздействует на вертекс<br />
+&#8211; Вес матрицы которая воздействует на вертекс<br />
+Передается не одна кость, обычно используется воздействие 4 костей на вертекс.<br />
+Также сумма весов 4-х костей должна всегда быть равна единице.<br />
+Далее рассмотрим как это выглядит в шейдере.<br />
+Массив матриц:<br />
+&#8220;uniform mat4 bonesMatrices[kMaxBones];&#8221;</p>
+<p>Информация о воздействии 4 костей на каждый вертекс:<br />
+&#8220;attribute vec2 bone0info;&#8221;<br />
+&#8220;attribute vec2 bone1info;&#8221;<br />
+&#8220;attribute vec2 bone2info;&#8221;<br />
+&#8220;attribute vec2 bone3info;&#8221;</p>
+<p>vec2 &#8211; в координате X храним индекс кости (и переводим в int в шейдере), в координате Y вес воздействия кости на вертекс. Почему приходится передавать эти данные в двухмерном векторе? Потому что GLSL не поддерживает передачу читаемых C структур с корректными полями в шейдер.</p>
+<p>Ниже приведу пример получения необходимой информации из вектора, для дальнейшей подстановки в формулу animatedVertex:</p>
+<p>&#8220;int bone0Index = int(bone0info.x);&#8221;<br />
+&#8220;float bone0weight = bone0info.y;&#8221;<br />
+&#8220;mat4 bone0matrix = bonesMatrices[bone0Index];&#8221;</p>
+<p>&#8220;int bone1Index = int(bone1info.x);&#8221;<br />
+&#8220;float bone1weight = bone1info.y;&#8221;<br />
+&#8220;mat4 bone1matrix = bonesMatrices[bone1Index];&#8221;</p>
+<p>&#8220;int bone2Index = int(bone2info.x);&#8221;<br />
+&#8220;float bone2weight = bone2info.y;&#8221;<br />
+&#8220;mat4 bone2matrix = bonesMatrices[bone2Index];&#8221;</p>
+<p>&#8220;int bone3Index = int(bone3info.x);&#8221;<br />
+&#8220;float bone3weight = bone3info.y;&#8221;<br />
+&#8220;mat4 bone3matrix = bonesMatrices[bone3Index];&#8221;</p>
+<p>Теперь структура вертекса, заполняющаяся на CPU, должна выглядеть так:<br />
+x, y, z, u, v, bone0index, bone0weight, bone1index, bone1weight, bone2index, bone2weight, bone3index, bone3weight</p>
+<p>Структура вертексного буфера заполняется один раз во время загрузки модели, а вот матрицы трансформации передаются из CPU в шейдер при каждом кадре рендеринга.</p>
+<p>В остальных частях я опишу принцип обсчета анимации на CPU, перед передачей в вертексный шейдер, опишу дерево нод костей, проход по иерархии анимация-модель-ноды-мэш, интерполяции матриц.</p>
+<h3>Источники</h3>
+<p><a href="http://ogldev.atspace.co.uk/www/tutorial38/tutorial38.html" target="_blank" rel="noopener noreferrer">http://ogldev.atspace.co.uk/www/tutorial38/tutorial38.html</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/skeletal-animation" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/skeletal-animation</a></p>

@@ -1,0 +1,47 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Прокси
+Slug: proxy-pattern
+Categories: techie,tutorials
+<p>Паттерн Прокси относится к структурным паттернам проектирования.<br />
+Паттерн описывает технику работы с классом через класс прослойку &#8211; прокси. Прокси позволяет изменять функционал оригинального класса, с возможностью сохранения оригинального поведения, при сохранении оригинального интерфейса класса.<br />
+Представим ситуацию &#8211; в 2015 году одна из стран западной Европы решает записывать все запросы к сайтам пользователей страны, для улучшения статистики и углубленного понимания политических настроений граждан.<br />
+Представим псевдокод наивной имплементации шлюза которым пользуются граждане для выхода в интернет:</p>
+<pre><code>
+class InternetRouter {
+
+    private let internet: Internet
+
+    init(internet: Internet) {
+        self.internet = internet
+    }
+
+    func handle(request: Request, from client: Client) -> Data {
+        return self.internet.handle(request)
+    }
+
+}
+</code></pre>
+<p>В приведенном выше коде, мы создаем класс интернет-роутера, с указателем на объект предоставляющий доступ в интернет. При обращении клиента с запросом сайта, мы возвращает ответ из интернета.</p>
+<p>Используя паттерн Прокси и антипаттерн синглтон, добавим функционал логирования имени клиента и URL:</p>
+<pre><code>
+class InternetRouterProxy {
+
+    private let internetRouter: InternetRouter
+
+    init(internet: Internet) {
+        self.internetRouter = InternetRouter(internet: internet)
+    }
+
+    func handle(request: Request, from client: Client) -> Data {
+
+        Logger.shared.log(“Client name: \(client.name), requested URL: \(request.URL)”)
+
+        return self.internetRouter.handle(request: request, from: client)
+    }
+
+}
+</code></pre>
+<p>Из-за сохранения оригинального интерфейса InternetRouter в классе прокси InternetRouterProxy, достаточно заменить класс инициализации с InternerRouter на его прокси, больше изменений в кодовой базе не потребуется.</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/proxy" rel="noopener noreferrer" target="_blank">https://refactoring.guru/ru/design-patterns/proxy</a></p>

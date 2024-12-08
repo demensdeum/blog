@@ -1,0 +1,7 @@
+Format: Fall24-October10
+Language: ru
+Title: LazyFoo Productions вебсайт
+Slug: lazyfoo-productions-website
+Categories: links
+<p>Пожалуй стоит упомянуть вебсайт с которого почти всегда начинаются мои проекты и новые разработки, это вебсайт LazyFoo Productions, на котором вы можете найти ответы на достаточно хардкорные тематики: примеры использования сложных API, узнать как объединять казалось бы несовместимые системы (Android/C++) с подробным объяснением принципов работы, рабочими примерами кода.</p>
+<p><a href="https://lazyfoo.net/" target="_blank" rel="noopener">https://lazyfoo.net/</a></p>

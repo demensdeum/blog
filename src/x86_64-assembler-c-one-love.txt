@@ -1,0 +1,52 @@
+Format: Fall24-October10
+Language: ru
+Title: x86_64 Assembler + C = One Love
+Slug: x86_64-assembler-c-one-love
+Categories: techie,tutorials
+<p>В данной заметке я опишу процесс вызова функций Си из ассемблера.<br />
+Попробуем вызвать printf(“Hello World!\n”); и exit(0);</p>
+<pre><code>section .rodata
+    message: db "Hello, world!", 10, 0
+
+section .text
+    extern printf
+    extern exit
+    global main
+
+main:
+    xor	rax, rax
+    mov	rdi, message    
+    call printf
+    xor rdi, rdi
+    call exit
+</code></pre>
+<p>Все гораздо проще чем кажется, в секции .rodata мы опишем статичные данные, в данном случае строку “Hello, world!”, 10 это символ новой строки, также не забудем занулить ее.</p>
+<p>В секции кода объявим внешние функции printf, exit библиотек stdio, stdlib, также объявим функцию входа main:</p>
+<pre><code>section .text
+    extern printf
+    extern exit
+    global main
+</code></pre>
+<p>В регистр возврата из функции rax передаем 0, можно использовать mov rax, 0; но для ускорения используют xor rax, rax; Далее в первый аргумент передаем указатель на строку:</p>
+<pre><code>rdi, message</code></pre>
+<p>Далее вызываем внешнюю функцию Си printf:</p>
+<pre><code>main:
+    xor	rax, rax
+    mov	rdi, message    
+    call printf
+    xor rdi, rdi
+    call exit
+</code></pre>
+<p>По аналогии делаем передачу 0 в первый аргумент и вызов exit:</p>
+<pre><code>    xor rdi, rdi
+    call exit
+</code></pre>
+<p>Как говорят американцы:<br />
+Кто никого не слушает<br />
+Тот плов кушает @ <a href="https://twitter.com/comrade_wolgast/status/1313561809337683970" target="_blank" rel="noopener noreferrer">Александр Пелевин</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.devdungeon.com/content/how-mix-c-and-assembly" target="_blank" rel="noopener noreferrer">https://www.devdungeon.com/content/how-mix-c-and-assembly</a><br />
+<a href="https://nekosecurity.com/x86-64-assembly/part-3-nasm-anatomy-syscall-passing-argument" target="_blank" rel="noopener noreferrer">https://nekosecurity.com/x86-64-assembly/part-3-nasm-anatomy-syscall-passing-argument</a><br />
+<a href="https://www.cs.uaf.edu/2017/fall/cs301/reference/x86_64.html" target="_blank" rel="noopener noreferrer">https://www.cs.uaf.edu/2017/fall/cs301/reference/x86_64.html</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/assembly-playground" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/assembly-playground</a></p>

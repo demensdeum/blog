@@ -1,0 +1,6 @@
+Format: Fall24-October10
+Language: ru
+Title: Observer: Redux &#8211; Slowplay
+Slug: observer-redux-slowplay
+Categories: streams
+<p>https://youtube.com/playlist?list=PLJLxLMyDiWkrlV-NuWXWe7t404_fhoDsV</p>

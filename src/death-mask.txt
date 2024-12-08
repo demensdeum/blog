@@ -1,0 +1,11 @@
+Format: Fall24-October10
+Language: ru
+Title: Death-Mask 1.0!
+Slug: death-mask
+Categories: games
+<p>Сегодня выходит релиз версия игры Death-Mask, созданная с нуля вместе с библиотеками Flame Steel Engine, Flame Steel Engine Game Toolkit и другими.</p>
+<p><a href="https://demensdeum.com/games/deathMask/" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone wp-image-2160 size-full" src="https://demensdeum.com/blog/wp-content/uploads/2019/08/dmlogo.jpg" alt="" width="1024" height="568" /></a></p>
+<p><a href="https://demensdeum.com/games/deathMask/" target="_blank" rel="noopener noreferrer">https://demensdeum.com/games/deathMask/</a></p>
+<p>В игре вы будете играть роль парня по имени Ревил-Разорбэк, он хочет завладеть артефактом дарующим бесконечную жизнь &#8211; Маской Смерти. Гуляя в поисках вы умрете от рук дронов много много раз, пока не найдете то что ищете.</p>
+<p>Обновления 3д моделей и небольшие геймплейные изменения возможны в ближайшем будущем.</p>
+<p><strong>Маска Смерти &#8211; киберфентезийное приключение в бесконечном технолабиринте. Приготовься умереть!</strong></p>

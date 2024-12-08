@@ -1,0 +1,23 @@
+Format: Fall24-October10
+Language: ru
+Title: Cube Art Project
+Slug: cube-art-project
+Categories: games
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-2536" src="https://demensdeum.com/blog/wp-content/uploads/2020/01/Screenshot_20200118_225401.png" alt="" width="447" height="264" srcset="https://demensdeum.com/blog/wp-content/uploads/2020/01/Screenshot_20200118_225401.png 1032w, https://demensdeum.com/blog/wp-content/uploads/2020/01/Screenshot_20200118_225401-300x177.png 300w, https://demensdeum.com/blog/wp-content/uploads/2020/01/Screenshot_20200118_225401-1024x604.png 1024w, https://demensdeum.com/blog/wp-content/uploads/2020/01/Screenshot_20200118_225401-768x453.png 768w" sizes="auto, (max-width: 447px) 100vw, 447px" /></p>
+<p>Cube Art Project &#8211; кубический 3D редактор.<br />
+Вам открывается потрясающая возможность передвигаться по сцене, строить и удалять кубы кнопками WSAD + E, крутите колесо мышки для смены цвета куба. На данный момент поддерживаются только 16 цветов, но в будущем планируется множество улучшений.</p>
+<p>Веб версия<br />
+<a href="https://demensdeum.com/games/CubeArtProjectWEB/" target="_blank" rel="noopener noreferrer">https://demensdeum.com/games/CubeArtProjectWEB/</a></p>
+<p>Windows<br />
+<a href="https://demensdeum.com/games/CubeArtProjectReleases/CubeArtProjectWin32.zip" target="_blank" rel="noopener noreferrer">https://demensdeum.com/games/CubeArtProjectReleases/CubeArtProjectWin32.zip</a></p>
+<p>macOS<br />
+<a href="https://demensdeum.com/games/CubeArtProjectReleases/CubeArtProjectMacOS.zip" target="_blank" rel="noopener noreferrer">https://demensdeum.com/games/CubeArtProjectReleases/CubeArtProjectMacOS.zip</a></p>
+<p>Linux (x86-64)<br />
+<a href="https://demensdeum.com/games/CubeArtProjectReleases/CubeArtProjectLinux86_64.zip" target="_blank" rel="noopener noreferrer">https://demensdeum.com/games/CubeArtProjectReleases/CubeArtProjectLinux86_64.zip</a></p>
+<p>Android<br />
+(Концепт, требуется usb-мышь)<br />
+<a href="https://demensdeum.com/games/CubeArtProjectReleases/CubeArtProject.apk" target="_blank" rel="noopener">https://demensdeum.com/games/CubeArtProjectReleases/CubeArtProject.apk</a></p>
+<p>Исходный код<br />
+<a href="https://gitlab.com/demensdeum/cube-art-project-bootstrap" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/cube-art-project-bootstrap</a><br />
+<a href="https://gitlab.com/demensdeum/cube-art-project-server" target="_blank" rel="noopener">https://gitlab.com/demensdeum/cube-art-project-server</a></p>
+<p>Технологии: <a href="https://www.libsdl.org/" target="_blank" rel="noopener noreferrer">SDL</a>, <a href="https://emscripten.org/" target="_blank" rel="noopener noreferrer">Emscripten</a>, <a href="http://www.mingw.org/" target="_blank" rel="noopener noreferrer">MinGW</a>, <a href="http://glew.sourceforge.net/" target="_blank" rel="noopener noreferrer">Glew</a>, <a href="https://glm.g-truc.net/0.9.9/index.html" target="_blank" rel="noopener noreferrer">GLM</a>, <a href="https://github.com/nlohmann/json" target="_blank" rel="noopener noreferrer">Cpp-JSON</a></p>

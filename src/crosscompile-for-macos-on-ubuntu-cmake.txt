@@ -1,0 +1,58 @@
+Format: Fall24-October10
+Language: ru
+Title: Сборка macOS приложений под Ubuntu OSXCross CMake
+Slug: crosscompile-for-macos-on-ubuntu-cmake
+Categories: techie,tutorials
+<p>В этой заметке я опишу сборку кросплатформенных C++ приложений для macOS на сборочной машине Ubuntu с использованием CMake и osxcross.<br />
+Для начала устанавливаем тулчейн osxcross:<br />
+<a href="https://github.com/tpoechtrager/osxcross" target="_blank" rel="noopener noreferrer">https://github.com/tpoechtrager/osxcross</a><br />
+Установка происходит в 3 этапа, загрузка зависимостей:</p>
+<pre> <code>
+cd tools
+./get_dependencies.sh
+</code> </pre>
+<p>Загрузка XCode.xip с официального сайта Apple, далее выгрузка SDK из XCode:</p>
+<pre> <code>
+./gen_sdk_package_pbzx.sh /media/demensdeum/2CE62A79E62A4404/LinuxSupportStorage/xcode111.xip
+</code> </pre>
+<p>Надеюсь вы прочитали лицензионное соглашение XCode на прошлом шаге? Далее сборка тулчейна с нужным префиксом:</p>
+<pre> <code>
+INSTALLPREFIX=/home/demensdeum/Apps/osxcross ./build.sh 
+</code> </pre>
+<p>Теперь можно пользоваться osxcross из директории-префикса прошлого шага. Добавим новый макрос сборки для CMake, пропишем все необходимо:</p>
+<pre> <code>
+if (OSXCROSS)
+SET(CMAKE_SYSTEM_NAME Darwin)
+SET(CMAKE_C_COMPILER o64-clang)
+SET(CMAKE_CXX_COMPILER o64-clang++)
+SET(CMAKE_C_COMPILER_AR x86_64-apple-darwin19-ar)
+SET(CMAKE_CXX_COMPILER_AR x86_64-apple-darwin19-ar)
+SET(CMAKE_LINKER x86_64-apple-darwin19-ld)
+SET(ENV{OSXCROSS_MP_INC} 1)
+endif()
+</code> </pre>
+<p>Динамическая линковка мне не удалась, поэтому экспортируем библиотеки статически:</p>
+<pre> <code>
+if (OSXCROSS)
+add_library(FlameSteelCore STATIC ${SOURCE_FILES})
+else()
+</code> </pre>
+<p>Далее вы можете столкнуться с фактом того что у вас нет необходимых библиотек для osxcross, с этим я встретился при использовании SDL2. osxcross поддерживает готовые пакеты библиотек &#8211; macports. Для примера установка SDL2-mixer:</p>
+<pre><code>
+osxcross-macports -v install libsdl2_mixer
+</code></pre>
+<p>После этого можно приступать к сборке библиотек/приложений как обычно в связке cmake-make, не забудьте прописать статическую линковку библиотек если необходимо.</p>
+<h3>Ручная сборка библиотек</h3>
+<p>На текущий момент я встретился с проблемой некорректной архивации библиотек при статической линковке, при сборке итогового приложения получаю ошибку:</p>
+<pre><code>
+file was built for archive which is not the architecture being linked (x86_64)
+</code></pre>
+<p>Очень похоже на <a href="https://github.com/tpoechtrager/osxcross/issues/11" rel="noopener" target="_blank">этот тикет</a>, удалось реализовать workaround в результате чего сборка завершается корректно. Разархивируем статическую библиотеку и соберем ее по новой с помощью архиватора osxcross:</p>
+<pre> <code>
+ar x ../libFlameSteelCore.a
+rm ../libFlameSteelCore.a
+x86_64-apple-darwin19-ar rcs ../libFlameSteelCore.a *.o
+</code> </pre>
+<p>Также одной из проблем лично я считаю отсутствие возможности запуска приложений macOS сразу на убунту (хотябы с частью функционала), конечно есть проект <a href="https://github.com/darlinghq/darling" rel="noopener" target="_blank">darling</a>, но поддержка оставляет пока желать лучшего.</p>
+<h3>Источники</h3>
+<p><a href="https://github.com/tpoechtrager/osxcross" rel="noopener" target="_blank">https://github.com/tpoechtrager/osxcross</a></p>

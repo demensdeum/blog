@@ -1,0 +1,55 @@
+Format: Fall24-October10
+Language: ru
+Title: Сортировка пузырьком на Erlang
+Slug: bubble-sort-in-erlang
+Categories: techie,tutorials
+<p>Сортировка пузырьком это достаточно скучно, но становится интереснее если попробовать реализовать его на функциональном языке для телекома &#8211; Erlang.</p>
+<p>У нас есть список из цифр, нам нужно его отсортировать. Алгоритм сортировки пузырьком проходит по всему списку, итерируя и сравнивая числа попарно. На проверке происходит следующее: меньшее число добавляется в выходной список, либо числа меняются местами в текущем списке если справа меньше, перебор продолжается со следующим по итерации числом. Данный обход повторяется до тех пор, пока в списке больше не будет замен.</p>
+<p>На практике его использовать не стоит из-за большой временной сложности алгоритма &#8211; O(n^2); я реализовал его на языке Erlang, в императивном стиле, но если вам интересно то можете поискать лучшие варианты:</p>
+<pre><code>
+-module(bubbleSort).
+-export([main/1]).
+
+startBubbleSort([CurrentHead|Tail]) -&gt;
+    compareHeads(CurrentHead, Tail, [], [CurrentHead|Tail]).
+
+compareHeads(CurrentHead, [NextHead|Tail], [], OriginalList) -&gt;   
+    if
+        CurrentHead &lt; NextHead -&gt;
+            compareHeads(NextHead, Tail, [CurrentHead], OriginalList);
+        true -&gt;
+            compareHeads(CurrentHead, Tail, [NextHead], OriginalList)
+    end;
+    
+compareHeads(CurrentHead, [NextHead|Tail], OriginalOutputList, OriginalList) -&gt;
+    if
+        CurrentHead &lt; NextHead -&gt;
+            OutputList = OriginalOutputList ++ [CurrentHead],
+            compareHeads(NextHead, Tail, OutputList, OriginalList);
+        true -&gt;
+            OutputList = OriginalOutputList ++ [NextHead],
+            compareHeads(CurrentHead, Tail, OutputList, OriginalList)
+    end;
+  
+compareHeads(CurrentHead, [], OriginalOutputList, OriginalList) -&gt;
+    OutputList = OriginalOutputList ++ [CurrentHead],
+    if
+        OriginalList == OutputList -&gt;
+            io:format("OutputList: ~w~n", [OutputList]);
+        true -&gt;
+            startBubbleSort(OutputList)
+    end.
+  
+main(_) -&gt;
+    UnsortedList = [69,7,4,44,2,9,10,6,26,1],
+    startBubbleSort(UnsortedList).
+
+</code></pre>
+<h3>Установка и запуск</h3>
+<p>В Ubuntu Эрланг установить очень просто, достаточно в терминале набрать команду sudo apt install erlang. В данном языке каждый файл должен представлять из себя модуль (module), со списком функций которые можно использовать извне &#8211; export. К интересным особенностям языка относится отсутствие переменных, только константы, отсутствие стандартного синтаксиса для ООП (что не мешает использовать ООП техники), и конечно же параллельные вычисления без блокировок на основе модели акторов.</p>
+<p>Запустить модуль можно либо через интерактивную консоль erl, запуская одну команду за другой, либо проще через escript bubbleSort.erl; Для разных случаев файл будет выглядеть по разному, например для escript необходимо сделать функцию main, из которой он будет стартовать.</p>
+<h3>Источники</h3>
+<p><a href="https://www.erlang.org/" target="_blank" rel="noopener noreferrer">https://www.erlang.org/</a><br />
+<a href="https://habr.com/ru/post/197364/" target="_blank" rel="noopener noreferrer">https://habr.com/ru/post/197364/</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/blob/master/bubbleSort/bubbleSort.erl" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/algorithms/blob/master/bubbleSort/bubbleSort.erl</a></p>

@@ -1,0 +1,12 @@
+Format: Fall24-October10
+Language: ru
+Title: Как запустить CSGO на Macbook M1
+Slug: how-to-run-csgo-on-macbook-m1
+Categories: techie,tutorials
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3089" src="https://demensdeum.com/blog/wp-content/uploads/2022/04/CSGO.jpg" alt="" width="720" height="450" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/04/CSGO.jpg 720w, https://demensdeum.com/blog/wp-content/uploads/2022/04/CSGO-300x188.jpg 300w" sizes="auto, (max-width: 720px) 100vw, 720px" /></p>
+<p>Если у вас вылезает ошибка SDL_GetDesktopDisplayMode_REAL на Macbook <strong>M1</strong> при запуске CSGO, то делайте как написано дальше.<br />
+1. Добавьте параметры запуска в Steam для CSGO:<br />
+<code>-w 1440 -h 900 -fullscreen</code><br />
+2. Запустите CSGO через Steam<br />
+3. Нажмите Игнорировать или Всегда игорировать на ошибке SDL_GetDesktopDisplayMode_REAL<br />
+4. Наслаждайтесь</p>

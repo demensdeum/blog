@@ -1,0 +1,42 @@
+Format: Fall24-October10
+Language: ru
+Title: Перевернутый мир
+Slug: flipped-world
+Categories: techie,tutorials
+<p>Для разработки нового проекта Cube Art Project взял на вооружение методологию разработки Test Driven Development. В данном подходе сначала реализуется тест для определенного функционала приложения, а затем уже реализуется конкретный функционал. Большим плюсом в данном подходе я считаю реализацию финальных интерфейсов, максимально непосвященных в детали реализации, до начала разработки функционала. При таком подходе тест диктует дальнейшую реализацию, добавляются все преимущества контрактного программирования, когда интерфейсы являются контрактами для конкретной реализации.<br />
+Cube Art Project &#8211; 3D редактор в котором пользователь строит фигуры из кубов, не так давно этот жанр был очень популярен. Так как это графическое приложение, то я решил добавить тесты с валидацией скриншотов.<br />
+Для валидирования скриншотов нужно получить их из OpenGL контекста, делается это с помощью функции glReadPixels. Описание аргументов функции простейшие &#8211; начальная позиция, ширина, высота, формат (RGB/RGBA/проч.), указатель на выходной буфер, любому работавшему с SDL или имеющему опыт с буферами данных в Си будет просто подставить нужные аргументы. Однако считаю необходимым описать интересную особенность выходного буфера glReadPixels, пиксели в нем хранятся снизу вверх, а в SDL_Surface все базовые операции происходят сверху вниз.<br />
+То есть загрузив референсный скриншот из png файла, я не смог сравнить два буфера в лоб, так как один из них был перевернутым.<br />
+Чтобы перевернуть выходной буфер из OpenGL вам нужно заполнить его отнимая высоту скриншота для координаты Y. Однако стоить учесть что есть шансы выйти за пределы буфера, если не отнять единицу во время заполнения, что приведет к memory corruption.<br />
+Так как я повсеместно стараюсь использовать ООП парадигму “программирования интерфейсами”, вместо прямого Си-подобного доступа к памяти по указателю, то при попытке записать данные за пределами буфера объект мне об этом сообщил благодаря валидации границ в методе.<br />
+Итоговый код метода получения скриншота в стиле сверху-вниз:</p>
+<pre><code>
+    auto width = params->width;
+    auto height = params->height;
+
+    auto colorComponentsCount = 3;
+    GLubyte *bytes = (GLubyte *)malloc(colorComponentsCount * width * height);
+    glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, bytes);
+
+    auto screenshot = make_shared<Screenshot>(width, height);
+
+    for (auto y = 0; y < height; y++) {
+        for (auto x = 0; x < width; x++) {
+            auto byteX = x * colorComponentsCount;
+            auto byteIndex = byteX + (y * (width * colorComponentsCount));
+            auto redColorByte = bytes[byteIndex];
+            auto greenColorByte = bytes[byteIndex + 1];
+            auto blueColorByte = bytes[byteIndex + 2];
+            auto color = make_shared<Color>(redColorByte, greenColorByte, blueColorByte, 255);
+            screenshot->setColorAtXY(color, x, height - y - 1);
+        }
+    }
+
+    free(bytes);
+
+</code></pre>
+<h3>Источники</h3>
+<p><a href="https://community.khronos.org/t/glreadpixels-fliped-image/26561" target="_blank" rel="noopener noreferrer">https://community.khronos.org/t/glreadpixels-fliped-image/26561</a><br />
+<a href="https://stackoverflow.com/questions/8346115/why-are-bmps-stored-upside-down" target="_blank" rel="noopener noreferrer">https://stackoverflow.com/questions/8346115/why-are-bmps-stored-upside-down</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/cube-art-project-bootstrap" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/cube-art-project-bootstrap</a></p>

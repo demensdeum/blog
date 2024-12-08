@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Death-Mask Wild Beta
+Slug: death-mask-wild-beta
+Categories: blog,demos
+<p>Игра Death-Mask переходит в статус публичной беты (wild beta)<br />
+Переработан экран главного меню игры, добавлен вид на синюю зону технолабиринта, с приятной музыкой на фоне.</p>
+<p><a href="http://demensdeum.com/games/deathMask/wildBeta/" target="_blank" rel="noopener noreferrer"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2114" src="https://demensdeum.com/blog/wp-content/uploads/2019/06/Screenshot-2019-06-29-at-14.27.45.png" alt="" width="982" height="529" /></a></p>
+<p>Далее я планирую переработать геймплейный контроллер, добавить плавное движение как в старых шутерах, качественные 3д модели ящиков, оружия, врагов, возможность переходить на другие уровни технолабиринта не только через порталы (лифты, двери, проваливаться через дыры в полу, дыры в стенах), добавлю немного разнообразия к окружению сгенерированного лабиринта. Также поработаю над игровым балансом.<br />
+Скелетная анимация будет добавлена на этапе полировки перед релизом.<a href="http://demensdeum.com/games/deathMask/wildBeta/" target="_blank" rel="noopener noreferrer"></a></p>

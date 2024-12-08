@@ -1,0 +1,91 @@
+Format: Fall24-October10
+Language: ru
+Title: RGB изображение в серое
+Slug: rgb-image-to-grayscale
+Categories: techie,tutorials
+<p>В этой заметке я опишу алгоритм перевода RGB буфера в серый (Grayscale).<br />
+А делается это довольно просто, каждый пиксель цветовой канал буфера преобразуется по определенной формуле и на выходе получается изображение серого цвета.<br />
+Метод среднего:</p>
+<pre><code>const average = (red + green + blue) / 3;
+red = average;
+green = average;
+blue = average;</code></pre>
+<p>Складываем 3 цветовых канала и делим на 3.</p>
+<p><img loading="lazy" decoding="async" class="size-full wp-image-3103" src="https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsColor.jpg" alt="" width="420" height="236" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsColor.jpg 420w, https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsColor-300x169.jpg 300w" sizes="auto, (max-width: 420px) 100vw, 420px" /></p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3104" src="https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsAverage.jpg" alt="" width="420" height="236" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsAverage.jpg 420w, https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsAverage-300x169.jpg 300w" sizes="auto, (max-width: 420px) 100vw, 420px" /></p>
+<p>Однако существует еще один метод – метод средневзвешенный, он учитывает цветовосприятие человека:</p>
+<pre><code>const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+red = luminance;
+green = luminance;
+blue = luminance;</code></pre>
+<p><img loading="lazy" decoding="async" class="size-full wp-image-3103" src="https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsColor.jpg" alt="" width="420" height="236" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsColor.jpg 420w, https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsColor-300x169.jpg 300w" sizes="auto, (max-width: 420px) 100vw, 420px" /></p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3105" src="https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsWeightedAverage.jpg" alt="" width="420" height="236" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsWeightedAverage.jpg 420w, https://demensdeum.com/blog/wp-content/uploads/2022/05/parrotsWeightedAverage-300x169.jpg 300w" sizes="auto, (max-width: 420px) 100vw, 420px" /></p>
+<p>Какой метод лучше использовать? Да какой вам больше подходит для конкретной задачи. Далее сравнение методов с помощью тестовой цветовой сетки:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3107" src="https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTest.png" alt="" width="430" height="323" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTest.png 430w, https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTest-300x225.png 300w" sizes="auto, (max-width: 430px) 100vw, 430px" /></p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3108" src="https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTestAverage.png" alt="" width="430" height="323" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTestAverage.png 430w, https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTestAverage-300x225.png 300w" sizes="auto, (max-width: 430px) 100vw, 430px" /></p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3109" src="https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTestWeightedAverage.png" alt="" width="430" height="323" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTestWeightedAverage.png 430w, https://demensdeum.com/blog/wp-content/uploads/2022/05/colorTestWeightedAverage-300x225.png 300w" sizes="auto, (max-width: 430px) 100vw, 430px" /></p>
+<p>Пример реализации на JavaScript + HTML 5</p>
+<pre><code>function rgb2grayscale(
+    image,
+    canvas,
+    weightedAverage
+) {
+    const context = canvas.getContext('2d');
+
+    const imageWeight = image.width;
+    const imageHeight = image.height;
+
+    canvas.width = imageWeight;
+    canvas.height = imageHeight;
+
+    context.drawImage(image, 0, 0);
+
+    let pixels = context
+        .getImageData(
+            0,
+            0,
+            imageWeight,
+            imageHeight
+        );
+
+    for (let y = 0; y & lt; pixels.height; y++) {
+        for (let x = 0; x & lt; pixels.width; x++) {
+            const i = (y * 4) * pixels.width + x * 4;
+
+            let red = pixels.data[i];
+            let green = pixels.data[i + 1];
+            let blue = pixels.data[i + 2]
+
+            const average = (red + green + blue) / 3;
+            const luminance = 0.2126 * red +
+                0.7152 * green +
+                0.0722 * blue;
+
+            red = weightedAverage ? luminance : average;
+            green = weightedAverage ? luminance : average;
+            blue = weightedAverage ? luminance : average;
+
+            pixels.data[i] = red;
+            pixels.data[i + 1] = green;
+            pixels.data[i + 2] = blue;
+        }
+    }
+    context
+        .putImageData(
+            pixels,
+            0,
+            0,
+            0,
+            0,
+            pixels.width,
+            pixels.height
+        );
+}</code></pre>
+<h3><strong>Источники</strong></h3>
+<p><a href="https://www.baeldung.com/cs/convert-rgb-to-grayscale" rel="noopener" target="_blank">https://www.baeldung.com/cs/convert-rgb-to-grayscale</a><br />
+<a href="https://twitter.com/mudasobwa/status/1528046455587495940" rel="noopener" target="_blank">https://twitter.com/mudasobwa/status/1528046455587495940</a><br />
+<a href="https://rosettacode.org/wiki/Grayscale_image" rel="noopener" target="_blank">https://rosettacode.org/wiki/Grayscale_image</a></p>
+<h3><strong>Ссылки</strong></h3>
+<p><a href="http://papugi.demensdeum.repl.co" target="_blank" rel="noopener">http://papugi.demensdeum.repl.co/</a></p>
+<h3><strong>Благодарности</strong></h3>
+<p>Спасибо Aleksei Matiushkin (<a href="https://twitter.com/mudasobwa" target="_blank" rel="noopener">https://twitter.com/mudasobwa</a>) за наводку на <a href="https://www.rosettacode.org/wiki/Rosetta_Code" rel="noopener" target="_blank">Rosetta Code</a></p>

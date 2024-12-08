@@ -1,0 +1,30 @@
+Format: Fall24-October10
+Language: ru
+Title: Добавляем поддержку скриптов JavaScript в C++
+Slug: add-javascript-support-for-cpp
+Categories: techie,tutorials
+<p>В данной заметке я опишу способ добавления поддержки JavaScript скриптов в приложение на C++ с помощью библиотеки Tiny-JS.</p>
+<p><a href="https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%80%D0%BE%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B0%D1%8F_%D0%B1%D0%B5%D1%80%D0%B5%D1%81%D1%82%D1%8F%D0%BD%D0%B0%D1%8F_%D0%B3%D1%80%D0%B0%D0%BC%D0%BE%D1%82%D0%B0_%E2%84%96_35" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2719" src="https://demensdeum.com/blog/wp-content/uploads/2020/05/lezha.png" alt="" width="320" height="75" srcset="https://demensdeum.com/blog/wp-content/uploads/2020/05/lezha.png 320w, https://demensdeum.com/blog/wp-content/uploads/2020/05/lezha-300x70.png 300w" sizes="auto, (max-width: 320px) 100vw, 320px" /></a></p>
+<p>Tiny-JS представляет из себя библиотеку для встраивания в C++, обеспечивающая выполнение JavaScript кода, с поддержкой биндингов (возможность вызывать код C++ из скриптов)</p>
+<p>Сначала я хотел использовать популярные библиотеки ChaiScript, Duktape или подключить Lua, но из-за зависимостей и возможных сложностей в портируемости на разные платформы, было принято решение найти простую, минимальную, но мощную MIT JS либу, этим критериям отвечает Tiny-JS. Единственный минус этой библиотеки в отсутствии поддержки/развития автором, однако ее код достаточно прост, что позволяет взять поддержку на себя, если это потребуется.</p>
+<p>Загрузите Tiny-JS из репозитория:<br />
+<a href="https://github.com/gfwilliams/tiny-js" target="_blank" rel="noopener noreferrer">https://github.com/gfwilliams/tiny-js</a></p>
+<p>Далее добавьте в код который отвечает за скрипты хидеры Tiny-JS:</p>
+<pre><code>
+#include "tiny-js/TinyJS.h"
+#include "tiny-js/TinyJS_Functions.h"
+
+</code></pre>
+<p>На этап сборки добавьте .cpp файлы TinyJS, далее можно приступать к написанию загрузки и запуска скриптов.</p>
+<p>Пример использования библотеки доступен ее в репозитории:<br />
+<a href="https://github.com/gfwilliams/tiny-js/blob/master/Script.cpp" target="_blank" rel="noopener noreferrer">https://github.com/gfwilliams/tiny-js/blob/master/Script.cpp</a><br />
+<a href="https://github.com/gfwilliams/tiny-js/blob/wiki/CodeExamples.md" target="_blank" rel="noopener noreferrer">https://github.com/gfwilliams/tiny-js/blob/wiki/CodeExamples.md</a></p>
+<p>Пример имплементации класса-обработчика можно посмотреть в проекте SpaceJaguar:<br />
+<a href="https://gitlab.com/demensdeum/space-jaguar-action-rpg/-/blob/master/project/src/Controllers/SpaceJaguarScriptController/SpaceJaguarScriptController.h" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/space-jaguar-action-rpg/-/blob/master/project/src/Controllers/SpaceJaguarScriptController/SpaceJaguarScriptController.h</a><br />
+<a href="https://gitlab.com/demensdeum/space-jaguar-action-rpg/-/blob/master/project/src/Controllers/SpaceJaguarScriptController/SpaceJaguarScriptController.cpp" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/space-jaguar-action-rpg/-/blob/master/project/src/Controllers/SpaceJaguarScriptController/SpaceJaguarScriptController.cpp</a></p>
+<p>Пример игрового скрипта добавленного  в приложение:<br />
+<a href="https://gitlab.com/demensdeum/space-jaguar-action-rpg/-/blob/master/project/resources/com.demensdeum.spacejaguaractionrpg.scripts.sceneController.js" target="_blank" rel="noopener">https://gitlab.com/demensdeum/space-jaguar-action-rpg/-/blob/master/project/resources/com.demensdeum.spacejaguaractionrpg.scripts.sceneController.js</a></p>
+<h3>Источники</h3>
+<p><a href="https://github.com/gfwilliams/tiny-js" target="_blank" rel="noopener noreferrer">https://github.com/gfwilliams/tiny-js</a><br />
+<a href="https://github.com/dbohdan/embedded-scripting-languages" target="_blank" rel="noopener noreferrer">https://github.com/dbohdan/embedded-scripting-languages</a><br />
+<a href="https://github.com/AlexKotik/embeddable-scripting-languages" target="_blank" rel="noopener noreferrer">https://github.com/AlexKotik/embeddable-scripting-languages</a></p>

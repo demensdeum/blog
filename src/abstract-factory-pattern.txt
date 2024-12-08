@@ -1,0 +1,44 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Абстрактная Фабрика
+Slug: abstract-factory-pattern
+Categories: techie,tutorials
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2353" src="https://demensdeum.com/blog/wp-content/uploads/2019/11/kit.jpg" alt="" width="420" height="315" srcset="https://demensdeum.com/blog/wp-content/uploads/2019/11/kit.jpg 420w, https://demensdeum.com/blog/wp-content/uploads/2019/11/kit-300x225.jpg 300w" sizes="auto, (max-width: 420px) 100vw, 420px" /></p>
+<p><b>Абстрактная фабрика </b>&#8211; предоставляет интерфейс создания связанных объектов, без указания конкретных классов.</p>
+<p>Мне большие нравится альтернативное название данного паттерна &#8211; <b>Набор</b> (Kit)</p>
+<p>Он очень похож на <b>Фабричный Метод</b>, однако <b>Абстрактные Фабрики </b>должны описывать связь между создаваемыми объектами, иначе это уже просто антипаттерн <b>God Object</b>, создающий бессистемно все подряд.</p>
+<p>Представим себе разработку AR фреймворка для очков, мы выводим на экране стрелки indoor навигации, иконки магазинов, интересных мест, окна и кнопки с информацией о каком-либо месте, в котором сейчас находится пользователь.</p>
+<p>При этом нам нужна возможность кастомизировать внешний вид и поведение контролов AR окружения. Вот именно для этого случая нужно использовать паттерн <b>Набор</b>.</p>
+<p>Напишем интерфейс <b>Абстрактной Фабрики</b> и <b>Абстрактных Продуктов</b> &#8211; родительских протоколов, элементов AR окружения:</p>
+<pre><code>
+protocol ARFactory {
+    func arrow() -&gt; ARArrow
+    func icon() -&gt; ARIcon
+    func button() -&gt; ARButton
+    func window() -&gt; ARWindow
+}
+
+protocol ARArrow {
+    var image: { get }
+    func handleSelection()
+}
+
+protocol ARIcon {
+    var image: { get }
+    var title: String
+}
+
+protocol ARButton {
+    var title: String
+    func handleSelection()
+}
+
+protocol ARWindow {
+    var title: String
+    var draw(canvas: Canvas)
+}
+</code></pre>
+<p>Теперь разработчикам наборов нужно будет реализовать Конкретную Фабрику на основе интерфейса Абстрактной Фабрики, причем реализовать придется все элементы вместе, остальные части приложения смогут работать с фабрикой не меняя свой код.</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/abstract-factory" target="_blank" rel="noopener">https://refactoring.guru/ru/design-patterns/abstract-factory</a><br />
+<a href="https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612" target="_blank" rel="noopener">https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612</a></p>
