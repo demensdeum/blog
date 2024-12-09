@@ -1,0 +1,20 @@
+Format: Fall24-October10
+Language: ru
+Title: 16-битные помощники Санты
+Slug: my-retro-16-bit-experience
+Categories: blog,sketches,techie
+<p>Мне пришло на почту сообщение:<br />
+<strong>&#8220;Эй мы тут открываем ретро гейм-джем &#8211; <a href="http://jams.gamejolt.io/bitbitjam3" target="_blank">bibitjam3</a>!!! Ты должен сделать игру на ретро платформу 8-16 бит!!!&#8221;</strong><br />
+Ба! Это же мечта моего детства &#8211; сделать игру для Сеги Меги Драйв Два.<br />
+Что-ж я попробовал сделать игрушку, и у меня что-то даже получилось:<br />
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-668" src="https://demensdeum.com/blog/wp-content/uploads/2016/07/rqr.png" alt="rqr" width="646" height="532" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/07/rqr.png 646w, https://demensdeum.com/blog/wp-content/uploads/2016/07/rqr-300x247.png 300w" sizes="auto, (max-width: 646px) 100vw, 646px" /><br />
+Игру я назвал &#8220;Замес Красной Королевы&#8221;. История такова &#8211; &#8220;Красная Королева была брошена в смертельный лабиринт, теперь она убьет всех на своем пути к свободе.&#8221;<br />
+Можно ходить, можно атаковать зеленую штучку с красными глазами, открывать сундуки с сокровищами, и переходить из сцены в сцену.<br />
+Это конечно уровень &#8220;на попробовать&#8221; хоть что-нибудь сделать для сеги и для конкурса.<br />
+Я использовать SGDK тулкит &#8211; компилятор для моторолы 68к на базе GCC, библиотеки для работы с железом сеги меги.<br />
+Теперь я понимаю что это реально было сложно &#8211; делать игры 20-30 лет назад. Например каждый тайл &#8211; должен быть поделен на кусочки 8х8 пикселей и отрисован кусками по очереди. Также палитра для каждого тайла должна не превышать 16 цветов! Сейчас конечно гораздо проще.<br />
+Конечно же нужно создать игровой, звуковой, графический движок для игры, как и сейчас.<br />
+Вы можете поиграть в Красную Королеву с помощью эмулятора Sega Genesis и РОМа игры:<br />
+<a href="http://demensdeum.com/games/redQueenRampageSegaGenesis/RedQueenRampage.zip" target="_blank">http://demensdeum.com/games/redQueenRampageSegaGenesis/RedQueenRampage.zip</a><br />
+Если вы хотите посмотреть исходники:<br />
+<a href="http://demensdeum.com/games/redQueenRampageSegaGenesis/RedQueenRampageSource.zip" target="_blank">http://demensdeum.com/games/redQueenRampageSegaGenesis/RedQueenRampageSource.zip</a></p>

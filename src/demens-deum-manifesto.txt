@@ -1,0 +1,7 @@
+Format: Fall24-October10
+Language: ru
+Title: Demens Deum Манифест
+Slug: demens-deum-manifesto
+Categories: misc
+<p><img loading="lazy" decoding="async" class="alignnone" src="https://demensdeum.com/games/demonsCave/data/graphics/demensdeumLogo.png" alt="Demens Deum MiniGames Logo" width="800" height="480" /></p>
+<p><strong>Demens Deum</strong> &#8211; команда инди-разработчиков, мы создаем новые интересные вещи, будь то игры, программы, музыка, комиксы. В мире сейчас очень мало команд готовых эксперементировать с идеями, технологиями, воплощением. Наш манифест &#8211; <strong>долой</strong> привычные рамки жанров, <strong>долой</strong> серые штампованные хиты &#8211; ударим экспериментом, оригинальными вселенными, захватывающими историями по мозгу обывателя, <strong>взбудоражим</strong> сердца жаждующих!</p>

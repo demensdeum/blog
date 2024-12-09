@@ -1,0 +1,51 @@
+Format: Fall24-October10
+Language: ru
+Title: Портирование SDL C++ игры на HTML5 (Emscripten)
+Slug: porting-sdl-c-game-to-html5-emscripten
+Categories: techie,tutorials
+<p><em>За последний год я написал простейший движок <a href="https://github.com/demensdeum/FlameSteelEngine" target="_blank" rel="noopener">Flame Steel Engine</a> и набор классов для игровой разработки <a href="https://github.com/demensdeum/FlameSteelEngineGameToolkit" target="_blank" rel="noopener">Flame Steel Engine Game Toolkit</a>. В данной статье я опишу как производил портирование движка и <strong>SDL</strong> игры <a href="http://demensdeum.com/games/BadRobots/BadRobots.html" target="_blank" rel="noopener">Bad Robots</a> на <strong>HTML 5</strong>, с использованием компилятора <strong>Emscripten</strong>.</em></p>
+<h6>Установка Hello World &#8211; Emscripten</h6>
+<p>Для начала нужно установить Emscripten. Простейшим вариантом оказалось использование скрипта emsdk для Linux. На официальном сайте данный тип установки называется как &#8220;<a class="reference external" href="https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz" target="_blank" rel="noopener">Portable Emscripten SDK for Linux and OS X</a>&#8220;. Внутри архива есть инструкция по установке с использованием скрипта. Я производил установку в директорию ~/emsdk/emsdk_portable.</p>
+<p>После установки emscripten нужно проверить корректность работы компилятора, для этого создаем простейший hello_world.cpp и собираем его в hello_world.html с помощью команд:</p>
+<p>source ~/emsdk/emsdk_portable/emsdk_env.sh<br />
+emcc hello_world.cpp -o hello_world.html</p>
+<p>После компиляции в папке появится hello_world.html и вспомогательные файлы, откройте его в лучшем браузере <strong>Firefox</strong>, проверьте что все работает корректно.</p>
+<h6>Портирование кода игры</h6>
+<p>В <strong>javascript</strong> нежелательно вызывать бесконечный цикл &#8211; это приводит к зависанию браузера. На данный момент корректная стратегия &#8211; запрашивать один шаг цикла у браузера с помощью вызова <strong>window.requestAnimationFrame(callback</strong>)</p>
+<p>В <strong>Emscripten</strong> данное обстоятельство <em>решено</em> с помощью вызова:</p>
+<p>emscripten_set_main_loop(em_callback_func func, int fps, int simulate_infinite_loop);</p>
+<p><!-- HTML generated using hilite.me --></p>
+<p>Таким образом, нужно изменить код игры для корректного вызова метода emscripten. Для этого я сделал глобальный метод <strong>GLOBAL_fsegt_emscripten_gameLoop</strong>, в котором вызываю шаг цикла игрового контроллера. Главный игровой контроллер также вынесен в глобальную видимость:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #557799;">#ifdef __EMSCRIPTEN__</span>
+
+<span style="color: #333399; font-weight: bold;">void</span> <span style="color: #0066bb; font-weight: bold;">GLOBAL_fsegt_emscripten_gameLoop</span>() {
+
+GLOBAL_fsegt_emscripten_gameController<span style="color: #333333;">-&gt;</span>gameLoop();
+
+}
+<span style="color: #557799;">#endif</span>
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>Также для обработки специфических для Emscripten моментов, нужно использовать макрос __EMSCRIPTEN__.</p>
+<h6>Ресурсы и оптимизация</h6>
+<p><strong>Emscripten</strong> поддерживает ресурсы и сборку с оптимизацией.</p>
+<p>Для добавления изображений, музыки и прочего, положите все файлы в одну папку, например <strong>data.</strong> Далее в скрипт сборки добавьте:</p>
+<p>emcc &lt;файлы для сборки&gt; &#8211;use-preload-plugins &#8211;preload-file data</p>
+<p>Флаг &#8211;use-preload-plugins включает красивый прелоадер в углу экрана, &#8211;preload-file добавляет указанный ресурс в файл <strong>&lt;имя проекта&gt;.data<br />
+</strong>Код постоянно останавливался с ошибками доступа к ресурсам, пока я не включил оба этих флага. Также стоит заметить что для корректного доступа к ресурсам, желательно запускать игру на https (возможно и http) сервере, или отключить защиту локального доступа к файлам в вашем браузере.</p>
+<p>Для включения оптимизации добавьте флаги:</p>
+<p>-s TOTAL_MEMORY=67108864 -O3 -ffast-math</p>
+<p>TOTAL_MEMORY &#8211; оперативная память в байтах(?) необходимая для корректной работы игры. Вы можете использовать флаг для динамического выделения памяти, но тогда часть оптимизаций работать не будет.</p>
+<h6>Производительность</h6>
+<p>Код javascript из C++ работает гораздо медленнее, даже со включенными оптимизациями. Поэтому если ваша цель это разработка для HTML5, то приготовьтесь к ручной оптимизации алгоритмов игры, паралелльному тестированию, также к написанию javascript кода вручную в особо узких местах. Для написания javascript кода используется макрос <a href="https://kripken.github.io/emscripten-site/docs/porting/connecting_cpp_and_javascript/Interacting-with-code.html#interacting-with-code-call-javascript-from-native" target="_blank" rel="noopener">EM_ASM</a>. Во время реализации рейкастера на emscripten, мне удалось добиться повышения fps с 2-4 до 30 с помощью прямого использования методов canvas.drawImage, в обход обертки SDL-&gt;Canvas,<em> что почти приравнялось к написанию <strong>всего</strong> на javascript</em>.</p>
+<h6>Поддержка SDL</h6>
+<p>На данный момент почти не работает SDL_TTF, поэтому отрисовка шрифта для Game Score в <a href="http://demensdeum.com/games/BadRobots/BadRobots.html" target="_blank" rel="noopener">BadRobots</a> очень проста. SDL_Image, SDL_Mixer работают корректно, в mixer я проверил только проигрывание музыки.</p>
+<p>Исходный код Flame Steel Engine, Flame Steel Engine Game Toolkit, игры Bad Robots:</p>
+<p><a href="https://github.com/demensdeum/BadRobots" target="_blank" rel="noopener">https://github.com/demensdeum/BadRobots</a><br />
+<a href="https://github.com/demensdeum/FlameSteelEngine" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngine</a><br />
+<a href="https://github.com/demensdeum/FlameSteelEngineGameToolkit" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngineGameToolkit</a></p>
+<p>Статья на эту тему:</p>
+<p><a href="https://hacks.mozilla.org/2012/04/porting-me-my-shadow-to-the-web-c-to-javascriptcanvas-via-emscripten/" target="_blank" rel="noopener">https://hacks.mozilla.org/2012/04/porting-me-my-shadow-to-the-web-c-to-javascriptcanvas-via-emscripten/</a></p>

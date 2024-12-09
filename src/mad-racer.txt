@@ -1,0 +1,17 @@
+Format: Fall24-October10
+Language: ru
+Title: Mad Racer (Устарело)
+Slug: mad-racer
+Categories: stories,games
+<p><a href="https://play.google.com/store/apps/details?id=mad.racer.free" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="size-full wp-image-21 aligncenter" src="https://demensdeum.com/blog/wp-content/uploads/2015/12/madracerLogo.png" alt="madracerLogo" width="300" height="300" srcset="https://demensdeum.com/blog/wp-content/uploads/2015/12/madracerLogo.png 300w, https://demensdeum.com/blog/wp-content/uploads/2015/12/madracerLogo-150x150.png 150w" sizes="auto, (max-width: 300px) 100vw, 300px" /></a></p>
+<p>Первая игра компании Demens Deum. Создана жарким летом 2011 года, силой двух человек <a href="https://demensdeum.com/blog/ru/2015/12/19/about-us/" target="_blank" rel="noopener">Demensdeum</a> и <a href="https://demensdeum.com/blog/ru/2015/12/19/anthony/" target="_blank" rel="noopener">Coolspotdreamer</a></p>
+<p><a href="https://play.google.com/store/apps/details?id=mad.racer.free" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="image-shadow aligncenter wp-image-20 size-medium" src="https://demensdeum.com/blog/wp-content/uploads/2015/12/madracer-300x200.jpg" alt="screenshot" width="300" height="200" srcset="https://demensdeum.com/blog/wp-content/uploads/2015/12/madracer-300x200.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2015/12/madracer-225x150.jpg 225w, https://demensdeum.com/blog/wp-content/uploads/2015/12/madracer.jpg 480w" sizes="auto, (max-width: 300px) 100vw, 300px" /></a></p>
+<p>Безумный гонщик и его оторва подруга живут вне закона. С базукой за плечом и верным байком они мчатся  по дороге&#8230;</p>
+<p>3д графика<br />
+Управление с помощью акселлерометра<br />
+Гениальная музыка<br />
+Жестокая полиция<br />
+Невероятные погони<br />
+Безбашенный геймплей!</p>
+<p style="text-align: center;"><iframe loading="lazy" src="https://www.youtube.com/embed/btiMcBcUL6c" width="420" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+<p>Ссылка на <a href="http://demensdeum.com/games/madRacer/mad.racer.free.apk" target="_blank" rel="noopener">APK файл</a></p>

@@ -1,0 +1,11 @@
+Format: Fall24-October10
+Language: ru
+Title: Bad Robots на WebGL на базе ThreeJS
+Slug: bad-robots-webgl-by-threejs
+Categories: demos,techie
+<p>Сегодня выходит версия игры Bad Robots на эксперементальном WebGL рендере на базе библиотеки  <a href="https://threejs.org/" target="_blank" rel="noopener">ThreeJS</a>.<br />
+Это первая OpenGL (WebGL) игра на движке Flame Steel Engine.<br />
+Вы можете поиграть в нее по ссылке:<br />
+<a href="http://demensdeum.com/games/BadRobotsGL/" target="_blank" rel="noopener">http://demensdeum.com/games/BadRobotsGL/</a></p>
+<p>Исходный код IOSystem на базе ThreeJS доступен здесь:<br />
+<a href="https://github.com/demensdeum/FlameSteelEngineGameToolkitWeb" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngineGameToolkitWeb</a></p>

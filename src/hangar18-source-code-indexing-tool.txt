@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Hangar18 утилита индексации исходного кода
+Slug: hangar18-source-code-indexing-tool
+Categories: devtools,software
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-1481" src="https://demensdeum.com/blog/wp-content/uploads/2018/09/Screenshot_20180914_234644.png" alt="" width="624" height="252" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/09/Screenshot_20180914_234644.png 1271w, https://demensdeum.com/blog/wp-content/uploads/2018/09/Screenshot_20180914_234644-300x121.png 300w, https://demensdeum.com/blog/wp-content/uploads/2018/09/Screenshot_20180914_234644-768x310.png 768w, https://demensdeum.com/blog/wp-content/uploads/2018/09/Screenshot_20180914_234644-1024x413.png 1024w" sizes="auto, (max-width: 624px) 100vw, 624px" /></p>
+<p>Hangar18 &#8211; утилита для индексации исходного кода C++, написанная на Rust. Данная утилита будет реализовывать функционал &#8220;перейти к определению&#8221; в Saber-Plus IDE.<br />
+На вход утилите подается абсолютный путь к директории исходного кода, строка декларации которую необходимо найти. На выходе grep-подобный вывод.</p>
+<p>Исходный код:<br />
+<a href="https://gitlab.com/demensdeum/hangar18" target="_blank" rel="noopener">https://gitlab.com/demensdeum/hangar18</a></p>

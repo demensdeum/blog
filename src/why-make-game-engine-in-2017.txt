@@ -1,0 +1,8 @@
+Format: Fall24-October10
+Language: ru
+Title: Зачем делать игровой движок в 2017 году?
+Slug: why-make-game-engine-in-2017
+Categories: blog,hottest
+<p>Много людей меня спрашивают, зачем делать игровой движок в 2017? Ведь на рынке уже столько готовых решений забесплатно.</p>
+<p>Я подготовил отдельную статью с обзором текущего рынка геймдева, описал причины сподвигнувшие меня на создание Flame Steel Engine:</p>
+<p>https://demensdeum.com/blog/ru/reasons-to-make-new-game-engine-in-2017/</p>

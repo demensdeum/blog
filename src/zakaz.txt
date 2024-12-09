@@ -1,0 +1,51 @@
+Format: Fall24-October10
+Language: ru
+Title: Декларативный язык Zakaz
+Slug: zakaz
+Categories: software
+<p></p>
+<p>Представляю вашему вниманию чистый декларативный язык программирования &#8211; Zakaz. Основная идея нового языка &#8211; приложение содержит команды на выполнение, написанные в произвольной форме, которые должны быть выполнены &#8220;исполнителями&#8221;. Если ни один &#8220;исполнитель&#8221; не может выполнить команду, то выполнение программы останавливается. Приложения называются техзаданиями (tez) и должны иметь расширение .tez. Синтаксис Zakaz обязывает соблюдать два правила:</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<ul class="wp-block-list">
+<li>Каждая команда начинается с новой строки</li>
+<li>Каждая команда должна быть оформлена формальным языком, понятным для человека</li>
+</ul>
+<p></p>
+<p></p>
+<p>Пример Hello World.tez:</p>
+<p></p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">Show <span style="background-color: #fff0f0;">"Hello World"</span> text on screen
+Show <span style="background-color: #fff0f0;">"Zakaz 'tez' example"</span> text on screen
+</pre>
+</div>
+<p></p>
+<p>Пример тз которое выводит описание принципа работы и открывающего сайт http://demensdeum.com в браузере Firefox</p>
+<p></p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">Show <span style="background-color: #fff0f0;">"Show website demo"</span> text on screen
+Show <span style="background-color: #fff0f0;">"You need Firefox installed on your system to run this 'tez', and it should be callable through </span><span style="color: #666666; font-weight: bold; background-color: #fff0f0;">\"</span><span style="background-color: #fff0f0;">system</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0;">\"</span><span style="background-color: #fff0f0;"> C function"</span> text on screen
+Show <span style="background-color: #fff0f0;">"Also there should be </span><span style="color: #666666; font-weight: bold; background-color: #fff0f0;">\"</span><span style="background-color: #fff0f0;">FirefoxPerformer</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0;">\"</span><span style="background-color: #fff0f0;"> assigned to Zakaz Runtime, please check manual for more information"</span> text on screen
+Show website with address <span style="background-color: #fff0f0;">"http://demensdeum.com"</span> in Firefox
+</pre>
+</div>
+<p></p>
+<p>Запускать пример выше необходимо вместе с &#8220;исполнителем&#8221; FirefoxPerformer, который способен обработать последнюю команду по выводу сайта через Firefox</p>
+<p></p>
+<p></p>
+<pre class="wp-block-preformatted">./ZakazRuntime openDemensdeumSite.tez FirefoxPerformer</pre>
+<p></p>
+<p></p>
+<p>Для имплементации своего исполнителя необходимо реализовать его в виде динамической библиотеки, используя абстрактный класс ZakazRuntime::Performer, и вернуть его вместе с умным указателем из метода глобальной функции createPerformer(). В качестве примера можно использовать реализацию FirefoxPerformer.</p>
+<p></p>
+<p></p>
+<h2 class="wp-block-heading">Исходный код</h2>
+<p></p>
+<p></p>
+<p><a href="https://gitlab.com/demensdeum/zakaz" target="_blank" rel="noreferrer noopener" aria-label="https://gitlab.com/demensdeum/zakaz (opens in a new tab)">https://gitlab.com/demensdeum/zakaz</a></p>
+<p></p>

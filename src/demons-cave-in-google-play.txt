@@ -1,0 +1,7 @@
+Format: Fall24-October10
+Language: ru
+Title: Пещера Демона на Андроид
+Slug: demons-cave-in-google-play
+Categories: news
+<p><a href="https://play.google.com/store/apps/details?id=com.demensdeum.demonscave" target="_blank"><img loading="lazy" decoding="async" class="wp-image-632 aligncenter" src="https://demensdeum.com/blog/wp-content/uploads/2016/06/Android_robot_2014.svg_.png" alt="Android_robot_2014.svg" width="235" height="276" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/06/Android_robot_2014.svg_.png 512w, https://demensdeum.com/blog/wp-content/uploads/2016/06/Android_robot_2014.svg_-256x300.png 256w" sizes="auto, (max-width: 235px) 100vw, 235px" /></a><br />
+<a href="https://play.google.com/store/apps/details?id=com.demensdeum.demonscave" target="_blank">В Пещеру Демона теперь можно играть на Андроиде. Расчехляй свой телефон!</a></p>

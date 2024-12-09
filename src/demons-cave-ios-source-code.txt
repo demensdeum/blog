@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Demon&#8217;s Cave iOS исходный код
+Slug: demons-cave-ios-source-code
+Categories: games
+<p>Исходный код игры Demon&#8217;s Cave iOS перенесен на Swift 4, выгружен в GitLab:<br />
+<a href="https://gitlab.com/demensdeum/demons-cave-ios" target="_blank" rel="noopener">https://gitlab.com/demensdeum/demons-cave-ios</a></p>
+<p><a href="https://gitlab.com/demensdeum/demons-cave-ios" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone wp-image-1505" src="https://demensdeum.com/blog/wp-content/uploads/2018/10/Screenshot-2018-10-19-at-12.21.02.png" alt="" width="628" height="359" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/10/Screenshot-2018-10-19-at-12.21.02.png 1764w, https://demensdeum.com/blog/wp-content/uploads/2018/10/Screenshot-2018-10-19-at-12.21.02-300x171.png 300w, https://demensdeum.com/blog/wp-content/uploads/2018/10/Screenshot-2018-10-19-at-12.21.02-768x439.png 768w, https://demensdeum.com/blog/wp-content/uploads/2018/10/Screenshot-2018-10-19-at-12.21.02-1024x585.png 1024w" sizes="auto, (max-width: 628px) 100vw, 628px" /></a></p>
+<p>Минимальная версия для запуска &#8211; iOS 8</p>

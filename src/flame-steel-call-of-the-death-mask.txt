@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Flame Steel: Call of The Death Mask
+Slug: flame-steel-call-of-the-death-mask
+Categories: news
+<p>Сегодня я анонсирую три проекта сразу! <em>Ухты</em>!<br />
+Первый проект &#8211; базовая платформа для кроссплатформенной разработки приложений <strong>Flame Steel Engine</strong>. Второй проект &#8211; набор библиотек для базовой платформы <strong>Flame Steel Game Toolkit</strong>, предназначенный для разработки игр. И третий проект &#8211; игра с генерируемыми уровнями в сеттинге киберфентези <strong>Flame Steel: Call of The Death Mask</strong>.<br />
+Исходный доступен по лицензии MIT, игровые ресурсы будут доступны под разными лицензиями (проверяйте каждый файл отдельно)</p>
+<p>Ссылка на Github (C++, Eclipse):<br />
+<a href="https://github.com/demensdeum/FlameSteelCallOfTheDeathMask" target="_blank">https://github.com/demensdeum/FlameSteelCallOfTheDeathMask</a></p>

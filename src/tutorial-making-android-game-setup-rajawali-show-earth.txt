@@ -1,0 +1,33 @@
+Format: Fall24-October10
+Language: ru
+Title: Туториал: Делаем игру на Андроид. Крутим землю. Rajawali
+Slug: tutorial-making-android-game-setup-rajawali-show-earth
+Categories: tutorials
+<p><iframe loading="lazy" src="https://www.youtube.com/embed/ItfvKSpulEQ" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+<p><em><span class="st">‘</span>В начале сотворил Бог небо и землю.<span class="st">‘</span></em><span class="p"><br />
+</span></p>
+<p>Это второе видео в которой мы делаем игру для Андроид. Будем крутить землю!<br />
+Напишите мне если у вас есть вопросы, или если вы хотите добавить что-то к данному курсу.<br />
+Видео основано на статье <a href="http://www.clintonmedbery.com/basic-rajawali3d-tutorial-for-android/" target="_blank">Rajawali Basic Setup &amp; Sphere (Maven)</a>:<br />
+<a href="http://www.clintonmedbery.com/basic-rajawali3d-tutorial-for-android/" target="_blank">http://www.clintonmedbery.com/basic-rajawali3d-tutorial-for-android/</a></p>
+<p>Rajawali Engine: <a href="https://github.com/Rajawali/Rajawali" target="_blank">https://github.com/Rajawali/Rajawali</a></p>
+<p>План, команды, ссылки:<br />
+1. Установить <span class="st"><em>VirtualBox</em> Guest <em>Additions</em></span></p>
+<pre style="color: #000000; background: #ffffff;">sudo apt-get install dkms
+sudo apt-get install linux-headers-$(uname -r)
+</pre>
+<p>2. Добавить библиотеку Rajawali к проекту<br />
+Файл<b> build.gradle (Project: Demon&#8217;s Cave)<br />
+</b>Добавить <strong><span class="crayon-e">mavenCentral</span><span class="crayon-sy">(</span><span class="crayon-sy">)  </span></strong><span class="crayon-sy">в секцию <strong>buildscript/repositories</strong><br />
+Добавить </span><strong><span class="crayon-e">maven</span> <span class="crayon-sy">{</span> <span class="crayon-i">url</span> <span class="crayon-s">&#8220;https://oss.sonatype.org/content/repositories/snapshots/&#8221;</span> <span class="crayon-sy">} </span></strong><span class="crayon-sy">в секцию <strong>allprojects/repositories section</strong></span></p>
+<p>Файл <strong>build.gradle (Module: app)<br />
+</strong>Добавить <strong><span class="crayon-i">compile</span> <span class="crayon-s">&#8216;org.rajawali3d:rajawali:1.0.306-SNAPSHOT@aar&#8217; </span></strong><span class="crayon-s">в секцию <strong>dependencies</strong><br />
+</span></p>
+<p>3. Создать класс <strong>Renderer</strong>, инициализировать сцену, добавить сферу и закрутить!<br />
+Исходный код класса Renderer.java:<br />
+<a href="https://github.com/clintonmedbery/RajawaliBasicProject/blob/master/app/src/main/java/com/clintonmedbery/rajawalibasicproject/Renderer.java" target="_blank">https://github.com/clintonmedbery/RajawaliBasicProject/blob/master/app/src/main/java/com/clintonmedbery/rajawalibasicproject/Renderer.java</a></p>
+<p>4. Добавить класс <strong>Renderer</strong> в <strong>MainActivity</strong><br />
+Исходный код MainActivity.java:<br />
+<a href="https://github.com/clintonmedbery/RajawaliBasicProject/blob/master/app/src/main/java/com/clintonmedbery/rajawalibasicproject/Renderer.java" target="_blank">https://github.com/clintonmedbery/RajawaliBasicProject/blob/master/app/src/main/java/com/clintonmedbery/rajawalibasicproject/MainActivity.java</a></p>
+<p>Текстура земли:<br />
+<a href="http://www.clintonmedbery.com/wp-content/uploads/2015/04/earthtruecolor_nasa_big.jpg" target="_blank">http://www.clintonmedbery.com/wp-content/uploads/2015/04/earthtruecolor_nasa_big.jpg</a></p>

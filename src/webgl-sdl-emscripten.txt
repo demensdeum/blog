@@ -1,0 +1,21 @@
+Format: Fall24-October10
+Language: ru
+Title: WebGL + SDL + Emscripten
+Slug: webgl-sdl-emscripten
+Categories: demos,techie,tutorials
+<p>В итоге я портировал Мику на WebGL, с помощью SDL 1 и Emscripten.</p>
+<p><a href="http://demensdeum.com/demos/mikuWebGL/" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1184" src="https://demensdeum.com/blog/wp-content/uploads/2017/07/jG_QElsOhjs.jpg" alt="" width="653" height="564" srcset="https://demensdeum.com/blog/wp-content/uploads/2017/07/jG_QElsOhjs.jpg 653w, https://demensdeum.com/blog/wp-content/uploads/2017/07/jG_QElsOhjs-300x259.jpg 300w" sizes="auto, (max-width: 653px) 100vw, 653px" /></a><a href="http://demensdeum.com/demos/mikuWebGL/" target="_blank" rel="noopener"></a></p>
+<p>Дальше я опишу что нужно было изменить в коде чтобы сборка в JavaScript завершилась успешно.</p>
+<ol>
+<li>Использовать SDL 1 вместо SDL 2. На данный момент существует порт SDL 2 для emscripten, однако использовать встроенный в emscripten SDL 1 я посчитал более целесообразным. Инициализация контекста происходит не в окне, а с помощью <span class="pl-c1">SDL_SetVideoMode и флага SDL_OPENGL. Отрисовка буфера производится командой SDL_GL_SwapBuffers()</span></li>
+<li>Из-за особенностей выполения циклов в JavaScript &#8211; рендеринг вынесен в отдельную функцию и его периодический вызов проставляется с помощью функции <span class="pl-c1">emscripten_set_main_loop</span></li>
+<li>Также сборку нужно осуществлять с ключом &#8220;<span class="pl-s">-s FULL_ES2=1</span>&#8220;</li>
+<li>Пришлось отказаться от библиотеки assimp, от загрузки модели из файловой системы, от загрузки текстуры с диска. Все необходимые буферы были прогружены на деcктоп версии, и прокинуты в c-header файл для сборки с помощью emscripten.</li>
+</ol>
+<p>Код:<br />
+<a href="https://github.com/demensdeum/OpenGLES3-Experiments/tree/master/9-sdl-gles-obj-textured-assimp-miku-webgl/mikuWebGL" target="_blank" rel="noopener">https://github.com/demensdeum/OpenGLES3-Experiments/tree/master/9-sdl-gles-obj-textured-assimp-miku-webgl/mikuWebGL</a></p>
+<p>Статьи:<br />
+<a href="http://blog.scottlogic.com/2014/03/12/native-code-emscripten-webgl-simmer-gently.html" target="_blank" rel="noopener">http://blog.scottlogic.com/2014/03/12/native-code-emscripten-webgl-simmer-gently.html</a><br />
+<a href="https://kripken.github.io/emscripten-site/docs/porting/multimedia_and_graphics/OpenGL-support.html" target="_blank" rel="noopener">https://kripken.github.io/emscripten-site/docs/porting/multimedia_and_graphics/OpenGL-support.html</a></p>
+<p>Модель:<br />
+<a href="https://sketchfab.com/models/7310aaeb8370428e966bdcff414273e7" target="_blank" rel="noopener">https://sketchfab.com/models/7310aaeb8370428e966bdcff414273e7</a></p>

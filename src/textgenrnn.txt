@@ -1,0 +1,46 @@
+Format: Fall24-October10
+Language: ru
+Title: Говорит Тесла
+Slug: textgenrnn
+Categories: techie
+<p>В этой заметке я опишу процесс создания <a rel="noreferrer noopener" href="https://twitter.com/deepnnquotes" target="_blank">генератора цитат</a>.<br></p>
+
+
+
+<h4 class="wp-block-heading">TL;DR</h4>
+
+
+
+<p>Для обучения и генерации текста &#8211; использовать библиотеку <a rel="noreferrer noopener" aria-label="Для обучения и генерации текста - использовать библиотеку textgenrnn, для фильтрации фраз нужно использовать проверку орфографии с помощью утилиты hunspell и ее библиотеки для C/python. После обучения в Cola
+ (opens in a new tab)" href="https://github.com/minimaxir/textgenrnn" target="_blank">textgenrnn</a>, для фильтрации фраз нужно использовать проверку орфографии с помощью утилиты <a rel="noreferrer noopener" aria-label="Для обучения и генерации текста - использовать библиотеку textgenrnn, для фильтрации фраз нужно использовать проверку орфографии с помощью утилиты hunspell и ее библиотеки для C/python. После обучения в Cola
+ (opens in a new tab)" href="http://hunspell.github.io/" target="_blank">hunspell</a> и ее библиотеки для C/python. После обучения в <a rel="noreferrer noopener" aria-label="Для обучения и генерации текста - использовать библиотеку textgenrnn, для фильтрации фраз нужно использовать проверку орфографии с помощью утилиты hunspell и ее библиотеки для C/python. После обучения в Colaboratory, можно приступать к генерации текста. Примерно 90% текста будет абсолютно не читаемым, однако оставшиеся 10% будут содержать толику смысла, а при ручной доработке фразы будут выглядеть вполне неплохо. (opens in a new tab)" href="https://colab.research.google.com/" target="_blank">Colaboratory</a>, можно приступать к генерации текста. Примерно 90% текста будет абсолютно не читаемым, однако оставшиеся 10% будут содержать толику смысла, а при ручной доработке фразы будут выглядеть вполне неплохо.<br>Проще всего запустить готовую нейросеть в Colaboratory:<br><a href="https://colab.research.google.com/drive/1-wbZMmxvsm3SoclJv11villo9VbUesbc" target="_blank" rel="noreferrer noopener" aria-label="Для обучения и генерации текста - использовать библиотеку textgenrnn, для фильтрации фраз нужно использовать проверку орфографии с помощью утилиты hunspell и ее библиотеки для C/python. После обучения в Colaboratory, можно приступать к генерации текста. Примерно 90% текста будет абсолютно не читаемым, однако оставшиеся 10% будут содержать толику смысла, а при ручной доработке фразы будут выглядеть вполне неплохо.
+Проще всего запустить готовую нейросеть в Colaboratory:
+https://colab.research.google.com/drive/1-wbZMmxvsm3SoclJv11villo9VbUesbc
+ (opens in a new tab)">https://colab.research.google.com/drive/1-wbZMmxvsm3SoclJv11villo9VbUesbc</a><br></p>
+
+
+
+<h4 class="wp-block-heading">Исходный код<br></h4>
+
+
+
+<p><a href="https://gitlab.com/demensdeum/MachineLearning/tree/master/3quotesGenerator" target="_blank" rel="noreferrer noopener" aria-label="https://gitlab.com/demensdeum/MachineLearning/tree/master/3quotesGenerator (opens in a new tab)">https://gitlab.com/demensdeum/MachineLearning/tree/master/3quotesGenerator</a></p>
+
+
+
+<h4 class="wp-block-heading">Источники<br></h4>
+
+
+
+<p><a rel="noreferrer noopener" aria-label="https://minimaxir.com/2018/05/text-neural-networks/
+http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+https://medium.com/deep-learning-turkey/google-colab-free-gpu-tutorial-e113627b9f5d
+https://github.com/wooorm/dictionaries (opens in a new tab)" href="https://minimaxir.com/2018/05/text-neural-networks/" target="_blank">https://minimaxir.com/2018/05/text-neural-networks/</a><br><a rel="noreferrer noopener" aria-label="https://minimaxir.com/2018/05/text-neural-networks/
+http://karpathy.github.io/2015/05/21/rnn-effectiveness/ (opens in a new tab)" href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank">http://karpathy.github.io/2015/05/21/rnn-effectiveness/</a><br><a href="https://medium.com/deep-learning-turkey/google-colab-free-gpu-tutorial-e113627b9f5d">https://medium.com/deep-learning-turkey/google-colab-free-gpu-tutorial-e113627b9f5d</a><br><a href="https://github.com/wooorm/dictionaries" target="_blank" rel="noreferrer noopener" aria-label="https://minimaxir.com/2018/05/text-neural-networks/
+http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+https://medium.com/deep-learning-turkey/google-colab-free-gpu-tutorial-e113627b9f5d
+https://github.com/wooorm/dictionaries (opens in a new tab)">https://github.com/wooorm/dictionaries</a></p>
+
+
+
+<p><br></p>

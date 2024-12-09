@@ -1,0 +1,38 @@
+Format: Fall24-October10
+Language: ru
+Title: Сколько у тебя там ошибок?
+Slug: bugs-count-estimation
+Categories: techie
+<p>На <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News</a> нашел очень интересную статью в которой автор предлагает использовать метод Петерсена-Линкольна, который используется биологами для подсчета популяции птичек, обезьянок и прочих животных, для *барабанная дробь* <strong>подсчета багов</strong> в приложении.</p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-1550" src="https://demensdeum.com/blog/wp-content/uploads/2018/11/bigfoot.jpg" alt="" width="554" height="369" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/11/bigfoot.jpg 1024w, https://demensdeum.com/blog/wp-content/uploads/2018/11/bigfoot-300x200.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2018/11/bigfoot-768x512.jpg 768w" sizes="auto, (max-width: 554px) 100vw, 554px" /></p>
+<p>Баг в естественной среде обитания &#8211; <a href="https://www.flickr.com/photos/loimere/4667972182/in/photostream/" target="_blank" rel="noopener">Bigfoot Sighting</a> by <a href="https://www.flickr.com/photos/loimere/" target="_blank" rel="noopener">Derek Hatfield</a></p>
+<p>Метод очень прост, берем двух <a href="https://ru.wikipedia.org/wiki/%D0%9E%D1%80%D0%BD%D0%B8%D1%82%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F" target="_blank" rel="noopener">орнитологов</a>, они находят птичек какого-то определенного вида, их задача &#8211; определить размер популяции этих птичек. Найденные птички помечаются обоими орнитологами, далее подсчитывается количество общих, подставляется в формулу индекса Линкольна и мы получаем примерный размер популяции.<br />
+Теперь для приложений &#8211; метод также очень прост, берем двух QA и они находят баги в приложении. Допустим один тестировщик нашел 10 багов (<strong>E1</strong>), а второй 20 багов (<strong>E2</strong>), теперь берем число общих багов &#8211; 3 (<strong>S</strong>), далее по формуле получаем <strong>индекс Линкольна</strong>:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1552" src="https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot_20181116_191540.png" alt="" width="318" height="79" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot_20181116_191540.png 318w, https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot_20181116_191540-300x75.png 300w" sizes="auto, (max-width: 318px) 100vw, 318px" /></p>
+<p>Это и есть прогноз числа багов во всем приложении, в приведенном примере ~66 багов.</p>
+<h3>Пример на Swift</h3>
+<p>Я реализовал тестовый стенд для проверки метода, посмотреть можно здесь:<br />
+<a href="https://paiza.io/projects/AY_9T3oaN9a-xICAx_H4qw?language=swift" target="_blank" rel="noopener">https://paiza.io/projects/AY_9T3oaN9a-xICAx_H4qw?language=swift</a></p>
+<p>Параметры которые можно менять:</p>
+<p>let aliceErrorFindProbability = 20 &#8211; процент нахождения багов у QA Alice (20%)<br />
+let bobErrorFindProbability = 60 &#8211; процент нахождения багов у QA Bob (60%)<br />
+let actualBugsCount = 200 &#8211; сколько багов в приложении на самом деле</p>
+<p>В последнем запуске я получил следующие данные:<br />
+Estimation bugs count: 213<br />
+Actual bugs count: 200</p>
+<p>Тоесть в приложении есть 200 багов, индекс Линкольна дает прогноз &#8211; 213:<br />
+&#8220;Alice found 36 bugs&#8221;<br />
+&#8220;Bob found 89 bugs&#8221;<br />
+&#8220;Common bugs count: 15&#8221;<br />
+&#8212;<br />
+Estimation bugs count: 213<br />
+Actual bugs count: 200</p>
+<h3>Слабые стороны</h3>
+<p>Использовать данный метод можно для оценки количества ошибок в приложении, на всех этапах разработки, <em>в идеале количество багов должно уменьшаться. </em>К слабым сторонам метода я могу отнести человеческий фактор, так как количество найденных багов от двух тестировщиков должно быть разным и найдены <strong><em>разные баги</em></strong>, однако <strong><em>должны быть найдены и общие</em></strong>, иначе метод работать не будет (ноль общих багов &#8211; <em><strong>деление на ноль</strong></em>)<br />
+Также такое понятие как <em><strong>общие баги</strong></em> требует обязательное наличие эксперта для понимания их <em><strong>общности.</strong></em></p>
+<h3>Источники</h3>
+<p><a href="https://www.johndcook.com/blog/2010/07/13/lincoln-index/" target="_blank" rel="noopener">How many errors are left to find? &#8211; John D. Cook, PhD, President</a><br />
+<a href="http://bit-player.org/2010/the-thrill-of-the-chase" target="_blank" rel="noopener">The thrill of the chase &#8211; Brian Hayes</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://paiza.io/projects/AY_9T3oaN9a-xICAx_H4qw?language=swift" target="_blank" rel="noopener">https://paiza.io/projects/AY_9T3oaN9a-xICAx_H4qw?language=swift</a><br />
+<a href="https://gitlab.com/demensdeum/statistics/tree/master/1_BugsCountEstimation/src" target="_blank" rel="noopener">https://gitlab.com/demensdeum/statistics/tree/master/1_BugsCountEstimation/src</a></p>

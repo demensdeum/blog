@@ -1,0 +1,12 @@
+Format: Fall24-October10
+Language: ru
+Title: Прототип Death Mask для Windows
+Slug: death-mask-prototype-release
+Categories: blog,demos,hottest
+<p>Видео:</p>
+<p><iframe loading="lazy" title="Death Mask Prototype" width="620" height="349" src="https://www.youtube.com/embed/5aoRcW-4mRw?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></p>
+<p>Версия для Windows:<br />
+<a href="http://demensdeum.com/games/deathMask/prototype/DeathMaskPrototype.exe" target="_blank" rel="noopener">http://demensdeum.com/games/deathMask/prototype/DeathMaskPrototype.ex</a><a href="http://demensdeum.com/games/deathMask/prototype/DeathMaskPrototype.exe" target="_blank" rel="noopener">e</a></p>
+<p>Пользователи Linux и OS X могут собрать игру из исходников:<br />
+<a href="https://github.com/demensdeum/Death-Mask" target="_blank" rel="noopener">https://github.com/demensdeum/Death-Mask</a></p>
+<p>Дальше я буду добавлять геймплейные элементы, освещение, анимацию.</p>

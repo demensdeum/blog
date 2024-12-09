@@ -1,0 +1,6 @@
+Format: Fall24-October10
+Language: ru
+Title: Новая жизнь
+Slug: bright-future-of-gitlab
+Categories: blog
+<p>Все исходники переехали на <a href="https://gitlab.com/demensdeum" target="_blank" rel="noopener">GitLab</a>.</p>

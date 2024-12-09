@@ -1,0 +1,37 @@
+Format: Fall24-October10
+Language: ru
+Title: Flyweight паттерн
+Slug: flyweight-pattern
+Categories: techie,tutorials
+<p>В данной заметке я опишу структурный паттерн &#8220;Легковес&#8221; или &#8220;Приспособленец&#8221; (Flyweight)<br />
+Данный паттерн относится к группе <strong>Структурных шаблонов.</strong></p>
+<p>Рассмотрим пример работы паттерна ниже:</p>
+
+<!-- iframe plugin v.5.1 wordpress.org/plugins/iframe/ -->
+<iframe loading="lazy" src="https://demensdeum.com/demos/flyweight/index.html" width="400" height="600" scrolling="yes" class="iframe-class" frameborder="0"></iframe>
+
+<p>Зачем он нужен? Для <strong>экономии оперативной памяти</strong>. Соглашусь что во времена повсеместного использования Java (которое потребляет cpu и память просто так), это уже и не так уж важно, однако использовать стоит.<br />
+На приведенном выше примере выводится только 40 объектов, но если поднять их количество до 120000, то потребление памяти увеличится соответствующе.<br />
+Посмотрим на потребление памяти без использования паттерна flyweight в браузере Chromium:</p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-1763" src="https://demensdeum.com/blog/wp-content/uploads/2019/04/memoryUsageRaw.jpeg" alt="" width="735" height="379" /></p>
+<p>Без использования паттерна потребление памяти составляет ~300 мегабайт.</p>
+<p>Теперь добавим в приложение паттерн и посмотрим потребление памяти:</p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-1764" src="https://demensdeum.com/blog/wp-content/uploads/2019/04/memoryUsageFixed.jpeg" alt="" width="729" height="370" /></p>
+<p>С использованием паттерна потребление памяти составляет ~200 мегабайт, таким образом мы сэкономили 100 мегабайт памяти в тестовом приложении, в серьезных проектах разница может быть гораздо больше.</p>
+<h3>Как работает?</h3>
+<p>В приведенном выше примере мы отрисовываем 40 котиков или для наглядности 120 тысяч. Каждый котик загружается в память в виде png изображения, далее в большинстве рендеров оно конвертируется в битовую карту для отрисовки (фактически bmp), делается это для скорости, так как сжатый png очень долго отрисовывается. Без использования паттерна мы загружаем 120 тысяч картинок котиков в оперативную память и рисуем, а вот при использовании паттерна &#8220;легковес&#8221; мы загружаем в память одного котика и рисуем его 120 тысяч раз с разной позицией и прозрачностью. Вся магия состоит в том, что координаты и прозрачность мы реализуем отдельно от изображения кота, при отрисовке рендер берет всего одного котика и использует объект с координатами и прозрачностью для корректной отрисовки.</p>
+<h3>Как выглядит в коде?</h3>
+<p><em>Ниже приведены примеры для языка <a href="https://gitlab.com/demensdeum/Rise" target="_blank" rel="noopener noreferrer">Rise</a></em></p>
+<p>Без использования паттерна:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1769" src="https://demensdeum.com/blog/wp-content/uploads/2019/04/catImageRaw.jpeg" alt="" width="636" height="449" /><br />
+Картинка кота загружается для каждого объекта в цикле отдельно &#8211; catImage.</p>
+<p>С использованием паттерна:</p>
+<h3><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1770" src="https://demensdeum.com/blog/wp-content/uploads/2019/04/catImageFixed.jpeg" alt="" width="443" height="393" /></h3>
+<p>Одна картинка кота используется 120 тысячами объектов.</p>
+<h3>Где используется?</h3>
+<p>Используется в GUI фреймворках, например у Apple в системе &#8220;переиспользования&#8221; (reuse) ячеек таблиц UITableViewCell, чем поднимают порог вхождения для новичков которые не знают про этот паттерн. Также повсеместно используется в разработке игр.</p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns/" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/patterns/</a></p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/flyweight" target="_blank" rel="noopener noreferrer">https://refactoring.guru/ru/design-patterns/flyweight</a><br />
+<a href="http://gameprogrammingpatterns.com/flyweight.html" target="_blank" rel="noopener noreferrer">http://gameprogrammingpatterns.com/flyweight.html</a></p>

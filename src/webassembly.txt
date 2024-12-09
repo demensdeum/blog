@@ -1,0 +1,18 @@
+Format: Fall24-October10
+Language: ru
+Title: 
+Slug: webassembly
+Categories: hottest,sketches,techie,tutorials
+<p>В этой заметке я опишу способ сборки bgfx приложений для веба (WebAssembly) через Emscripten.</p>
+<p>Платформа для установки это Linux x86-64, например Arch Linux.</p>
+<p>Для начала установим Emscripten версии 3.1.51, иначе у вас ничего не получится, всё из-за изменения типа динамических библотек в последней версии Emscripten. Подробнее можно прочитать здесь:<br />
+<a href="https://github.com/bkaradzic/bgfx/discussions/3266" rel="noopener" target="_blank">https://github.com/bkaradzic/bgfx/discussions/3266</a></p>
+<p>Делается это так:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-swift" data-lang="Swift"><code>git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install 3.1.51
+./emsdk activate 3.1.51
+source ./emsdk_env.sh
+</code></pre>
+</div>

@@ -1,0 +1,36 @@
+Format: Fall24-October10
+Language: ru
+Title: Visitor паттерн
+Slug: visitor-pattern
+Categories: techie,tutorials
+<p><em>В данной заметке я опишу паттерн проектирования под названием &#8220;Посетитель&#8221; или &#8220;Visitor&#8221;<br />
+</em>Данный паттерн относится к группе <strong>Поведенических шаблонов</strong>.</p>
+<h3>Придумаем проблему</h3>
+<p>В основном, данный паттерн используют для обхода ограничения одиночной диспетчеризации (&#8220;single dispatch&#8221;), в языках с ранним связыванием.</p>
+<p><a href="https://www.flickr.com/photos/nfg/16506635470/in/photostream/" target="_blank" rel="noopener noreferrer"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1798" src="https://demensdeum.com/blog/wp-content/uploads/2019/04/kinbaku.jpg" alt="" width="420" height="640" /></a></p>
+<p><a href="https://www.flickr.com/photos/nfg/16506635470/in/photostream/" target="_blank" rel="noopener noreferrer">Alice X</a> by <a href="https://nfgphoto.com" target="_blank" rel="noopener noreferrer">NFGPhoto</a> (<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC-2.0</a>)<br />
+Создадим абстрактный класс/протокол Band, сделаем подкласс MurpleDeep, создадим класс Visitor с двумя методами &#8211; один для вывода в консоль любого наследника Band, второй для вывода любого MurpleDeep, главное чтобы имена (сигнатуры) у методов были одинаковые, а аргументы различались только классом. Через промежуточный метод printout с аргументом Band, создадим экземпляр Visitor и вызовем метод visit для MurpleDeep.<br />
+Далее код на Kotlin:<br />
+
+<!-- iframe plugin v.5.1 wordpress.org/plugins/iframe/ -->
+<iframe loading="lazy" src="https://pl.kotl.in/qsxky0Z8C" width="360" height="400" scrolling="yes" class="iframe-class" frameborder="0"></iframe>
+</p>
+<p>В выводе будет &#8220;<strong><span class="standard-output darcula">This is Band class</span></strong>&#8220;</p>
+<h3>Да как так то?!</h3>
+<p>Почему это происходит описано  умными словами во многих статьях, в том числе и на русском, я же предлагаю вам представить как видит код компилятор, возможно все станет понятно сразу:<br />
+
+<!-- iframe plugin v.5.1 wordpress.org/plugins/iframe/ -->
+<iframe loading="lazy" src="https://pl.kotl.in/oBsgszLCO" width="360" height="500" scrolling="yes" class="iframe-class" frameborder="0"></iframe>
+</p>
+<h3>Решаем проблему</h3>
+<p>Для решения данной проблемы существует множество решений, далее рассмотрим решение с помощью паттерна Visitor.<br />
+В абстрактный класс/протокол добавляем метод accept с аргументом Visitor, внутри метода вызываем visitor.visit(this), после этого добавляем в класс MurpleDeep оверайд/имплементацию метода accept, решительно и спокойно нарушая DRY, снова пишем visitor.visit(this).<br />
+Итоговый код:<br />
+
+<!-- iframe plugin v.5.1 wordpress.org/plugins/iframe/ -->
+<iframe loading="lazy" src="https://pl.kotl.in/0fvYomzJd" width="360" height="500" scrolling="yes" class="iframe-class" frameborder="0"></iframe>
+</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/visitor-double-dispatch" target="_blank" rel="noopener noreferrer">https://refactoring.guru/ru/design-patterns/visitor-double-dispatch</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/patterns</a></p>

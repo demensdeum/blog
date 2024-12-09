@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Игровая сцена из Demon&#8217;s Cave для Андроида
+Slug: demons-cave-android-ingame-scene
+Categories: news
+<p><img loading="lazy" decoding="async" class="image-shadow alignnone wp-image-624 size-full" src="https://demensdeum.com/blog/wp-content/uploads/2016/05/androidVersion.jpg" alt="Demon's Cave Android Prototype Ingame Scene" width="960" height="540" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/05/androidVersion.jpg 960w, https://demensdeum.com/blog/wp-content/uploads/2016/05/androidVersion-300x169.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2016/05/androidVersion-768x432.jpg 768w" sizes="auto, (max-width: 960px) 100vw, 960px" /></p>
+<p>Теперь у Пещеры Демона на Андроид есть игровая сцена. Следующая остановка музыка, звуки, система очков, анимация.</p>
+<p>Почекать изменения можешь в репозитории:<br />
+<a href="https://github.com/demensdeum/DemonsCaveAndroid" target="_blank">https://github.com/demensdeum/DemonsCaveAndroid</a></p>

@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Релиз Saber-Plus 1.0
+Slug: saber-plus-release-1-0
+Categories: software
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1436" src="https://demensdeum.com/blog/wp-content/uploads/2018/08/Screenshot_20180804_114732.png" alt="" width="937" height="630" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/08/Screenshot_20180804_114732.png 937w, https://demensdeum.com/blog/wp-content/uploads/2018/08/Screenshot_20180804_114732-300x202.png 300w, https://demensdeum.com/blog/wp-content/uploads/2018/08/Screenshot_20180804_114732-768x516.png 768w" sizes="auto, (max-width: 937px) 100vw, 937px" /></p>
+<p>Saber-Plus &#8211; быстрый и простой редактор для C++.</p>
+<p>Релиз пакета deb для Ubuntu and Debian:<br />
+<a href="http://demensdeum.com/blog/wp-content/uploads/2018/08/saberplus1.0_amd64.zip">saberplus1.0_amd64.zip</a></p>

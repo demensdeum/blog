@@ -1,0 +1,27 @@
+Format: Fall24-October10
+Language: ru
+Title: Разбавляя ECS
+Slug: you-cant-fly-because-of-your-lack-of-wings-component
+Categories: blog,techie
+<p style="text-align: center;"><object width="450" height="478"><param name="movie" value="https://backend.deviantart.com/embed/view.swf?1" /><param name="flashvars" value="id=175079567&amp;width=1337" /><param name="allowScriptAccess" value="always" /></object><br />
+<a href="http://culpeo-fox.deviantart.com/art/Commission-Mad-Scientist-175079567">Commission: Mad Scientist</a> by <span class="username-with-symbol u"><a class="u premium username" href="http://culpeo-fox.deviantart.com/">Culpeo-Fox</a></span> on <a href="http://www.deviantart.com">DeviantArt</a></p>
+<p>В этой статье я примерно опишу паттерн ECS, и свою реализацию  в Flame Steel Engine Game Toolkit. Паттерн Entity Component System (Сущность, Компонент, Система) используется в играх, в т.ч. на движке Unity. <strong>Каждый объект в игре представляет из себя Сущность, которая заполнена Компонентами</strong>.  Зачем это нужно если есть ООП?<br />
+Затем чтобы менять свойства, поведение, отображение объектов прямо во время выполнения игры. Такие вещи не встречаются в прикладных приложениях реального мира, динамика изменения параметров, свойств объектов, отображения, звучания, присущи больше играм, чем бухгалтерскому ПО.</p>
+<p style="text-align: center;"><iframe loading="lazy" src="https://www.youtube.com/embed/ZOVDayozSm0" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe><br />
+Бананы мы не проходили</p>
+<p>Допустим у нас в игре есть класс банан. И геймдизайнер захотел чтобы бананы можно было использовать как оружие. Допустим в текущей архитектуре бананы никак не связаны с оружием. Делать банан оружием? Делать все предметы оружием?<br />
+ECS предлагает решение данной насущной проблемы &#8211; все объекты в игре должны состоять из компонентов. Раньше банан был классом Banana, теперь мы сделаем его, и все остальные объекты, классом Entity (Сущность), добавим им компоненты. Допустим банан теперь состоит из компонентов:</p>
+<ol>
+<li>Компонент позиции (координаты в игровом мире &#8211; x, y, z)</li>
+<li>Компонент поворота (координаты x, y, z)</li>
+<li>Компонент калорийности банана (главному герою нельзя сильно толстеть)</li>
+<li>Компонент картинки банана</li>
+</ol>
+<p>Теперь мы добавляем для всех бананов новый компонент, который является флагом того что его можно использовать как оружие &#8211; Компонент оружия. Теперь когда игровая Система видит что игрок подошел к банану, она проверяет наличие компонента оружия у банана, и если он есть, то вооружает игрока бананом.<br />
+В моей игре Flame Steel Call Of The Death Mask, паттерн ECS используется везде. Объекты состоят из компонентов, компоненты сами могут содержать компоненты. Вообще разделение объект &lt; &#8211; &gt; компонент в моей реализации отсутствует, но это даже плюс.</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-778" src="https://demensdeum.com/blog/wp-content/uploads/2016/09/Screenshot_2016-09-24_14-33-43.png" alt="screenshot_2016-09-24_14-33-43" width="802" height="625" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/09/Screenshot_2016-09-24_14-33-43.png 802w, https://demensdeum.com/blog/wp-content/uploads/2016/09/Screenshot_2016-09-24_14-33-43-300x234.png 300w, https://demensdeum.com/blog/wp-content/uploads/2016/09/Screenshot_2016-09-24_14-33-43-768x599.png 768w" sizes="auto, (max-width: 802px) 100vw, 802px" /></p>
+<p>Дробовик на данном скриншоте является компонентом игрока и в то же время второй дробовик просто висит на игровой карте как обычный объект.<br />
+На данном скриншоте работают две Системы &#8211; отрисовщик сцены и отрисовщик интерфейса. Отрисовщик сцены работает с компонентом изображения дробовика <strong>на карте</strong>, отрисовщик интерфейса с компонентом изображения дробовика <strong>в руках игрока</strong>.</p>
+<p>Ссылки по теме:<br />
+<a href="https://habrahabr.ru/post/197920/" target="_blank">https://habrahabr.ru/post/197920/</a><br />
+<a href="https://www.youtube.com/watch?v=NTWSeQtHZ9M" target="_blank">https://www.youtube.com/watch?v=NTWSeQtHZ9M</a></p>

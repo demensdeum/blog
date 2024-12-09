@@ -1,0 +1,44 @@
+Format: Fall24-October10
+Language: ru
+Title: Бьемся с Малевичем, черные квадраты OpenGL
+Slug: black-screen-opengl
+Categories: blog,techie,tutorials
+<p>К любому разработчику на OpenGL периодически приходит Малевич. Происходит это неожиданно и дерзко, ты просто запускаешь проект и видишь черный квадрат вместо чудесного рендера:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1441" src="https://demensdeum.com/blog/wp-content/uploads/2018/08/malevich.png" alt="" width="688" height="553" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/08/malevich.png 688w, https://demensdeum.com/blog/wp-content/uploads/2018/08/malevich-300x241.png 300w" sizes="auto, (max-width: 688px) 100vw, 688px" /></p>
+<p>Сегодня я опишу по какой причине меня посетил черный квадрат, найденные проблемы из-за которых OpenGL ничего не рисует на экране, а иногда и вообще делает окно прозрачным.</p>
+<h3>Используй инструменты</h3>
+<p>Для отладки OpenGL мне помогли два инструмента: <a href="https://github.com/baldurk/renderdoc" target="_blank" rel="noopener">renderdoc</a> и <a href="https://github.com/apitrace/apitrace" target="_blank" rel="noopener">apitrace</a>. Renderdoc &#8211; инструмент для отладки процесса рендеринга OpenGL, просматривать можно все &#8211; вертексы, шейдеры, текстуры, отладочные сообщения от драйвера. Apitrace &#8211; инструмент для трейсинга вызовов графического API, делает дамп вызовов и показывает аргументы. Также есть великолепная возможность сравнивать два дампа через wdiff (или без него, но не так удобно)</p>
+<h3>Проверяй с кем работаешь</h3>
+<p>У меня есть операционная система Ubuntu 16.10 со старыми зависимостями SDL2, GLM, assimp, GLEW. В последней версии Ubuntu 18.04 я получаю сборку игры <a href="https://gitlab.com/demensdeum/Death-Mask" target="_blank" rel="noopener">Death-Mask</a> которая ничего не показывает на экране (только черный квадрат). При использовании chroot и сборке в 16.10 я <strong>получаю рабочую сборку игры с графикой</strong>.</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1446" src="https://demensdeum.com/blog/wp-content/uploads/2018/08/NOTSUREIF.jpg" alt="" width="417" height="234" /><br />
+Похоже что-то сломалось в Ubuntu 18.04</p>
+<p><strong>LDD</strong> показал линковку к идентичным библиотекам SDL2, GL. Прогоняя нерабочий билд в renderdoc, я увидел мусор на входе в вертексный шейдер, но мне нужно было более солидное подтверждение. Для того чтобы разобраться в разнице между бинариками я прогнал их оба через <strong>apitrace</strong>. Сравнение дампов показало мне что сборка на свежей убунте ломает передачу матриц перспективы в OpenGL, фактически отправляя туда мусор:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1448" src="https://demensdeum.com/blog/wp-content/uploads/2018/08/apicalls.png" alt="" width="1902" height="234" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/08/apicalls.png 1902w, https://demensdeum.com/blog/wp-content/uploads/2018/08/apicalls-300x37.png 300w, https://demensdeum.com/blog/wp-content/uploads/2018/08/apicalls-768x94.png 768w, https://demensdeum.com/blog/wp-content/uploads/2018/08/apicalls-1024x126.png 1024w" sizes="auto, (max-width: 1902px) 100vw, 1902px" /></p>
+<p>Матрицы собираются в библиотеке GLM. После копирования GLM из 16.04 &#8211; я снова получил рабочий билд игры. Проблема оказалась в разнице инициализации единичной матрицы в GLM 9.9.0, в ней необходивно явно указывать аргумент mat4(1.0f) в конструкторе. Поменяв инициализацию и <a href="https://github.com/g-truc/glm/issues/797" rel="noopener" target="_blank">отписав</a> автору библиотеки, я принялся делать <a href="https://gitlab.com/demensdeum/FSGLtest" target="_blank" rel="noopener">тесты для FSGL</a>. в процессе написания которых я обнаружил недоработки в FSGL, их опишу далее.</p>
+<h3>Определись ты кто по жизни</h3>
+<p>Для корректной работы с OpenGL нужно в <strong><em>добровольно принудительном порядке</em></strong> запросить контекст определенной версии. Так это выглядит для SDL2 (проставлять версию нужно строго до инициализации контекста):</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, <span style="color: #0000dd; font-weight: bold;">3</span>);
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, <span style="color: #0000dd; font-weight: bold;">2</span>);
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );   
+</pre>
+</div>
+<p>Например Renderdoc не работает с контекстами ниже 3.2. Хочется отметить что после переключения контекста <strong>высока вероятность увидеть тот самый черный экран</strong>. Почему?<br />
+Потому что <strong>контекст OpenGL 3.2 обязательно требует наличие VAO буфера</strong>, без которого не работают 99% графических драйверов. Добавить его легко:<br />
+<!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">    glGenVertexArrays(<span style="color: #0000dd; font-weight: bold;">1</span>, <span style="color: #333333;">&</span>vao);
+    glBindVertexArray(vao);
+</pre>
+</div>
+<h3>Не спи, замерзнешь</h3>
+<p>Также я встретился с интересной проблемой на Kubuntu, вместо черного квадрата у меня выводился прозрачный, а <strong>иногда</strong> все рендерилось корректно. Решение этой проблемы я нашел на Stack Overflow:<br />
+<a href="https://stackoverflow.com/questions/38411515/sdl2-opengl-window-appears-semi-transparent-sometimes" target="_blank" rel="noopener">https://stackoverflow.com/questions/38411515/sdl2-opengl-window-appears-semi-transparent-sometimes</a></p>
+<p>В коде тестового рендера FSGL тоже присутствовал <strong>sleep(2s)</strong>; Так вот на Xubuntu и Ubuntu я получал корректный рендер и отправлял приложение спать, однако на Kubuntu я получил прозрачный экран в 80% случаев запуска из Dolphin и 30% запусков и терминала. Для решения данной проблемы я добавил рендеринг в каждом кадре, после опроса SDLEvent, как это рекомендуется делать в документации.</p>
+<p>Код теста:<br />
+<a href="https://gitlab.com/demensdeum/FSGLtests/blob/master/renderModelTest/" target="_blank" rel="noopener">https://gitlab.com/demensdeum/FSGLtests/blob/master/renderModelTest/</a></p>
+<h3>Поговори с драйвером</h3>
+<p>OpenGL поддерживает канал связи между приложением и драйвером, для его активации нужно включить флаги GL_DEBUG_OUTPUT, GL_DEBUG_OUTPUT_SYNCHRONOUS, проставить оповещение <span class="pl-c1">glDebugMessageControl</span> и привязать каллбек через <span class="pl-c1">glDebugMessageCallback</span>.<br />
+Пример инициализации можно взять здесь:<br />
+<a href="https://github.com/rock-core/gui-vizkit3d/blob/master/src/EnableGLDebugOperation.cpp" target="_blank" rel="noopener">https://github.com/rock-core/gui-vizkit3d/blob/master/src/EnableGLDebugOperation.cpp</a></p>

@@ -1,0 +1,16 @@
+Format: Fall24-October10
+Language: ru
+Title: Rise Programming Language
+Slug: rise-programming-language
+Categories: software
+<p>Представляю вашему вниманию мой собственный язык программирования под названием &#8211; <strong>Rise</strong>. На данный момент доступен транспайлер из Rise в JavaScript.</p>
+<p>Его можно увидеть и попользоваться по ссылке ниже &#8211; Rise в JavaScript (диалект ECMAScript 5):<br />
+<a href="https://gitlab.com/demensdeum/Rise" target="_blank" rel="noopener">https://gitlab.com/demensdeum/Rise</a></p>
+<p>Также представляю вашему вниманию демо приложение полностью написанное на Rise:<br />
+
+<!-- iframe plugin v.5.1 wordpress.org/plugins/iframe/ -->
+<iframe loading="lazy" src="https://demensdeum.com/demos/riseDemoApplication/index.html" width="400" height="600" scrolling="yes" class="iframe-class" frameborder="0"></iframe>
+</p>
+<p>Исходный код Rise Demo Application:<br />
+<a href="https://gitlab.com/demensdeum/RiseDemoApplication" target="_blank" rel="noopener">https://gitlab.com/demensdeum/RiseDemoApplication</a></p>
+<p>Можете написать <a href="http://demensdeum.com/blog/2015/12/19/about-us/" target="_blank" rel="noopener">мне</a> если у вас есть идеи, предложения, комментарии по новому языку.</p>

@@ -1,0 +1,6 @@
+Format: Fall24-October10
+Language: ru
+Title: Death Mask Prototype
+Slug: death-mask-prototype
+Categories: blog
+<p>В этом году планирую выпустить простейший прототип Death Mask, следите за новостями.</p>

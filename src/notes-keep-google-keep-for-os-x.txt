@@ -1,0 +1,11 @@
+Format: Fall24-October10
+Language: ru
+Title: Notes Keep &#8211; вебклиент Google Keep для OS X
+Slug: notes-keep-google-keep-for-os-x
+Categories: software
+<p>Notes Keep &#8211; OS X веб клиент для Google Keep.</p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-1511" src="https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot-2018-11-02-at-17.35.59.png" alt="" width="730" height="588" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot-2018-11-02-at-17.35.59.png 912w, https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot-2018-11-02-at-17.35.59-300x241.png 300w, https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot-2018-11-02-at-17.35.59-768x618.png 768w" sizes="auto, (max-width: 730px) 100vw, 730px" /></p>
+<p>Релиз:<br />
+<a href="http://demensdeum.com/blog/wp-content/uploads/2018/11/NotesKeep.zip" target="_blank" rel="noopener">NotesKeep 1.0</a></p>
+<p>Исходный код:<br />
+<a href="https://gitlab.com/demensdeum/notes-keep" target="_blank" rel="noopener">https://gitlab.com/demensdeum/notes-keep</a></p>

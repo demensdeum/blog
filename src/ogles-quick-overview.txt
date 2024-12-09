@@ -1,0 +1,14 @@
+Format: Fall24-October10
+Language: ru
+Title: Проецируй это
+Slug: ogles-quick-overview
+Categories: techie,tutorials
+<p>Нарисовав красный чайник в 3D, я считаю своим долгом кратко описать как это делается.</p>
+<p>Современный OpenGL не рисует 3D, он рисует только треугольники, точки, и пр. в 2D координатах экрана.<br />
+Чтобы вывести с помощью OpenGL хоть что-то, нужно предоставить вертексный буфер, написать вертексный шейдер, добавить в вертексный шейдер все необходимые матрицы (проекция, модель, вью),<strong> </strong>связать все входные данные с шейдером, вызвать метод отрисовки в OpenGL. Выглядит просто?</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1145" src="https://demensdeum.com/blog/wp-content/uploads/2017/07/computer_science_major.png" alt="" width="561" height="595" srcset="https://demensdeum.com/blog/wp-content/uploads/2017/07/computer_science_major.png 561w, https://demensdeum.com/blog/wp-content/uploads/2017/07/computer_science_major-283x300.png 283w" sizes="auto, (max-width: 561px) 100vw, 561px" /><br />
+Ок, что такое вертексный буфер? Список координат которые необходимо отрисовать (x, y, z)<br />
+Вертексный шейдер говорит GPU какие координаты нужно рисовать.<br />
+Пиксельный шейдер говорит <strong>что</strong> рисовать (цвет, текстуру, блендинг и тд.)<br />
+Матрицы транслируют 3D координаты в 2D координаты OpenGL которые он может отрисовать</p>
+<p>В следующих статьях я приведу примеры кода и результат.</p>

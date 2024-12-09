@@ -1,0 +1,11 @@
+Format: Fall24-October10
+Language: ru
+Title: Обзор Demon&#8217;s Cave
+Slug: demons-cave-review
+Categories: news
+<p>Пока отечественная пресса подтягивается, на западе уже во всю пишут обзоры. Сайт <a href="http://appgames.net/game/demons-cave" target="_blank">App Games</a> выпустили обзор игры <a href="http://demensdeum.com/games/demonsCave/" target="_blank">Demon&#8217;s Cave</a></p>
+<blockquote>
+<div id="stcpDiv">From animations to the game world and everything in between, Demon&#8217;s Cave does show quality and a great promise. It’s a pleasant and fun title with a lot of cool things to offer. It’s one of the best casual arcade games that you can try out so you should check it out, it really deserves your time!</div>
+</blockquote>
+<div></div>
+<p>Ссылка на статью: <a href="http://appgames.net/game/demons-cave" target="_blank">http://appgames.net/game/demons-cave</a></p>

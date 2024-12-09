@@ -1,0 +1,12 @@
+Format: Fall24-October10
+Language: ru
+Title: Новостной краулер для iOS
+Slug: news-crawler-for-ios
+Categories: software
+<p><a href="https://gitlab.com/demensdeum/news-crawler" target="_blank" rel="noopener">Новостной краулер iOS</a> &#8211; приложение ищет текст и выводит результат во время загрузки.<br />
+Заложена поддержка больших файлов из коробки (&gt; 200мб), результаты сохраняются в result.log файл.<br />
+Простой, продуманный дизайн.<br />
+Поддержка регулярок с помощью библиотеки <a href="https://github.com/sharplet/Regex/" target="_blank" rel="noopener">Regex</a>.</p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-1517" src="https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot-2018-11-02-at-21.52.35.png" alt="" width="324" height="561" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot-2018-11-02-at-21.52.35.png 463w, https://demensdeum.com/blog/wp-content/uploads/2018/11/Screenshot-2018-11-02-at-21.52.35-173x300.png 173w" sizes="auto, (max-width: 324px) 100vw, 324px" /></p>
+<p>Исходный код:<br />
+<a href="https://gitlab.com/demensdeum/news-crawler" target="_blank" rel="noopener">https://gitlab.com/demensdeum/news-crawler</a></p>

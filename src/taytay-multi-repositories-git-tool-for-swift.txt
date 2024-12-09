@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Taytay контроль статуса Git репозиториев
+Slug: taytay-multi-repositories-git-tool-for-swift
+Categories: devtools,software
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-1467" src="https://demensdeum.com/blog/wp-content/uploads/2018/08/taytay.png" alt="" width="720" height="166" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/08/taytay.png 1193w, https://demensdeum.com/blog/wp-content/uploads/2018/08/taytay-300x69.png 300w, https://demensdeum.com/blog/wp-content/uploads/2018/08/taytay-768x177.png 768w, https://demensdeum.com/blog/wp-content/uploads/2018/08/taytay-1024x236.png 1024w" sizes="auto, (max-width: 720px) 100vw, 720px" /></p>
+<p>Представляю вашему вниманию <a href="https://gitlab.com/demensdeum/taytay" target="_blank" rel="noopener">Taytay</a> &#8211; утилиту для контроля статуса репозиторев git для языка Swift. На текущий момент Свифт можно установить на всех мейнстримовых десктопных операционных системах. Для Ubuntu я рекомендую использовать <a href="https://github.com/kylef/swiftenv" target="_blank" rel="noopener">Swiftenv</a>. Завязан <a href="https://gitlab.com/demensdeum/taytay" target="_blank" rel="noopener">Тайтай</a> на утилиту <a href="https://github.com/git-cola/git-cola" target="_blank" rel="noopener">git-cola</a>, но можешь отредактировать исходник и поменять на любую другую программу.</p>
+<p>Исходный код:<br />
+<a href="https://gitlab.com/demensdeum/taytay" target="_blank" rel="noopener">https://gitlab.com/demensdeum/taytay</a></p>

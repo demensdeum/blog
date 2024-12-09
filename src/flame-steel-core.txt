@@ -1,0 +1,20 @@
+Format: Fall24-October10
+Language: ru
+Title: Flame Steel Core
+Slug: flame-steel-core
+Categories: blog
+<p>Скриншот из последней версии Death Mask:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1119" src="https://demensdeum.com/blog/wp-content/uploads/2017/07/0v1Sp43jGjA.jpg" alt="" width="800" height="600" srcset="https://demensdeum.com/blog/wp-content/uploads/2017/07/0v1Sp43jGjA.jpg 800w, https://demensdeum.com/blog/wp-content/uploads/2017/07/0v1Sp43jGjA-300x225.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2017/07/0v1Sp43jGjA-768x576.jpg 768w" sizes="auto, (max-width: 800px) 100vw, 800px" /></p>
+<p>Выглядит на миллион долларов да?</p>
+<blockquote class="imgur-embed-pub" lang="en" data-id="n54WC6w"><p><a href="//imgur.com/n54WC6w"></a></p></blockquote>
+<p><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></p>
+<h3>Переименование, разбиение</h3>
+<p>Библиотека Flame Steel Engine переименована в Flame Steel Core, Game Toolkit разбит на SDL, Panda3D (Desktop) и Web (ThreeJS) библиотеки. Если в наличии есть стальные шары для сборки с помощью библиотек Flame Steel, тогда нужно сначала выбрать и собрать нужные.</p>
+<p>Github:</p>
+<p><a href="https://github.com/demensdeum/DeathMask" target="_blank" rel="noopener">https://github.com/demensdeum/Death-Mask</a><br />
+<a href="https://github.com/demensdeum/FlameSteelCore" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelCore</a><br />
+<a href="https://github.com/demensdeum/FlameSteelEngineGameToolkit" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngineGameToolkit</a><br />
+<a href="https://github.com/demensdeum/FlameSteelEngineGameToolkitDesktop" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngineGameToolkitDesktop</a></p>
+<p>Устаревшие:</p>
+<p><a href="https://github.com/demensdeum/FlameSteelEngineGameToolkitSDL" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngineGameToolkitSDL</a><br />
+<a href="https://github.com/demensdeum/FlameSteelEngineGameToolkitWeb" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngineGameToolkitWeb</a></p>

@@ -1,0 +1,14 @@
+Format: Fall24-October10
+Language: ru
+Title: Death Mask
+Slug: death-mask-cyberpunk-roguelike-game
+Categories: news
+<p>С сегодняшнего дня я начинают разработку <a href="https://ru.wikipedia.org/wiki/Roguelike" target="_blank">roguelike</a> игры в киберпанк сеттинге &#8211; <strong>Death Mask</strong>.<br />
+На самом деле это должна была быть первая игра на новом тулчейне Flame Steel Engine, но движок пришлось дорабатывать до появления полноценного 3D.<br />
+Изначальное название &#8220;Flame Steel: Call Of The Death Mask&#8221;, потом я решил упростить задачу и выпустить лишь часть игры &#8211; &#8220;Flame Steel: Zombie Night&#8221;<br />
+Однако мысль о создании нормального полноценного проекта не давала мне покоя, также название было перегружено названием вселенной Flame Steel.<br />
+За вдохновение в визуальном плане я беру мангу <a href="https://www.amazon.com/Biomega-Vol-2-Tsutomu-Nihei/dp/1421531852" target="_blank">Biomega</a> и <a href="http://a.co/8yUUA5i" target="_blank">Blame!</a> сама вселенная Flame Steel очень похожа на <a href="http://store.steampowered.com/app/234650/" target="_blank">Shadowrun</a> в космосе.<br />
+Поэтому не удивляйтесь, если в этой игры вы встретите <strong>инопланетного мага, стреляющего в оборотня магическими пулями из револьвера, точной наводкой из кибер-импланта в глазу.</strong></p>
+<p>Игра разрабатывается под MIT лицензией с открытым кодом на GitHub, с использованием тулчейна Flame Steel Engine и свободных фреймворков.</p>
+<p>GitHub:<br />
+<a href="https://github.com/demensdeum/Death-Mask" target="_blank">https://github.com/demensdeum/Death-Mask</a></p>

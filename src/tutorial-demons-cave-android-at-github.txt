@@ -1,0 +1,91 @@
+Format: Fall24-October10
+Language: ru
+Title: Туториал: Demon&#8217;s Cave на GitHub
+Slug: tutorial-demons-cave-android-at-github
+Categories: tutorials
+<p><strong>С днем победы!</strong></p>
+<p>Сегодня код <a href="https://github.com/demensdeum/DemonsCaveAndroid" target="_blank">Demon&#8217;s Cave для Android</a> выходит на GitHub:<br />
+<a href="https://github.com/demensdeum/DemonsCaveAndroid" target="_blank">https://github.com/demensdeum/DemonsCaveAndroid</a></p>
+<p>У меня сейчас нет времени для записи видео, поэтому здесь короткая текстовая версия туториала.<br />
+Вообще вы можете скачать <a href="https://github.com/demensdeum/DemonsCaveAndroid" target="_blank">код игры Demon&#8217;s Cave</a> и собрать на своей машине.<br />
+Сегодня мы будет выводить лого компании Demens Deum на движке Rajawali (OpenGL-ES 2.0)</p>
+<p>1. Скачайте Demens Deum лого<br />
+<a href="http://demensdeum.com/games/demonsCave/data/graphics/demensdeumLogo.png" target="_blank">http://demensdeum.com/games/demonsCave/data/graphics/demensdeumLogo.png</a></p>
+<p>2. Установите Gimp и<strong> поверните картинку по горизонтали</strong></p>
+<pre style="background: #fff; color: #3b3b3b;">sudo apt-get install gimp
+</pre>
+<p>3. Добавляем вывод активити на полный экран девайса<br />
+Добавьте этот код в метод onCreate класса MainActivity.java</p>
+<pre style="background: #fff; color: #3b3b3b;"><span style="color: #ff5600;">protected</span> <span style="color: #ff5600;">void</span> onCreate(<span style="color: #ff5600;">Bundle</span> savedInstanceState) {
+ <span style="color: #0053ff; font-weight: bold;">super</span><span style="color: #069; font-weight: bold;">.</span>onCreate(savedInstanceState);
+ getWindow()<span style="color: #069; font-weight: bold;">.</span>setFlags(<span style="color: #ff5600;">WindowManager</span><span style="color: #069; font-weight: bold;">.</span><span style="color: #ff5600;">LayoutParams</span><span style="color: #069; font-weight: bold;">.</span>FLAG_FULLSCREEN, <span style="color: #ff5600;">WindowManager</span><span style="color: #069; font-weight: bold;">.</span><span style="color: #ff5600;">LayoutParams</span><span style="color: #069; font-weight: bold;">.</span>FLAG_FULLSCREEN);
+ requestWindowFeature(<span style="color: #ff5600;">Window</span><span style="color: #069; font-weight: bold;">.</span>FEATURE_NO_TITLE);
+</pre>
+<p>Добавьте/замените настройки res/values/styles.xml</p>
+<pre style="background: #fff; color: #3b3b3b;"><span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">resources</span>&gt;</span>
+
+
+<span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">style</span> <span style="color: #963dff;">name</span>=<span style="color: #666;">"AppTheme"</span> <span style="color: #963dff;">parent</span>=<span style="color: #666;">"Theme.AppCompat.Light.NoActionBar"</span>&gt;</span>
+
+<span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">item</span> <span style="color: #963dff;">name</span>=<span style="color: #666;">"colorPrimary"</span>&gt;</span>@color/colorPrimary<span style="color: #7a7a7a;">item</span>&gt;
+<span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">item</span> <span style="color: #963dff;">name</span>=<span style="color: #666;">"colorPrimaryDark"</span>&gt;</span>@color/colorPrimaryDark<span style="color: #7a7a7a;">item</span>&gt;
+<span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">item</span> <span style="color: #963dff;">name</span>=<span style="color: #666;">"colorAccent"</span>&gt;</span>@color/colorAccent<span style="color: #7a7a7a;">item</span>&gt;
+<span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">item</span> <span style="color: #963dff;">name</span>=<span style="color: #666;">"android:windowNoTitle"</span>&gt;</span>true<span style="color: #7a7a7a;">item</span>&gt;
+<span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">item</span> <span style="color: #963dff;">name</span>=<span style="color: #666;">"android:windowActionBar"</span>&gt;</span>false<span style="color: #7a7a7a;">item</span>&gt;
+<span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">item</span> <span style="color: #963dff;">name</span>=<span style="color: #666;">"android:windowFullscreen"</span>&gt;</span>true<span style="color: #7a7a7a;">item</span>&gt;
+<span style="color: #7a7a7a;">&lt;<span style="color: #016cff;">item</span> <span style="color: #963dff;">name</span>=<span style="color: #666;">"android:windowContentOverlay"</span>&gt;</span>@null<span style="color: #7a7a7a;">item</span>&gt;
+&lt;<span style="color: #7a7a7a;">style</span>&gt;
+
+&lt;<span style="color: #7a7a7a;">resources</span>&gt;</pre>
+<p>4. Инициализируем двухмерную камеру Camera2D<br />
+Добавляем приватное поле Camera2D в класс Renderer.class</p>
+<pre style="background: #fff; color: #3b3b3b;"><span style="color: #069; font-weight: bold;">import</span> <span style="color: #ff5600;">org.rajawali3d.cameras.Camera2D</span>;
+</pre>
+<p>Добавляем метод инициализации камеры Camera2d</p>
+<pre style="background: #fff; color: #3b3b3b;">    <span style="color: #ff5600;">protected</span> <span style="color: #ff5600;">void</span> initializeCamera() {
+gameCamera <span style="color: #069; font-weight: bold;">=</span> <span style="color: #069; font-weight: bold;">new</span> <span style="color: #ff5600;">Camera2D</span>();
+
+getCurrentScene()<span style="color: #069; font-weight: bold;">.</span>addCamera(gameCamera);
+getCurrentScene()<span style="color: #069; font-weight: bold;">.</span>switchCamera(gameCamera);
+}
+</pre>
+<p>5. Добавляем примитив плоскость (Plane) с картинкой demensdeum_logo.png<br />
+Добавляем приватное поле Plane в класс Renderer.java</p>
+<pre style="background: #fff; color: #3b3b3b;">    <span style="color: #ff5600;">private</span> <span style="color: #ff5600;">Plane</span> plane;
+</pre>
+<p>Добавляем метод инициализации Plane</p>
+<pre style="background: #fff; color: #3b3b3b;">    <span style="color: #ff5600;">protected</span> <span style="color: #ff5600;">void</span> initializePlane() {
+<span style="color: #ff5600;">Material</span> material <span style="color: #069; font-weight: bold;">=</span> <span style="color: #069; font-weight: bold;">new</span> <span style="color: #ff5600;">Material</span>();
+material<span style="color: #069; font-weight: bold;">.</span>enableLighting(<span style="color: #a535ae;">false</span>);
+material<span style="color: #069; font-weight: bold;">.</span>setDiffuseMethod(<span style="color: #069; font-weight: bold;">new</span> <span style="color: #ff5600;">DiffuseMethod</span>.<span style="color: #ff5600;">Lambert</span>());
+material<span style="color: #069; font-weight: bold;">.</span>setColor(<span style="color: #a8017e;">0</span>);
+
+<span style="color: #ff5600;">Texture</span> earthTexture <span style="color: #069; font-weight: bold;">=</span> <span style="color: #069; font-weight: bold;">new</span> <span style="color: #ff5600;">Texture</span>(<span style="color: #666;">"Earth"</span>, <span style="color: #ff5600;">R</span><span style="color: #069; font-weight: bold;">.</span>drawable<span style="color: #069; font-weight: bold;">.</span>demensdeum_logo);
+<span style="color: #069; font-weight: bold;">try</span>{
+material<span style="color: #069; font-weight: bold;">.</span>addTexture(earthTexture);
+
+} <span style="color: #069; font-weight: bold;">catch</span> (<span style="color: #ff5600;">ATexture</span><span style="color: #069; font-weight: bold;">.</span><span style="color: #ff5600;">TextureException</span> error){
+<span style="color: #ff5600;">Log</span><span style="color: #069; font-weight: bold;">.</span>d(<span style="color: #666;">"DEBUG"</span>, <span style="color: #666;">"TEXTURE ERROR"</span>);
+}
+
+plane <span style="color: #069; font-weight: bold;">=</span> <span style="color: #069; font-weight: bold;">new</span> <span style="color: #ff5600;">Plane</span>(<span style="color: #a8017e;">1</span>, <span style="color: #a8017e;">1</span>, <span style="color: #a8017e;">2</span>, <span style="color: #a8017e;">2</span>);
+plane<span style="color: #069; font-weight: bold;">.</span>setPosition(<span style="color: #a8017e;">0</span>,<span style="color: #a8017e;">0</span>,<span style="color: #a8017e;">0</span>);
+plane<span style="color: #069; font-weight: bold;">.</span>setMaterial(material);
+}
+</pre>
+<p>Меняем код инициализации сцены</p>
+<pre style="background: #fff; color: #3b3b3b;">@<span style="color: #ff5600;">Override</span>
+<span style="color: #ff5600;">protected</span> <span style="color: #ff5600;">void</span> initScene() {
+initializeCamera();
+initializePlane();
+
+getCurrentScene()<span style="color: #069; font-weight: bold;">.</span>addChild(plane);
+getCurrentCamera()<span style="color: #069; font-weight: bold;">.</span>setZ(<span style="color: #a8017e;">200.2f</span>);
+}
+</pre>
+<p>6. Добавляем demensdeum_logo.png в res/drawable папку<br />
+7. Собираем-проверяем на вашем Android девайсе</p>
+<p><img loading="lazy" decoding="async" class="image-shadow alignnone wp-image-610 size-full" src="https://demensdeum.com/blog/wp-content/uploads/2016/05/screenshots.png" alt="screenshots" width="960" height="540" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/05/screenshots.png 960w, https://demensdeum.com/blog/wp-content/uploads/2016/05/screenshots-300x169.png 300w, https://demensdeum.com/blog/wp-content/uploads/2016/05/screenshots-768x432.png 768w" sizes="auto, (max-width: 960px) 100vw, 960px" /></p>
+<p>Вы должны увидеть картинку &#8211; логотип компании Demens Deum, если она будет по горизонтали зеркальная &#8211; поверните ее в Gimp сначала.<br />
+Продвинутые пользователи могут ничего не зеркалить, вам стоит попробовать использовать самую последнюю версию Rajawali, некорректные текстурные координаты для Plane это <a href="https://github.com/Rajawali/Rajawali/issues/1561" target="_blank">известная проблема старых версий</a>.</p>
+<p><a href="https://demensdeum.com/blog/ru/2015/12/19/about-us/" target="_blank">Спросите меня, если у вас есть вопросы, и если нет тоже.</a></p>

@@ -1,0 +1,6 @@
+Format: Fall24-October10
+Language: ru
+Title: Маска Смерти: Ядро коррупции тизер
+Slug: death-mask-corrupted-city-teaser
+Categories: news,sketches
+<p><iframe loading="lazy" src="https://www.youtube.com/embed/pinbxd6T-hQ" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>

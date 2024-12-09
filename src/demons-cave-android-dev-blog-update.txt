@@ -1,0 +1,8 @@
+Format: Fall24-October10
+Language: ru
+Title: Отчет о разработке Demon&#8217;s Cave для Андроида
+Slug: demons-cave-android-dev-blog-update
+Categories: news
+<p>Добавлены базовые объекты игровой сцены, монетки, сталактиты.<br />
+Последние изменения можно получить в репозитории:<br />
+<a href="https://github.com/demensdeum/DemonsCaveAndroid" target="_blank">https://github.com/demensdeum/DemonsCaveAndroid</a></p>

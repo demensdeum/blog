@@ -1,0 +1,11 @@
+Format: Fall24-October10
+Language: ru
+Title: Death Mask дев отчет 1
+Slug: death-mask-dev-diary-1
+Categories: dev-diary
+<p>Новая непостоянная рубрика &#8220;дневники разработчиков&#8221; или Dev Diary на иностранный манер.<br />
+Разработка игры <a href="https://demensdeum.com/games/deathMask/wild/" target="_blank" rel="noopener">Death-Mask</a> идет полным ходом, за 2019 год добавлен логотип движка игры Flame Steel Engine, экран выбора начальной карты по островам (зеленый, красный, черный, белый) вывод текстур для стен, потолка, пола лабиринта, увеличены размеры игровой зоны.</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1698" src="https://demensdeum.com/blog/wp-content/uploads/2019/04/gameMap.jpg" alt="" width="547" height="358" srcset="https://demensdeum.com/blog/wp-content/uploads/2019/04/gameMap.jpg 547w, https://demensdeum.com/blog/wp-content/uploads/2019/04/gameMap-300x196.jpg 300w" sizes="auto, (max-width: 547px) 100vw, 547px" /><br />
+<em>Карта Города Красной Зоны</em></p>
+<p>Далее планируется добавить 3д модели для окружения, вместо Doom-style спрайтов, в планах добавить модели для оружия, ящиков, врагов, друзей. В геймплее планируется добавить валюту, магазины, возможность покупать части игровой карты с указанием интересных мест с лутом, и возможного нахождения &#8220;Маски Смерти&#8221;. Также хочу добавить возможность нанимать компаньонов для странствий по киберлабиринту.<br />
+Следите за новостями.</p>

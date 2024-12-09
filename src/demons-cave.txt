@@ -1,0 +1,8 @@
+Format: Fall24-October10
+Language: ru
+Title: Пещера Демона Анонс
+Slug: demons-cave
+Categories: news
+<p style="text-align: center;"> <a href="http://demensdeum.com/graphics/gameScreenshot.png" target="_blank"><img loading="lazy" decoding="async" class="image-shadow aligncenter wp-image-353 size-full" src="https://demensdeum.com/blog/wp-content/uploads/2016/03/gameScreenshotPreview.png" alt="gameScreenshotPreview" width="320" height="248" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/03/gameScreenshotPreview.png 320w, https://demensdeum.com/blog/wp-content/uploads/2016/03/gameScreenshotPreview-300x233.png 300w, https://demensdeum.com/blog/wp-content/uploads/2016/03/gameScreenshotPreview-194x150.png 194w" sizes="auto, (max-width: 320px) 100vw, 320px" /></a></p>
+<p style="text-align: center;"><a href="http://demensdeum.com/graphics/gameScreenshot1.png" target="_blank"><img loading="lazy" decoding="async" class="image-shadow alignnone wp-image-357 size-full" src="https://demensdeum.com/blog/wp-content/uploads/2016/03/gameScreenshot1Preview.png" alt="gameScreenshot1Preview" width="320" height="233" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/03/gameScreenshot1Preview.png 320w, https://demensdeum.com/blog/wp-content/uploads/2016/03/gameScreenshot1Preview-300x218.png 300w, https://demensdeum.com/blog/wp-content/uploads/2016/03/gameScreenshot1Preview-206x150.png 206w" sizes="auto, (max-width: 320px) 100vw, 320px" /></a></p>
+<p style="text-align: center;"><strong>Пещера Демона </strong>&#8211; бешеная аркада для HTML5. <strong>Скоро</strong></p>

@@ -1,0 +1,14 @@
+Format: Fall24-October10
+Language: ru
+Title: Death-Mask в открытом доступе
+Slug: death-mask-goes-wild
+Categories: misc
+<p>С сегодняшнего дня игра Death-Mask уходит в открытый доступ &#8211; можете следить за прогрессом реализации игры по ссылке: (Вау!)<br />
+[<a href="https://demensdeum.com/games/deathMask/wild/" target="_blank" rel="noopener">Death-Mask Wild</a>]</p>
+<p><a href="https://demensdeum.com/games/deathMask/wild/" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1489" src="https://demensdeum.com/blog/wp-content/uploads/2018/10/deathmaskwild.png" alt="" width="420" height="236" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/10/deathmaskwild.png 420w, https://demensdeum.com/blog/wp-content/uploads/2018/10/deathmaskwild-300x169.png 300w" sizes="auto, (max-width: 420px) 100vw, 420px" /></a></p>
+<p>На данный момент версия &#8211; 0.1 содержит базовое управление на стрелках, wsad, генерация карт, предметов (в том числе и маску смерти!), рендеринг.<br />
+Предстоит еще куча работы, и мне очень интересен ваш фидбэк &#8211; поэтому можете писать комментарии на странице с wild версией игры.<br />
+В финальной версии игра заканчивается после того как игрок найдет предмет &#8211; Маску Смерти (Death-Mask)<br />
+Приятного теста : )<br />
+&#8212;<br />
+<a href="https://demensdeum.com/games/deathMask/wild//credits.txt" target="_blank" rel="noopener">Авторы ресурсов</a></p>

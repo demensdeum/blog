@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Flame Steel Battle Axe
+Slug: flame-steel-battle-axe
+Categories: blog,software
+<p>С сегодняшнего дня я начинаю разработку редактора для игрового фреймворка &#8211; <strong>Flame Steel Battle Axe.</strong></p>
+<p>Редактор позволить редактировать сцены для игрового фреймворка <strong>Flame Steel Game Toolkit</strong>.<br />
+Я выбрал относительно молодой язык Kotlin на базе Java, для того чтобы опробовать его в боевых условиях.</p>
+<p>Можете следить за процессом в репозитории:<br />
+<a href="https://github.com/demensdeum/FlameSteelBattleAxe" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelBattleAxe</a></p>

@@ -1,0 +1,34 @@
+Format: Fall24-October10
+Language: ru
+Title: Порхай как Мишель
+Slug: prophet
+Categories: techie,tutorials
+<p>[<a rel="noreferrer noopener" aria-label=" (opens in a new tab)" href="https://translate.google.ru/translate?sl=ru&amp;tl=en&amp;u=https%3A%2F%2Fdemensdeum.com%2Fblog%2F2019%2F01%2F03%2Fprophet%2F" target="_blank">Feel the power of Artificial Intelligence</a>]<br>В данной заметке я расскажу как <strong>предсказывать будущее</strong>.</p>
+
+
+
+<figure class="wp-block-image"><img loading="lazy" decoding="async" width="470" height="427" src="https://demensdeum.com/blog/wp-content/uploads/2019/03/kim.jpg" alt="" class="wp-image-1640" srcset="https://demensdeum.com/blog/wp-content/uploads/2019/03/kim.jpg 470w, https://demensdeum.com/blog/wp-content/uploads/2019/03/kim-300x273.jpg 300w" sizes="auto, (max-width: 470px) 100vw, 470px" /></figure>
+
+
+
+<p>В статистике существует класс задач &#8211; анализ временных рядов. Имея дату и значение некой переменной, можно прогнозировать значение этой переменной в будущем.<br>Поначалу я хотел реализовать решение данной задачи на <a rel="noreferrer noopener" aria-label="TensorFlow (opens in a new tab)" href="https://www.tensorflow.org/" target="_blank">TensorFlow</a>, однако нашел библиотеку <a rel="noreferrer noopener" aria-label="Prophet (opens in a new tab)" href="https://github.com/facebook/prophet" target="_blank">Prophet</a> от <a rel="noreferrer noopener" aria-label="Facebook (opens in a new tab)" href="https://i.redd.it/vrkjvgso70101.jpg" target="_blank">Facebook</a>.<br><a rel="noreferrer noopener" aria-label="Prophet (opens in a new tab)" href="https://github.com/facebook/prophet" target="_blank">Prophet</a> позволяет делать прогноз на основе данных (csv), содержащих колонки даты (ds) и значения переменной (y). О том как с ней работать, можно узнать в документации на официальном сайте в разделе <a rel="noreferrer noopener" aria-label="Quick Start (opens in a new tab)" href="https://facebook.github.io/prophet/docs/quick_start.html" target="_blank">Quick Start</a><br>В качестве датасета я использовал выгрузку в csv с сайта <a rel="noreferrer noopener" href="https://www.investing.com" target="_blank">https://www.investing.com</a>, при реализации я использовал <a rel="noreferrer noopener" aria-label="язык R (opens in a new tab)" href="https://www.r-project.org/" target="_blank">язык R</a> и <a rel="noreferrer noopener" aria-label="Prophet API (opens in a new tab)" href="http://facebook.github.io/prophet/docs/quick_start.html#r-api" target="_blank">Prophet API</a> для него. R мне очень понравился, так как его синтаксис упрощает работу с большими массивами данных, позволяет писать проще, допускать меньше ошибок, чем при работе с обычными языками (Python), так как пришлось бы работать с лямбда выражениями, а в R уже все лямбда выражения.<br>Для того чтобы не подготавливать данные к обработке, я использовал пакет <a rel="noreferrer noopener" aria-label="anytime (opens in a new tab)" href="http://dirk.eddelbuettel.com/code/anytime.html" target="_blank">anytime</a>, который умеет переводить строки в дату, без предварительной обработки. Конвертация строк валюты в number осуществляется с помощью пакета <a rel="noreferrer noopener" href="https://cran.r-project.org/web/packages/readr/index.html" target="_blank">readr.</a></p>
+
+
+
+<p>В результате я получил прогноз по которому биткоин будет стоить 8400$ к концу 2019 года, а курс доллара будет 61 руб. Стоит ли верить данным прогнозам? Лично я считаю что не стоит, т.к. <a rel="noreferrer noopener" aria-label="нельзя использовать математические методы, не понимая их сущности. (opens in a new tab)" href="https://www.anekdot.ru/id/610726/" target="_blank">нельзя использовать математические методы, не понимая их сущности.</a></p>
+
+
+
+<h3 class="wp-block-heading">Источники</h3>
+
+
+
+<p><a rel="noreferrer noopener" aria-label=" (opens in a new tab)" href="https://facebook.github.io/prophet/" target="_blank">https://facebook.github.io/prophet</a><br><a rel="noreferrer noopener" aria-label="https://habr.com/company/ods/blog/323730/ (opens in a new tab)" href="https://habr.com/company/ods/blog/323730/" target="_blank">https://habr.com/company/ods/blog/323730/</a><br><a rel="noreferrer noopener" aria-label="https://www.r-project.org/ (opens in a new tab)" href="https://www.r-project.org/" target="_blank">https://www.r-project.org/</a></p>
+
+
+
+<h3 class="wp-block-heading">Исходный код</h3>
+
+
+
+<p><a href="https://gitlab.com/demensdeum/MachineLearning/tree/master/4prophet" target="_blank" rel="noreferrer noopener" aria-label="https://gitlab.com/demensdeum/MachineLearning/tree/master/4prophet (opens in a new tab)">https://gitlab.com/demensdeum/MachineLearning/tree/master/4prophet</a><br></p>

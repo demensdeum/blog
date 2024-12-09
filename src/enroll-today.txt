@@ -1,0 +1,6 @@
+Format: Fall24-October10
+Language: ru
+Title: Подпишись!
+Slug: enroll-today
+Categories: advertisement
+<p>Подпишись на нашу спам рассылку, только свежие консервы &#8211;  <a href="http://vk.com/demensdeum.corp" target="_blank">ВКонтакте </a>или <a href="https://www.facebook.com/groups/927057997380544/" target="_blank">Facebook</a></p>

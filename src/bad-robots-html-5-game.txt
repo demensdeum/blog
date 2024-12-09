@@ -1,0 +1,16 @@
+Format: Fall24-October10
+Language: ru
+Title: Bad Robots &#8211; HTML 5 Игра
+Slug: bad-robots-html-5-game
+Categories: demos
+<p>Первая игра на движке <strong>Flame Steel Engine</strong>.</p>
+<p><a href="http://demensdeum.com/games/BadRobots/BadRobots.html"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-974" src="https://demensdeum.com/blog/wp-content/uploads/2017/03/badRobotsMenu.png" alt="" width="720" height="405" srcset="https://demensdeum.com/blog/wp-content/uploads/2017/03/badRobotsMenu.png 720w, https://demensdeum.com/blog/wp-content/uploads/2017/03/badRobotsMenu-300x169.png 300w" sizes="auto, (max-width: 720px) 100vw, 720px" /></a></p>
+<p><a href="http://demensdeum.com/games/BadRobots/BadRobots.html" target="_blank" rel="noopener">http://demensdeum.com/games/BadRobots/BadRobots.html</a></p>
+<p>Перестреляй всех роботов на экране!</p>
+<p><strong>Авторы</strong>:</p>
+<p>Анимация робота &#8211; http://opengameart.org/content/xeon-ultimate-smash-friends<br />
+Музыка &#8211; Killers Kevin MacLeod (incompetech.com)</p>
+<p><strong>Исходный код</strong>:</p>
+<p><a href="https://github.com/demensdeum/BadRobots" target="_blank" rel="noopener">https://github.com/demensdeum/BadRobots</a><br />
+<a href="https://github.com/demensdeum/FlameSteelEngine" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngine</a><br />
+<a href="https://github.com/demensdeum/FlameSteelEngineGameToolkit" target="_blank" rel="noopener">https://github.com/demensdeum/FlameSteelEngineGameToolkit</a></p>

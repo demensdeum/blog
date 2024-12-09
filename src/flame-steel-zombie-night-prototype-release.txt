@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Flame Steel Zombie Night прототип (обновлено)
+Slug: flame-steel-zombie-night-prototype-release
+Categories: sketches
+<p>Первая версия Flame Steel Zombie Night для Windows:</p>
+<p><a href="http://demensdeum.com/blog/wp-content/uploads/2017/01/FlameSteelZombieNightPrototype2.zip">FlameSteelZombieNightPrototype2</a></p>
+<p>Можешь бегать, стрелять, зарабатывать очки. Стрелять мышью, бегать вперед назад на стрелках клавиатуры.<br />
+Это прототип первой игры на Flame Steel Engine, с единой кодовой базой для нескольких платформ.</p>

@@ -1,0 +1,14 @@
+Format: Fall24-October10
+Language: ru
+Title: Saber-Plus C++ IDE
+Slug: saber-plus-c-ide
+Categories: blog,devtools,software
+<p>Начал разработку собственного IDE для С++ &#8211; Saber-Plus. Основные идеи нового IDE &#8211; быть простым, быстрым и *помогающим* в разработке. На данный момент исходный код доступен по лицензии MIT на GitHub, для работы с UI используется Qt. В дальнейшем планирую перенести всю разработку связанную с C++ на Saber-Plus &#8211; точно будет проведена миграция игры Death-Mask. Подробнее по пунктам:</p>
+<ul>
+<li>Простой &#8211; планируется не добавлять больше чем нужно &#8211; например не содержать source control клиенты, встроенный терминал и подобные вещи. Функционал сосредоточен только на редактировании кода, анализе ошибок. Код редактора должен быть разбит на простые классы, которые корректно выполняют свою часть работы (Unix-way)</li>
+<li>Быстрый &#8211; касается как кодовой базы IDE так и самого поведения редактора. Все действия в IDE должны быть максимально быстрыми, даже такие зачастую долгие и сложные как создание/импортирование проектов.</li>
+<li>Помогающий &#8211; анализ типичных ошибок при написании, компиляции кода. Исправление ошибок, предупреждений по требованию пользователя. В планах идея добавить анализ сборки приложения на конкретной платформе и вывод справочной информации по установке нужных библиотек, компонентов.</li>
+</ul>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1302" src="https://demensdeum.com/blog/wp-content/uploads/2018/01/Screenshot_20180106_162337.png" alt="" width="988" height="700" srcset="https://demensdeum.com/blog/wp-content/uploads/2018/01/Screenshot_20180106_162337.png 988w, https://demensdeum.com/blog/wp-content/uploads/2018/01/Screenshot_20180106_162337-300x213.png 300w, https://demensdeum.com/blog/wp-content/uploads/2018/01/Screenshot_20180106_162337-768x544.png 768w" sizes="auto, (max-width: 988px) 100vw, 988px" /></p>
+<p>Для сборки редактора для вашей операционной системы, нужно установить  Qt 5 SDK, загрузить код IDE из репозитория, открыть файл Saber-Plus.pro в Qt Creator и запустить сборку:</p>
+<p><a href="https://github.com/demensdeum/saberplus" target="_blank" rel="noopener">https://github.com/demensdeum/saberplus</a></p>

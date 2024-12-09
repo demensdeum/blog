@@ -1,0 +1,11 @@
+Format: Fall24-October10
+Language: ru
+Title: Пещера Демона
+Slug: demons-cave-released
+Categories: games
+<p><strong>Игра &#8220;Пещера Демона&#8221; вышла для <a href="https://play.google.com/store/apps/details?id=com.demensdeum.demonscave" target="_blank" rel="noopener">Андроида</a> и <a href="http://demensdeum.com/games/demonsCave" target="_blank" rel="noopener">Web</a>!</strong></p>
+<p><a href="http://demensdeum.com/games/demonsCave/" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="image-shadow aligncenter wp-image-374 size-full" src="https://demensdeum.com/blog/wp-content/uploads/2016/04/screen640x640.jpeg" alt="screen640x640" width="640" height="360" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/04/screen640x640.jpeg 640w, https://demensdeum.com/blog/wp-content/uploads/2016/04/screen640x640-300x169.jpeg 300w, https://demensdeum.com/blog/wp-content/uploads/2016/04/screen640x640-267x150.jpeg 267w" sizes="auto, (max-width: 640px) 100vw, 640px" /></a></p>
+<p><strong>Demon’s Cave</strong> – игра в которой нужно лететь в пещере и уворачиваться от скал, собирая монетки! Вердж — отважный охотник на демонов, на своем самолете и запасе энтузиазма пытается поймать легендарного демона планеты Сириус 9.</p>
+<p style="text-align: center;"><strong>Зацени!</strong></p>
+<p style="text-align: center;"><a href="http://demensdeum.com/games/demonsCave/" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-396" src="https://demensdeum.com/blog/wp-content/uploads/2016/04/html5Button-1.png" alt="html5Button" width="180" height="180" srcset="https://demensdeum.com/blog/wp-content/uploads/2016/04/html5Button-1.png 180w, https://demensdeum.com/blog/wp-content/uploads/2016/04/html5Button-1-150x150.png 150w" sizes="auto, (max-width: 180px) 100vw, 180px" /></a></p>
+<p>&nbsp;</p>

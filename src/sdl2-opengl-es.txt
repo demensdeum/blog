@@ -1,0 +1,31 @@
+Format: Fall24-October10
+Language: ru
+Title: SDL2 &#8211; OpenGL ES
+Slug: sdl2-opengl-es
+Categories: techie,tutorials
+<p>Я люблю <strong>Panda3D</strong>. Однако этот игровой движок слишком сложен в компиляции/поддержке для платформы Microsoft Windows. Поэтому я решил заняться разработкой собственной графической библиотеки на OpenGL ES и SDL2.<br />
+В этой статье я опишу как инициализировать OpenGL контекст. Мы выведем <strong>пустое</strong> окно.</p>
+<h3>King Nothing</h3>
+<p>Для начала установим библиотеки OpenGL ES3 &#8211; GLES 3. На убунте это делается легко, командой <strong>sudo apt-get install libgles2-mesa-dev</strong>. Для работы с OpenGL, необходимо проинициализировать контекст. Для решения данной задачи есть много вспомогательных библиотек &#8211; SDL2, GLFW, GLFM и тд. На самом деле, единственного варианта инициализации для всех платформ не существует, я выбрал SDL2 т.к. код будет един для Windows/*nix/HTML5/iOS/Android/и тд.</p>
+<p>Установить SDL2 на убунте можно командой <strong>sudo apt-get install libsdl2-dev</strong></p>
+<p>Код для инициализации контекста OpenGL с помощью SDL2:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">    SDL_Window *window = SDL_CreateWindow(
+            <span style="color: #0000ff;">"SDL2 - OGLES"</span>,
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            <span style="color: #0000ff;">640</span>,
+            <span style="color: #0000ff;">480</span>,
+            SDL_WINDOW_OPENGL
+            );
+	    
+
+    SDL_GLContext glContext = SDL_GL_CreateContext(window);
+</pre>
+</div>
+<p>После этого можно делать вызовы OpenGL, которые будут отрабатывать в данном контексте.</p>
+<p>Пример с выводом окна на OpenGL ES с синей заливкой:<br />
+<a href="https://github.com/demensdeum/OpenGLES3-Experiments/tree/master/3sdl-gles" target="_blank" rel="noopener">https://github.com/demensdeum/OpenGLES3-Experiments/tree/master/3sdl-gles</a><br />
+<a href="https://github.com/demensdeum/OpenGLES3-Experiments/blob/master/3sdl-gles/sdlgles.cpp" target="_blank" rel="noopener">https://github.com/demensdeum/OpenGLES3-Experiments/blob/master/3sdl-gles/sdlgles.cpp</a></p>
+<p>Собрать и проверить можно с помощью команды <strong>cmake . &#038;&#038; make &#038;&#038; ./SDLGles</strong></p>

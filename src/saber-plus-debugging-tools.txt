@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Saber-Plus дебаггер
+Slug: saber-plus-debugging-tools
+Categories: blog,news
+<p>Обновлен Saber-Plus C++ IDE, добавлен вывод содержимого умных указателей (shared_ptr)<br />
+Демо можно посмотреть ниже:</p>
+<p><iframe loading="lazy" title="Saber-Plus C++ IDE Debug Features" width="620" height="465" src="https://www.youtube.com/embed/EJd7STZhYw0?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></p>
+<p>Исходный код Saber-Plus:<br />
+<a href="https://gitlab.com/demensdeum/saberplus/" target="_blank" rel="noopener">https://gitlab.com/demensdeum/saberplus/</a></p>

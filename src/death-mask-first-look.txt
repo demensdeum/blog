@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Death Mask &#8211; Первые скриншоты
+Slug: death-mask-first-look
+Categories: blog
+<p>Тестирую генерацию карт, точку выхода.</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1070" src="https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212618.png" alt="" width="800" height="600" srcset="https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212618.png 800w, https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212618-300x225.png 300w, https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212618-768x576.png 768w" sizes="auto, (max-width: 800px) 100vw, 800px" /></p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1071" src="https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212547.png" alt="" width="800" height="600" srcset="https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212547.png 800w, https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212547-300x225.png 300w, https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212547-768x576.png 768w" sizes="auto, (max-width: 800px) 100vw, 800px" /></p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1072" src="https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212505.png" alt="" width="800" height="600" srcset="https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212505.png 800w, https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212505-300x225.png 300w, https://demensdeum.com/blog/wp-content/uploads/2017/05/Screenshot_20170507_212505-768x576.png 768w" sizes="auto, (max-width: 800px) 100vw, 800px" /></p>

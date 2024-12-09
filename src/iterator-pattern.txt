@@ -1,0 +1,104 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Итератор
+Slug: iterator-pattern
+Categories: techie,tutorials
+<p>В данной заметке я опишу паттерн Итератор.<br />
+Данный паттерн относится к поведенческим шаблонам проектирования.</p>
+<h3>Распечатай это</h3>
+<p>Допустим нам нужно распечатать список треков с альбома &#8220;Procrastinate them all&#8221; группы &#8220;Procrastinallica&#8221;.<br />
+Наивная имплементация (Swift) выглядит так:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #008800; font-weight: bold;">for</span> i=<span style="color: #6600ee; font-weight: bold;">0</span>; i &lt; tracks.count; i++ {
+    print(tracks[i].title)
+}
+</pre>
+</div>
+<p>Вдруг при сборке обнаруживается что класс объекта tracks не отдает количество треков в вызове count, мало того, еще и к его элементам нельзя обратиться по индексу. Ой&#8230;</p>
+<h3>Отфильтруй</h3>
+<p>Допустим мы пишем статью для журнала &#8220;Wacky Hammer&#8221;, нам нужен список треков группы &#8220;Djentuggah&#8221; в которых bpm превышает 140 ударов в минуту. Интересная особенность этой группы, что ее записи хранятся в огромной коллекции underground групп, не отсортированная по альбомам, или по каким-либо другим признакам.<br />
+Представим себе что работаем с языком без функциональных возможностей:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #008800; font-weight: bold;">var</span> djentuggahFastTracks = [Track]()
+
+<span style="color: #008800; font-weight: bold;">for</span> track <span style="color: #008800; font-weight: bold;">in</span> undergroundCollectionTracks {
+    <span style="color: #008800; font-weight: bold;">if</span> track.band.title == <span style="background-color: #fff0f0;">"Djentuggah"</span> &amp;&amp; track.info.bpm == <span style="color: #6600ee; font-weight: bold;">140</span> {
+        djentuggahFastTracks.append(track)
+    }
+}
+</pre>
+</div>
+<p>Вдруг в коллекции оцифрованных кассет обнаруживается пару треков группы, и редактор журнала предлагает найти в этой коллекции треки и написать о них.<br />
+Знакомый Data Scientist сообщает, что вооружившись ML алгоритмом классификации треков Djentuggah можно будет не прослушивать коллекцию из 200 тысяч кассет вручную, а определить их автоматически.<br />
+Попробуем:<br />
+<!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #008800; font-weight: bold;">var</span> djentuggahFastTracks = [Track]()
+
+<span style="color: #008800; font-weight: bold;">for</span> track <span style="color: #008800; font-weight: bold;">in</span> undergroundCollectionTracks {
+    <span style="color: #008800; font-weight: bold;">if</span> track.band.title == <span style="background-color: #fff0f0;">"Djentuggah"</span> &amp;&amp; track.info.bpm == <span style="color: #6600ee; font-weight: bold;">140</span> {
+        djentuggahFastTracks.append(track)
+    }
+}
+
+let tracksClassifier = TracksClassifier()
+let bpmClassifier = BPMClassifier()
+
+<span style="color: #008800; font-weight: bold;">for</span> track <span style="color: #008800; font-weight: bold;">in</span> cassetsTracks {
+    <span style="color: #008800; font-weight: bold;">if</span> tracksClassifier.classify(track).band.title == <span style="background-color: #fff0f0;">"Djentuggah"</span> &amp;&amp; bpmClassifier.classify(track).bpm == <span style="color: #6600ee; font-weight: bold;">140</span> {
+        djentuggahFastTracks.append(track)
+    }
+}
+</pre>
+</div>
+<h3>Ошибаемся</h3>
+<p>Теперь перед самой отправкой в печать, редактор сообщает что 140 ударов в минуту вышли из моды, людей больше интересуют 160, поэтому статью надо переписать, добавив необходимые треки.<br />
+Переписываем:<br />
+<!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #008800; font-weight: bold;">var</span> djentuggahFastTracks = [Track]()
+
+<span style="color: #008800; font-weight: bold;">for</span> track <span style="color: #008800; font-weight: bold;">in</span> undergroundCollectionTracks {
+    <span style="color: #008800; font-weight: bold;">if</span> track.band.title == <span style="background-color: #fff0f0;">"Djentuggah"</span> &amp;&amp; track.info.bpm == <span style="color: #6600ee; font-weight: bold;">160</span> {
+        djentuggahFastTracks.append(track)
+    }
+}
+
+let tracksClassifier = TracksClassifier()
+let bpmClassifier = BPMClassifier()
+
+<span style="color: #008800; font-weight: bold;">for</span> track <span style="color: #008800; font-weight: bold;">in</span> cassetsTracks {
+    <span style="color: #008800; font-weight: bold;">if</span> tracksClassifier.classify(track).band.title == <span style="background-color: #fff0f0;">"Djentuggah"</span> &amp;&amp; bpmClassifier.classify(track).bpm == <span style="color: #6600ee; font-weight: bold;">140</span> {
+        djentuggahFastTracks.append(track)
+    }
+}
+</pre>
+</div>
+<p>Самые внимательные заметили ошибку, параметр bpm изменен только для первого прохода по списку. Если бы проходов по коллекциям было больше, то и шанс ошибится был бы выше, именно потому нужно использовать принцип DRY.<br />
+Приведенный выше пример можно развивать и дальше, например добавив условие что нужно найти несколько групп с разным bpm, по именам вокалистов, гитаристов, это будет увеличивать шанс ошибки из-за дублирования кода.</p>
+<h3>Добавляем итератор</h3>
+<p>В литературе итератор описывается как совокупность двух протоколов/интерфейсов, первый это интерфейс итератора состоящий из двух методов &#8211; next(), hasNext()<br />
+next() отдает обьект из коллекции, а hasNext() сообщает что дальше есть объект и список не закончился.<br />
+Однако на практике я наблюдал итераторы с одним методом &#8211; next(), когда список заканчивался, из этого обьекта возвращался null.<br />
+Второй это коллекция которая должна иметь интерфейс отдающий итератор &#8211; метод iterator(), есть вариации с интерфейсом коллекции которая возвращает итератор в начальной позиции и в конечной &#8211; методы begin() и end() &#8211; используется в C++ std.<br />
+Использование итератора в приведенном выше примере позволит убрать дублирование кода, устранит шанс ошибиться из-за дублирования условий фильтрации. Также будет проще работать с коллекцией треков по единому интерфейсу &#8211; при изменении внутренней структуры коллекции, интерфейс останется старым и внешний код затронут не будет.</p>
+<p>Перепишем:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">let bandFilter = Filter(key: <span style="background-color: #fff0f0;">"band"</span>, value: <span style="background-color: #fff0f0;">"Djentuggah"</span>)
+let bpmFilter = Filter(key: <span style="background-color: #fff0f0;">"bpm"</span>, value: <span style="color: #6600ee; font-weight: bold;">140</span>)
+let iterator = tracksCollection.filterableIterator(filters: [bandFilter, bpmFilter])
+
+<span style="color: #008800; font-weight: bold;">while</span> let track = iterator.next() {
+    print(<span style="background-color: #fff0f0;">"\(track.band) - \(track.title)"</span>)
+}
+</pre>
+</div>
+<h3>Изменение коллекции и я</h3>
+<p>Во время работы итератора коллекция может измениться, таким образом приводя внутренний счетчик итератора в некорректное состояние и вообще ломая такое понятие как &#8220;следующий объект&#8221;. Многие фреймворки содержат проверку на изменение состояние коллекции, и в случае изменений возвращают ошибку/exception. Некоторые реализации позволяют удалять объекты из коллекции во время работы итератора, предоставляя метод remove() в итераторе.</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/iterator" target="_blank" rel="noopener noreferrer">https://refactoring.guru/ru/design-patterns/iterator</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns/" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/patterns/</a></p>

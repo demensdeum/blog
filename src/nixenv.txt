@@ -1,0 +1,9 @@
+Format: Fall24-October10
+Language: ru
+Title: Nixenv консольные утилиты Linux для Windows
+Slug: nixenv
+Categories: software
+<p>Я собрал свою альтернативу MSYS, данный набор включает в себя утилиты coretools + git + cmake + make + добавляет msvs msbuild в переменную окружения PATH. Данный набор приложений необходим тем разработчикам, которые привыкли к разработке на платформе Linux, и им необходимо собирать приложение под Windows из командной строки с использованием Microsoft Visual Studio. Скачать:</p>
+<p><a href="https://www.mediafire.com/file/s5yf75blfslkbym/nixenv.exe">https://www.mediafire.com/file/s5yf75blfslkbym/nixenv.exe</a></p>
+<p><a href="https://www.4shared.com/file/QyjJXBaJca/nixenv.html">https://www.4shared.com/file/QyjJXBaJca/nixenv.html</a></p>
+<p>Установите, измените пути в файле nixenv.bat и запускайте его.</p>

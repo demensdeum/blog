@@ -1,0 +1,8 @@
+Format: Fall24-October10
+Language: ru
+Title: Death Mask концепт документ
+Slug: death-mask-design-document
+Categories: blog,hottest
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1201" src="https://demensdeum.com/blog/wp-content/uploads/2017/08/DeathMask.png" alt="" width="658" height="351" srcset="https://demensdeum.com/blog/wp-content/uploads/2017/08/DeathMask.png 658w, https://demensdeum.com/blog/wp-content/uploads/2017/08/DeathMask-300x160.png 300w" sizes="auto, (max-width: 658px) 100vw, 658px" /></p>
+<p>Черновик концепт документа игры Death Mask на английском:</p>
+<p><a href="https://docs.google.com/document/d/1KWkbs89-okkNOgbuIYcFdZRPVJtpukPLUWSS3UHiqJI/edit?usp=sharing" target="_blank" rel="noopener">https://docs.google.com/document/d/1KWkbs89-okkNOgbuIYcFdZRPVJtpukPLUWSS3UHiqJI/edit?usp=sharing</a></p>

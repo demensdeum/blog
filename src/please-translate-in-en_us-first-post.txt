@@ -1,0 +1,6 @@
+Format: Fall24-October10
+Language: ru
+Title: Первое Сообщение!
+Slug: please-translate-in-en_us-first-post
+Categories: news
+<p>Первое сообщение блога компании Demens Deum!</p>

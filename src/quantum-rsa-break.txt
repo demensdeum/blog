@@ -1,0 +1,26 @@
+Format: Fall24-October10
+Language: ru
+Title: Квантовый взлом RSA
+Slug: quantum-rsa-break
+Categories: blog,techie
+<p>На днях я написал свою реализацию алгоритма шифрования с открытым ключом RSA. Также сделал простейший взлом этого алгоритма, поэтому хотел написать небольшую заметку на эту тему. Стойкость ко взлому RSA основывается на задаче факторизации. Факторизация&#8230; Какое страшное слово&#8230;</p>
+<h4>Не все так страшно</h4>
+<p>На самом деле на первом этапе создания ключей мы берем два случайных числа, но числа должны делиться только на себя и единицу &#8211; <strong>простые</strong> числа.<br />
+Назовем их <strong>p</strong> и <strong>q</strong>. Далее мы должны получить число <strong>n</strong> = <strong>p</strong> *<strong>q</strong>. Оно будет использоваться для дальнейшей генерации ключей, ключи в свою очередь будут использоваться для шифрования, дешифровки сообщений. В итоговом варианте приватного и публичного ключа число <strong>n</strong> будет передано без изменений.<br />
+Допустим у нас на руках один из ключей RSA и зашифрованное сообщение. Вытаскиваем из ключа число <strong>n</strong> и начинаем его <strong>хакать</strong>.</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-1100" src="https://demensdeum.com/blog/wp-content/uploads/2017/06/tumblr_nt7hwt4oai1tkezu4o1_500.gif" alt="" width="500" height="280" /></p>
+<h4>Факторизуем n</h4>
+<p>Факторизация &#8211; разложение числа на <strong>простые</strong> множители. Сначала вытаскиваем из ключа число <strong>n </strong>(на настоящих ключах можно сделать с помощью openssl), допустим <strong>n</strong> = 35. Тогда раскладываем на простые множители n = 35 = 5 * 7, это и есть наши <strong>p</strong> и <strong>q</strong>. Теперь можно перегенерить ключи с помощью полученных <strong>p</strong>, <strong>q</strong>, дешифровать сообщение и шифровать обеспечивая видимость оригинального автора.</p>
+<h4>С кубитами не все так просто</h4>
+<p>Неужели можно поломать любой RSA так просто? На самом деле нет, числа <strong>p</strong>, <strong>q</strong> берут заведомо большими, чтобы задача факторизации на классических компьютерах заняла очень продолжительное время (10 лет в какой-то там степени)<br />
+Однако, используя квантовый алгоритм Шора, факторизовать число можно за очень малое время. На данный момент в статьях на эту тему заявлено время перемножения данного числа, тоесть фактически моментально. Для работы алгоритма Шора необходимо реализовать квантовые компьютеры, с большим количеством кубит. В 2001 году IBM разложили на простые множители число 15 с помощью 7 кубит. Так что этого момента придется ждать еще долго, к тому времени мы перейдем на пост-квантовые алгоритмы шифрования.</p>
+<h4>Потрогать Шора</h4>
+<p>Питер Шор рассказывает про свой алгоритм факторизации</p>
+<p><iframe loading="lazy" src="https://www.youtube.com/embed/hOlOY7NyMfs" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+<p>Чтобы опробовать алгоритм Шора на <em>квантовом симуляторе</em>, вы можете установить <a href="https://github.com/ProjectQ-Framework/ProjectQ" target="_blank" rel="noopener">ProjectQ</a>, в его примеры входит реализация shor.py, позволяющая факторизовать число вводимое пользователем. На симуляторе время выполнения удручает, но вроде весело и задорно симулирует работу квантового компьютера.</p>
+<p>Статьи:<br />
+<a href="http://www.pagedon.com/rsa-explained-simply/my_programming/" target="_blank" rel="noopener">http://www.pagedon.com/rsa-explained-simply/my_programming/</a><br />
+<a href="http://southernpacificreview.com/2014/01/06/rsa-key-generation-example/" target="_blank" rel="noopener">http://southernpacificreview.com/2014/01/06/rsa-key-generation-example/</a><br />
+<a href="https://0day.work/how-i-recovered-your-private-key-or-why-small-keys-are-bad/" target="_blank" rel="noopener">https://0day.work/how-i-recovered-your-private-key-or-why-small-keys-are-bad/</a></p>
+<p>Реализация RSA на Python:<br />
+<a href="https://github.com/demensdeum/RSA-Python" target="_blank" rel="noopener">https://github.com/demensdeum/RSA-Python</a></p>
