@@ -237,9 +237,10 @@ for languageIndex in range(len(languageCodes)):
     targetLanguageCode = languageCodes[languageIndex]
     outputFileDescriptor.write(f"{{:{targetLanguageCode}}}")
     shouldTranslateLine = True
+    codeBlock = False
     for lineIndex, line in enumerate(inputFileLines):
         if line.startswith("[DO NOT PROCESS LINE]"):
-            outputFileDescriptor.write(line)
+            outputFileDescriptor.write(line[len("[DO NOT PROCESS LINE]"):])
 
         elif line.startswith("<") and "frame" in line:
             outputFileDescriptor.write(line)
@@ -249,10 +250,12 @@ for languageIndex in range(len(languageCodes)):
 
         elif line.startswith("</") and "code" in line and "pre" in line:
             shouldTranslateLine = True
+            codeBlock = True
             outputFileDescriptor.write("</code></pre></div>")
 
         elif line.startswith("<") and "pre" in line and "code" in line:
             shouldTranslateLine = False
+            codeBlock = False
             codeStateLanguage = line.split("Language: ")[1].strip() if "Language: " in line else "unknown"
             outputFileDescriptor.write(f"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-{codeStateLanguage.lower()}\" data-lang=\"{codeStateLanguage}\"><code>")
 
@@ -269,7 +272,7 @@ for languageIndex in range(len(languageCodes)):
             else:
                 outputFileDescriptor.write(line)
 
-        if '\n' not in line and '\r' not in line:
+        if codeBlock == False:
             outputFileDescriptor.write("\n")
 
     outputFileDescriptor.write("{:}\n")
