@@ -250,12 +250,12 @@ for languageIndex in range(len(languageCodes)):
 
         elif line.startswith("</") and "code" in line and "pre" in line:
             shouldTranslateLine = True
-            codeBlock = True
+            codeBlock = False
             outputFileDescriptor.write("</code></pre></div>")
 
         elif line.startswith("<") and "pre" in line and "code" in line:
             shouldTranslateLine = False
-            codeBlock = False
+            codeBlock = True
             codeStateLanguage = line.split("Language: ")[1].strip() if "Language: " in line else "unknown"
             outputFileDescriptor.write(f"<div class=\"hcb_wrap\"><pre class=\"prism undefined-numbers lang-{codeStateLanguage.lower()}\" data-lang=\"{codeStateLanguage}\"><code>")
 

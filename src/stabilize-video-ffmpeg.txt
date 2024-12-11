@@ -1,0 +1,57 @@
+Format: Fall24-October10  
+Language: ru  
+Title: Стабилизация видео с помощью ffmpeg  
+Slug: stabilize-video-ffmpeg  
+Categories: blog  
+
+Если вы хотите стабилизировать видео и убрать дрожание камеры, инструмент `ffmpeg` предлагает мощное решение. Благодаря встроенным фильтрам `vidstabdetect` и `vidstabtransform`, можно добиться профессионального результата без использования сложных видеоредакторов.
+
+<h2>Подготовка к работе</h2>
+
+Прежде чем начать, убедитесь, что ваш `ffmpeg` поддерживает библиотеку `vidstab`. В Linux это можно проверить командой:  
+
+<pre><code>Language: bash
+bash  
+ffmpeg -filters | grep vidstab  
+</code></pre>
+
+Если библиотека не установлена, её можно добавить:
+
+<pre><code>Language: bash
+sudo apt install ffmpeg libvidstab-dev  
+</pre></code>
+
+Установка для macOS через brew:
+<pre><code>Language: bash
+brew install libvidstab
+brew install ffmpeg
+</code></pre>
+
+Теперь перейдём к процессу.
+
+Шаг 1: Анализ движения
+
+Сначала нужно провести анализ движения видео и создать файл с параметрами стабилизации.
+
+<pre><code>Language: bash
+ffmpeg -i input.mp4 -vf vidstabdetect=shakiness=10:accuracy=15 transfile=transforms.trf -f null -  
+</code></pre>
+
+Параметры:
+
+shakiness: Уровень дрожания видео (по умолчанию 5, можно увеличить до 10 для более сложных случаев).
+accuracy: Точность анализа (по умолчанию 15).
+transfile: Имя файла для сохранения параметров движения.
+
+Шаг 2: Применение стабилизации
+
+Теперь можно применить стабилизацию, используя файл трансформаций:
+
+<pre><code>Language: bash
+ffmpeg -i input.mp4 -vf vidstabtransform=input=transforms.trf:zoom=5 output.mp4
+</code></pre>
+
+Параметры:
+
+input: Указывает на файл с параметрами трансформации (созданный на первом шаге).
+zoom: Коэффициент масштабирования для устранения черных краев (например, 5 — автоматическое увеличение до устранения артефактов).
