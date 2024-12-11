@@ -1,0 +1,139 @@
+Format: Fall24-October10  
+Language: ru  
+Title: Динамическая линковка Qt приложений на macOS  
+Slug: dynamic-linking-qt-app-macos  
+Categories: blog  
+Сегодня я выпустил версию RaidenVideoRipper для macOS на процессорах Apple. RaidenVideoRipper это приложение для быстрого монтажа видео, которое позволяет вырезать часть видеофайла в новый файл. Также можно делать gif, экспортировать звуковую дорожку в mp3.
+
+Далее я коротко опишу какие команды я использовал для того чтобы это осуществить. Теорию того что здесь происходит, документацию утилит, можно по следующим ссылкам:
+https://www.unix.com/man-page/osx/1/otool/
+https://www.unix.com/man-page/osx/1/install_name_tool/
+https://llvm.org/docs/CommandGuide/llvm-nm.html
+https://linux.die.net/man/1/file
+https://www.unix.com/man-page/osx/8/SPCTL/
+https://linux.die.net/man/1/chmod
+https://linux.die.net/man/1/ls
+https://man7.org/linux/man-pages/man7/xattr.7.html
+https://doc.qt.io/qt-6/macos-deployment.html
+
+Для начала установите Qt на свою macOS, также установите окружение для Qt Desktop Development. После этого соберите свой проект например в Qt Creator, далее я опишу что нужно для того чтобы зависимости с внешними динамическими библиотеками корректно отрабатывали при дистрибутизации приложения конечным пользователям.
+Создайте в папке .app/Contents вашего приложения директорию Frameworks, сложите внешние зависимости туда. Для примера так выглядит Frameworks для приложения RaidenVideoRipper:
+
+<pre><code>Language: bash
+Frameworks
+├── DullahanFFmpeg.framework
+│   ├── dullahan_ffmpeg.a
+│   ├── libavcodec.60.dylib
+│   ├── libavdevice.60.dylib
+│   ├── libavfilter.9.dylib
+│   ├── libavformat.60.dylib
+│   ├── libavutil.58.dylib
+│   ├── libpostproc.57.dylib
+│   ├── libswresample.4.dylib
+│   └── libswscale.7.dylib
+├── QtCore.framework
+│   ├── Headers -> Versions/Current/Headers
+│   ├── QtCore -> Versions/Current/QtCore
+│   ├── Resources -> Versions/Current/Resources
+│   └── Versions
+├── QtGui.framework
+│   ├── Headers -> Versions/Current/Headers
+│   ├── QtGui -> Versions/Current/QtGui
+│   ├── Resources -> Versions/Current/Resources
+│   └── Versions
+├── QtMultimedia.framework
+│   ├── Headers -> Versions/Current/Headers
+│   ├── QtMultimedia -> Versions/Current/QtMultimedia
+│   ├── Resources -> Versions/Current/Resources
+│   └── Versions
+├── QtMultimediaWidgets.framework
+│   ├── Headers -> Versions/Current/Headers
+│   ├── QtMultimediaWidgets -> Versions/Current/QtMultimediaWidgets
+│   ├── Resources -> Versions/Current/Resources
+│   └── Versions
+├── QtNetwork.framework
+│   ├── Headers -> Versions/Current/Headers
+│   ├── QtNetwork -> Versions/Current/QtNetwork
+│   ├── Resources -> Versions/Current/Resources
+│   └── Versions
+└── QtWidgets.framework
+    ├── Headers -> Versions/Current/Headers
+    ├── QtWidgets -> Versions/Current/QtWidgets
+    ├── Resources -> Versions/Current/Resources
+    └── Versions
+</code></pre>
+
+Для упрощения я распечатал только второй уровень вложенности.
+
+Далее печатаем текущие динамические зависимости вашего приложения:
+<pre><code>Language: bash
+otool -L RaidenVideoRipper 
+</code></pre>
+
+Вывод для бинарика RaidenVideoRipper, который лежит в RaidenVideoRipper.app/Contents/MacOS:
+<pre><code>Language: bash
+RaidenVideoRipper:
+	@rpath/DullahanFFmpeg.framework/dullahan_ffmpeg.a (compatibility version 0.0.0, current version 0.0.0)
+	@rpath/QtMultimediaWidgets.framework/Versions/A/QtMultimediaWidgets (compatibility version 6.0.0, current version 6.8.1)
+	@rpath/QtWidgets.framework/Versions/A/QtWidgets (compatibility version 6.0.0, current version 6.8.1)
+	@rpath/QtMultimedia.framework/Versions/A/QtMultimedia (compatibility version 6.0.0, current version 6.8.1)
+	@rpath/QtGui.framework/Versions/A/QtGui (compatibility version 6.0.0, current version 6.8.1)
+	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 2575.20.19)
+	/System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO (compatibility version 1.0.0, current version 1.0.0)
+	/System/Library/Frameworks/Metal.framework/Versions/A/Metal (compatibility version 1.0.0, current version 367.4.0)
+	@rpath/QtNetwork.framework/Versions/A/QtNetwork (compatibility version 6.0.0, current version 6.8.1)
+	@rpath/QtCore.framework/Versions/A/QtCore (compatibility version 6.0.0, current version 6.8.1)
+	/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit (compatibility version 1.0.0, current version 275.0.0)
+	/System/Library/Frameworks/DiskArbitration.framework/Versions/A/DiskArbitration (compatibility version 1.0.0, current version 1.0.0)
+	/System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers (compatibility version 1.0.0, current version 709.0.0)
+	/System/Library/Frameworks/AGL.framework/Versions/A/AGL (compatibility version 1.0.0, current version 1.0.0)
+	/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 1800.101.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1351.0.0)
+</code></pre>
+
+Как можно увидеть у RaidenVideoRipper в зависимостях Qt и dullahan_ffmpeg. Dullahan FFmpeg это форк FFmpeg который запаковывает его функционал в библиотеку, с возможностью получения текущего прогресса выполнения и отмены из си функций.
+Далее заменяйте у приложения и всех необходимых библиотек пути с помощью install_name_tool, оно для этого и создано.
+
+Команда для этого такая:
+<pre><code>Language: bash
+install_name_tool -change old path new path target
+</code></pre>
+
+Пример использования:
+<pre><code>Language: bash
+install_name_tool -change @rpath/DullahanFFmpeg.framework/libavcodec.60.dylib dallahan_ffmpeg.a
+</code></pre>
+
+Приложение должно стартовать корректно, после того как вы пропишете все правильные пути. Для дополнительной проверки проверьте что все пути к библиотекам относительные, перенесите бинарик, и откройте заново.
+Если вы видите какую-то ошибку, то проверяйте пути через otool и меняйте пути через install_name_tool.
+
+Также бывает ошибка с путинницей зависимостей, когда у замененной вами библиотеки отсутствует символ в таблице, проверить наличие или отсутствие таблицы можно так:
+<pre><code>Language: bash
+nm -gU path
+</code></pre>
+
+После выполнения вы увидите всю символьную таблицу библиотеки или приложения.
+Также возможно что вы скопируете зависимости не той архитектуры, проверить это можно с помощью file:
+<pre><code>Language: bash
+file path
+</code></pre>
+
+Утилита покажет вам к какой архитектуре принадлежит библиотека или приложение.
+
+<h2>Безопасность macOS</h2>
+После того как вы скопируете все зависимости и поправите пути для динамической линковки, вам нужно будет подписать приложение подписью разработчика, и еще дополнительно отправить версию приложения в Apple для нотаризации.
+
+Если у вас нет 100$ на лицензию разработчика или вы не хотите ничего подписывать, то тогда напишите вашим пользователям инструкцию по запуску приложения.
+
+Эта инструкция работает также и для RaidenVideoRipper:
+<ul>
+<li>Отключение Gatekeeper: spctl --master-disable</li>
+<li>Разрешить запуск из любых источников в Privacy & Security: Allow applications переключить на Anywhere</li>
+<li>Удалить флаг карантина после скачивания с zip или dmg приложения: xattr -d com.apple.quarantine app.dmg</li>
+<li>Проверите что флаг карантина (com.apple.quarantine) отсутствует: ls -l@ app.dmg 
+<li>Дополните подтвердите запуск приложения если необходимо в Privacy & Security</li>
+</ul>
+
+Ссылка на сборку RaidenVideoRipper для Apple Sillicon:
+https://github.com/demensdeum/RaidenVideoRipper/releases/download/1.0.1.0/RaidenVideoRipper-1.0.1.0.dmg
