@@ -1,0 +1,11 @@
+Format: Fall24-October10  
+Language: ru  
+Title: Я помогу вам в разработке iOS для Swift или Objective-С
+Slug: fiverr-gig  
+Categories: blog
+Рад сообщить, что теперь я предлагаю свои услуги как iOS-разработчик на Fiverr. Если вам нужна помощь в разработке качественных iOS-приложений или улучшении существующих проектов, ознакомьтесь с моим профилем:
+https://www.fiverr.com/s/Q7x4kb6
+ 
+Буду рад возможности поработать над вашим проектом.
+Email: <a href="mailto:demensdeum@gmail.com">demensdeum@gmail.com</a>
+Telegram: <a href="https://t.me/demensdeum">https://t.me/demensdeum</a>

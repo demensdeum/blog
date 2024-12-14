@@ -1,0 +1,5 @@
+Format: Fall24-October10  
+Language: ru  
+Title: Одержимость примитивами
+Slug: primitive-obsession  
+Categories: blog
