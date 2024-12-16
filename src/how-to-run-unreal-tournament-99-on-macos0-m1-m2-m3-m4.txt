@@ -1,0 +1,9 @@
+Format: Fall24-October10  
+Language: ru  
+Title: How to run Unreal Tournament 99 on macOS M1/M2/M3/M4 
+Slug: how-to-run-unreal-tournament-99-on-macos0-m1-m2-m3-m4
+Categories: blog
+Видео демонстрация установки и настройки OldUnreal для Unreal Tournament 99 на macOS с CPU M1/M2/M3/M4
+Вам нужны файлы из Steam или GoG версии Unreal Tournament 99 для Windows!
+ 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/oylH-OrUbpk?si=kRMlqhrpS3LY-b2C" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
