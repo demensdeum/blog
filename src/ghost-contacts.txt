@@ -1,0 +1,18 @@
+Format: Fall24-October10
+Language: ru
+Title: Ghost Contacts
+Slug: ghost-contacts
+Categories: software
+
+В приложении GhostContacts можно добавлять контакты в секретный список, есть поддержка темной и светлых тем, локализация, экспорт и импорт контактов CSV, поддерживается экстренный пароль для сброса списка контактов, если у пользователя вдруг требуют обычный пароль для входа.
+
+<video autoplay muted loop playsinline height="480">
+<source src="https://demensdeum.com/blog/wp-content/uploads/2025/01/mediaGhostContactsDemo.mov" type="video/quicktime">
+Your browser is boring
+</video>
+
+Приложение онлайн:
+https://demensdeum.com/software/ghost-contacts/
+
+GitHub:
+https://github.com/demensdeum/GhostContacts

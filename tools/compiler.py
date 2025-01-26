@@ -265,6 +265,12 @@ for languageIndex in range(len(languageCodes)):
         elif line.startswith("<") and "img " in line:
             outputFileDescriptor.write(line)
 
+        elif line.startswith("<") and "video" in line:
+            outputFileDescriptor.write(line)
+
+        elif line.startswith("<") and "source" in line:
+            outputFileDescriptor.write(line)
+
         else:
             if shouldTranslateLine:
                 translatedText = translate(line, "google", originalLanguageCode, googleTranslateLanguageCodes[languageIndex])
