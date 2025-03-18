@@ -7,7 +7,7 @@ Categories: software
 В приложении GhostContacts можно добавлять контакты в секретный список, есть поддержка темной и светлых тем, локализация, экспорт и импорт контактов CSV, поддерживается экстренный пароль для сброса списка контактов, если у пользователя вдруг требуют обычный пароль для входа.
 
 <video autoplay muted loop playsinline height="480">
-<source src="https://demensdeum.com/blog/wp-content/uploads/2025/01/mediaGhostContactsDemo-1.mp4" type="video/quicktime">
+<source src="https://demensdeum.com/blog/wp-content/uploads/2025/01/mediaGhostContactsDemo-1.mp4" type="video/mp4">
 Your browser is boring
 </video>
 
