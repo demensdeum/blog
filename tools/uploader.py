@@ -5,6 +5,7 @@ import requests
 import sys
 import argparse
 import base64
+import time
 
 parser = argparse.ArgumentParser(description="Upload or update a WordPress post.")
 parser.add_argument("--post", required=True, help="Path to the post file.")
@@ -20,6 +21,9 @@ with open(auth_file, "r", encoding="utf-8") as file:
         print("Auth file must contain three lines: blog url, login and Application Password.")
         sys.exit(1)
 
+# Setting a reasonable timeout for all requests
+REQUEST_TIMEOUT = 10  # seconds
+
 site_url = lines[0].strip()
 username = lines[1].strip()
 app_password = lines[2].strip()
@@ -28,7 +32,14 @@ auth_token = base64.b64encode(f"{username}:{app_password}".encode()).decode()
 
 api_url_posts = f"{site_url}/wp-json/wp/v2/posts"
 api_url_categories = f"{site_url}/wp-json/wp/v2/categories"
-headers = {
+# Headers for GET requests (with Accept header)
+auth_headers = {
+    "Authorization": f"Basic {auth_token}",
+    "Accept": "application/json"
+}
+
+# Headers for POST requests (includes Content-Type)
+post_headers = {
     "Authorization": f"Basic {auth_token}",
     "Content-Type": "application/json"
 }
@@ -36,34 +47,110 @@ headers = {
 def get_all_categories():
     categories = []
     page = 1
-    while True:
-        response = requests.get(api_url_categories, headers=headers, params={"per_page": 100, "page": page})
+    max_pages = 10  # Safety limit to prevent infinite loops
+    
+    while page <= max_pages:
+        print(f"Fetching categories page {page}...")
+        try:
+            print(api_url_categories)
+            response = requests.get(
+                api_url_categories, 
+                headers=auth_headers, 
+                params={"per_page": 100, "page": page},
+                timeout=REQUEST_TIMEOUT
+            )
+            print(f"Response received: {response.status_code}")
+        except requests.exceptions.Timeout:
+            print(f"Request timed out after {REQUEST_TIMEOUT} seconds")
+            sys.exit(1)
+        except requests.exceptions.ConnectionError as e:
+            print(f"Connection error: {e}")
+            sys.exit(1)
+            
         if response.status_code == 200:
-            data = response.json()
-            if not data:
+            try:
+                data = response.json()
+                # Debug the actual structure of the data
+                print(f"Data type: {type(data)}")
+                if isinstance(data, list):
+                    print(f"Received {len(data)} categories on page {page}")
+                    if len(data) > 0:
+                        print(f"First category structure: {type(data[0])}")
+                        # Print first category keys if it's a dictionary
+                        if isinstance(data[0], dict):
+                            print(f"First category keys: {data[0].keys()}")
+                else:
+                    print(f"Data is not a list but: {type(data)}")
+                    print(f"Data content: {data}")
+                
+                if not data:
+                    print("No more categories found, breaking loop")
+                    break
+                    
+                # Make sure we're adding the right kind of data
+                if isinstance(data, list):
+                    categories.extend(data)
+                else:
+                    # If it's not a list, try to handle it appropriately
+                    print("Warning: Expected a list of categories but received something else")
+                    # If it's a dict with 'categories' key, use that
+                    if isinstance(data, dict) and 'categories' in data:
+                        categories.extend(data['categories'])
+                    # Otherwise just append it
+                    else:
+                        categories.append(data)
+                
+                # Check if we've received fewer items than requested per_page
+                # This means we've reached the last page
+                if isinstance(data, list) and len(data) < 100:
+                    print("Last page reached (fewer than 100 items returned)")
+                    break
+            except Exception as e:
+                print(f"Error parsing JSON: {e}")
+                print(f"Response content: {response.text[:500]}...")
                 break
-            categories.extend(data)
+                
             page += 1
         else:
             print(f"Failed to fetch categories. Status code: {response.status_code}")
+            try:
+                error_details = response.json()
+                print(f"Error details: {error_details}")
+            except:
+                print(f"Response content: {response.text}")
             sys.exit(1)
     return categories
 
 def get_category_ids(category_names):
     all_categories = get_all_categories()
-    print(category_names)
-    print("---")
-    print(all_categories)
+    print(f"Total categories fetched: {len(all_categories)}")
+    # If we have any categories, print the first one as example
+    if len(all_categories) > 0:
+        print(f"Example category data: {all_categories[0]}")
+    
     category_ids = []
     for name in category_names:
-        print(f"name: {name} from {category_names}")
+        print(f"Looking for category: '{name}'")
         found = False
         for category in all_categories:
-            print(f"Searching for {name}")
-            if category['slug'].lower() == name.lower().strip():
-                category_ids.append(category['id'])
-                found = True
-                break
+            # Make sure category is a dictionary before accessing keys
+            if isinstance(category, dict) and 'slug' in category:
+                if category['slug'].lower() == name.lower().strip():
+                    category_ids.append(category['id'])
+                    found = True
+                    print(f"Found category '{name}' with ID {category['id']}")
+                    break
+            elif isinstance(category, str):
+                # If category is a string, compare directly
+                if category.lower() == name.lower().strip():
+                    # We might not have an ID if it's just a string
+                    # In this case we'll use the name as the ID
+                    print(f"Category '{name}' is a string, not an object with ID")
+                    category_ids.append(name)
+                    found = True
+                    break
+            else:
+                print(f"Unexpected category type: {type(category)}")
         if not found:
             print(f"Category '{name}' not found.")
             sys.exit(1)
@@ -83,7 +170,19 @@ with open(file_path, "r", encoding="utf-8") as file:
 category_ids = get_category_ids(category_names)
 
 search_params = {"slug": slug}
-response = requests.get(api_url_posts, headers=headers, params=search_params)
+try:
+    response = requests.get(
+        api_url_posts, 
+        headers=auth_headers, 
+        params=search_params,
+        timeout=REQUEST_TIMEOUT
+    )
+except requests.exceptions.Timeout:
+    print(f"Request timed out after {REQUEST_TIMEOUT} seconds")
+    sys.exit(1)
+except requests.exceptions.ConnectionError as e:
+    print(f"Connection error: {e}")
+    sys.exit(1)
 posts = response.json()
 
 if posts:
@@ -99,11 +198,28 @@ if posts:
         "categories": category_ids
     }
 
-    update_response = requests.post(f"{api_url_posts}/{post_id}", headers=headers, json=update_data)
+    try:
+        update_response = requests.post(
+            f"{api_url_posts}/{post_id}", 
+            headers=post_headers, 
+            json=update_data,
+            timeout=REQUEST_TIMEOUT
+        )
+    except requests.exceptions.Timeout:
+        print(f"Request timed out after {REQUEST_TIMEOUT} seconds")
+        sys.exit(1)
+    except requests.exceptions.ConnectionError as e:
+        print(f"Connection error: {e}")
+        sys.exit(1)
     if update_response.status_code == 200:
         print(f"Post updated successfully. ID: {post_id}")
     else:
         print(f"Failed to update post: {update_response.status_code}")
+        try:
+            error_details = update_response.json()
+            print(f"Error details: {error_details}")
+        except:
+            print(f"Response content: {update_response.text}")
 else:
     create_data = {
         "title": post_title,
@@ -113,9 +229,26 @@ else:
         "categories": category_ids
     }
 
-    create_response = requests.post(api_url_posts, headers=headers, json=create_data)
+    try:
+        create_response = requests.post(
+            api_url_posts, 
+            headers=post_headers, 
+            json=create_data,
+            timeout=REQUEST_TIMEOUT
+        )
+    except requests.exceptions.Timeout:
+        print(f"Request timed out after {REQUEST_TIMEOUT} seconds")
+        sys.exit(1)
+    except requests.exceptions.ConnectionError as e:
+        print(f"Connection error: {e}")
+        sys.exit(1)
     if create_response.status_code == 201:
         new_post_id = create_response.json()["id"]
         print(f"Post created successfully. ID: {new_post_id}")
     else:
         print(f"Failed to create post: {create_response.status_code}")
+        try:
+            error_details = create_response.json()
+            print(f"Error details: {error_details}")
+        except:
+            print(f"Response content: {create_response.text}")
