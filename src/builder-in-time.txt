@@ -48,3 +48,4 @@ print(car)
 <h2>Источники</h2>
 
 https://www.amazon.com/Design-Patterns-Object-Oriented-Addison-Wesley-Professional-ebook/dp/B000SEIBB8
+https://demensdeum.com/blog/2019/09/23/builder-pattern/
