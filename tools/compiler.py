@@ -155,6 +155,13 @@ def translate(text, type, source, destination):
                 print(error)
                 
         #outputText = text
+
+        if outputText.strip().lower().startswith("<h2>") and not outputText.strip().lower().endswith("</h2>"):
+            outputText += "</h2>"
+
+        if outputText.strip().lower().startswith("<h3>") and not outputText.strip().lower().endswith("</h3>"):
+            outputText += "</h3>"
+
         return outputText
 
     elif type == "openai":
