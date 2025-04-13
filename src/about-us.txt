@@ -3,7 +3,7 @@ Language: ru
 Title: Demens Deum
 Slug: about-us
 Categories: company
-<img src="https://demensdeum.com/blog/wp-content/uploads/2015/12/jinjer.jpg">
+<center><img src="https://demensdeum.com/blog/wp-content/uploads/2015/12/jinjer.jpg" width="320" style="height: auto;"></center>
 <p>Опытный программист с широким опытом кроссплатформенной разработки для мобильных, десктоп систем, различных архитектур (x86, x86-64, ARM, PowerPC, Motorola 68000, Z80, MSP-430), веб-разработки и программирования драйверов для macOS. Могу создавать проекты с нуля, выводить их на рынок и поддерживать как внутренние, так и внешние проекты. Легко осваиваю новые технологии для решения бизнес-задач.
 Реализовывал и поддерживал проекты для таких брендов, как Decathlon, Мать и Дитя, Fitbit и Playboy.
 &#8211; Разработка архитектур и приложений с нуля.
