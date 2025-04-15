@@ -105,3 +105,4 @@ Categories: blog
 https://developer.apple.com/app-store/review/guidelines/
 https://en.wikipedia.org/wiki/SOLID
 https://en.wikipedia.org/wiki/API
+https://en.wikipedia.org/wiki/RTFM
