@@ -1,0 +1,21 @@
+Format: Fall24-October10
+Language: ru
+Title: Demens TV Heads NFT
+Slug: demens-tv-heads
+Categories: blog
+Хочу поделиться своим новым проектом — NFT-коллекцией “Demens TV Heads”.
+
+<img src="demens-tv-heads-cover.png" />
+
+Это серия цифровых арт-работ, в них отражены люди разных характеров и профессий, в стиле логотипа DemensDeum.
+Первая работа - Fierce "Грозный" это стилизованный автопортрет.
+
+Планирую выпустить всего 12 NFT, по одной каждый месяц.
+
+Каждая работа существует не только в Ethereum-блокчейне, но и доступна на сайте DemensDeum и в GitHub-репозитории, вместе с метаданными.
+
+Если интересно — посмотреть или просто оценить визуально, буду рад:
+https://opensea.io/collection/demens-tv-heads
+https://github.com/demensdeum/demens-tv-heads-collection
+https://demensdeum.com/collections/demens-tv-heads/fierce.png
+https://demensdeum.com/collections/demens-tv-heads/fierce-metadata.txt
