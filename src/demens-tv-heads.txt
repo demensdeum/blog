@@ -5,7 +5,7 @@ Slug: demens-tv-heads
 Categories: blog
 Хочу поделиться своим новым проектом — NFT-коллекцией “Demens TV Heads”.
 
-<img src="demens-tv-heads-cover.png" />
+<img src="https://demensdeum.com/blog/wp-content/uploads/2025/05/mediademens-tv-heads-cover.jpg" />
 
 Это серия цифровых арт-работ, в них отражены люди разных характеров и профессий, в стиле логотипа DemensDeum.
 Первая работа - Fierce "Грозный" это стилизованный автопортрет.
