@@ -4,6 +4,6 @@ Title: Demensdeum Code Challenge Winner
 Slug: demensdeum-code-challenge-1-winner
 Categories: blog
 Подведение итогов DemensDeum Challenge 1.
-Выиграл вариант написанный вручную на ассемблере - размер исполняемого файла 50кб вместе с картинкой.
+Наш победитель - вариант от snkbp95 написанный вручную на ассемблере - размер исполняемого файла 50кб вместе с картинкой.
 Поздравляем победителя!
 https://github.com/snkbp95/DemensDeum-Coding-Challenge-1/
