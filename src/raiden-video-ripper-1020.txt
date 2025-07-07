@@ -1,0 +1,14 @@
+Format: Fall24-October10
+Language: ru
+Title: [DO NOT PROCESS LINE]Raiden Video Ripper 1.0.2.0
+Slug: raiden-video-ripper-1020
+Categories: software
+
+Новая версия RaidenVideoRipper - 1.0.2.0
+Добавлена поддержка темной темы для Windows 11.
+Raiden Video Ripper это приложение для простой нарезки видео в форматы webm, gif.
+
+[DO NOT PROCESS LINE]<img src="https://demensdeum.com/blog/wp-content/uploads/2025/07/mediaraiden-video-ripper-1020.jpeg" alt="RaidenVideoRipper 1.0.2.0 UI">
+
+Пожалуйста, посетите страницу "Релизы", чтобы быть в курсе последних выпусков и обновлений:
+https://github.com/demensdeum/RaidenVideoRipper/releases
