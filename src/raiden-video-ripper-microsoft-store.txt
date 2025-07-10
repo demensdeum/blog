@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: [DO NOT PROCESS LINE]RaidenVideoRipper Microsoft Store
+Slug: raiden-video-ripper-microsoft-store
+Categories: software
+Состоялся релиз RaidenVideoRipper в Microsoft Store - приложения для быстрого монтажа видео и конвертации в форматы mp4, webm, gif.
+
+<img src="">
+
+https://apps.microsoft.com/detail/9nvzjs98smgc?hl=en-us&gl=GE&ocid=pdpshare
