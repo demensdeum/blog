@@ -5,6 +5,6 @@ Slug: raiden-video-ripper-microsoft-store
 Categories: software
 Состоялся релиз RaidenVideoRipper в Microsoft Store - приложения для быстрого монтажа видео и конвертации в форматы mp4, webm, gif.
 
-[DO NOT PROCESS LINE]<a href="https://apps.microsoft.com/detail/9nvzjs98smgc?hl=en-us&gl=GE&ocid=pdpshare"><img src="https://demensdeum.com/blog/wp-content/uploads/2025/07/mediarvrscreen1.jpg"></a>
+[DO NOT PROCESS LINE]<a href="https://apps.microsoft.com/detail/9nvzjs98smgc?hl=en-us&gl=GE&ocid=pdpshare" target="_blank"><img src="https://demensdeum.com/blog/wp-content/uploads/2025/07/mediarvrscreen1.jpg"></a>
 
 https://apps.microsoft.com/detail/9nvzjs98smgc?hl=en-us&gl=GE&ocid=pdpshare
