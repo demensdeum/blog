@@ -1,0 +1,8 @@
+Format: Fall24-October10
+Language: ru
+Title: Raiden Video Ripper Туториалы
+Slug: raiden-video-ripper-tutorials
+Categories: software,blog
+Туториалы для RaidenVideoRipper про то как извлекать звук из видео с помощью RaidenVideoRipper, делать gif из фрагментов видео:
+https://www.youtube.com/watch?v=T_6Bm-1RWN8
+https://www.youtube.com/watch?v=7x8LFlVjzKs
