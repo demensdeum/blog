@@ -10,7 +10,7 @@ Categories: blog
 После загрузки специально сформированного jsonl файла, начинается процесс специализации LLM модели на указанном датасете, для всех текущих известных провайдеров LLM сервисов эта услуга платная.
 
 Для fine-tune на локальной машине я рекомендую опираться на хорошее видео от YouTube канала Tech With Tim - EASIEST Way to Fine-Tune a LLM and Use It With Ollama:
-<a href="https://www.youtube.com/watch?v=pTaSDVz0gok>https://www.youtube.com/watch?v=pTaSDVz0gok</a>
+https://www.youtube.com/watch?v=pTaSDVz0gok
 
 Пример Jupyter ноутбука с подготовкой jsonl датасета из экспорта всех сообщений Telegram и запуска процесса локального fine-tune, доступен здесь:
-<a href="https://github.com/demensdeum/llm-train-example">https://github.com/demensdeum/llm-train-example</a>
+https://github.com/demensdeum/llm-train-example
