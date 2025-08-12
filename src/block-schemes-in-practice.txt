@@ -52,8 +52,7 @@ Categories: techie,tutorials
 
 Вот как выглядит код:
 
-<code>
-#include <stdio.h>
+<pre><code>#include <stdio.h>
 #include <string.h>
 
 int main() {
@@ -65,7 +64,7 @@ memcpy(buffer, my_string, 5);
 printf("%s\n", buffer);
 return 0;
 }
-</code>
+</pre></code>
 
 <b>Ожидаемый результат:</b> "hello"
 <b>Реальный результат</b> Непредсказуем.
