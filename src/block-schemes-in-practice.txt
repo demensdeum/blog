@@ -56,7 +56,7 @@ Categories: techie,tutorials
 #include <string.h>
 
 int main() {
-char buffer\[5];
+char buffer[5];
 char* my_string = "hello";
 
 memcpy(buffer, my_string, 5);
