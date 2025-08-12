@@ -154,7 +154,8 @@ def translate(text, type, source, destination):
             except Exception as error:
                 print(error)
                 
-        #outputText = text
+        if outputText == None:
+            outputText = text
 
         if outputText.strip().lower().startswith("<h2>") and not outputText.strip().lower().endswith("</h2>"):
             outputText += "</h2>"
