@@ -5,4 +5,6 @@ Slug: donkey-adept
 Categories: blog
 "Donkey Adept" — это потрясающее, электризующее произведение пиксельного сюрреализма. В центре — фигура в чёрной кожаной куртке, голова которой представляет собой пылающий, охваченный статикой телевизор с огненными ослиными ушами. Субъект держит мощный фонарь, выступая одиноким стражем, который ищет истину среди всеобщего шума. Это яростное размышление в ретро-стиле о медиа, безумии и неустанном поиске света.
 
-<a href="https://opensea.io/item/ethereum/0x008d50b3b9af49154d6387ac748855a3c62bf40d/5"><img src="https://demensdeum.com/blog/wp-content/uploads/2025/10/mediadonkey-adept.jpg'"></a>
+<a href="https://opensea.io/item/ethereum/0x008d50b3b9af49154d6387ac748855a3c62bf40d/5" target="blank"><img src="https://demensdeum.com/blog/wp-content/uploads/2025/10/mediadonkey-adept.jpg'"></a>
+
+https://opensea.io/item/ethereum/0x008d50b3b9af49154d6387ac748855a3c62bf40d/5
