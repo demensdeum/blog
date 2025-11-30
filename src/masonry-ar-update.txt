@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Masonry-AR Update
+Slug: masonry-ar-update
+Categories: blog
+В игру Masonry-AR добавлена возможность покупать монеты за криптовалюту! За 1$ можно получить 5000 MOS. Также в игру добавлены референсные ссылки, за каждую покупку друга, рефер получает 50000 MOS. Подробности в Масонской Вики. Также добавлен режим автоходьбы когда нет доступа к модулю GPS, масон начинает идти от одной из столиц мира автоматически, только вперед.
+<a href="https://demensdeum.com/demos/masonry-ar/client/"><img src="https://demensdeum.com/blog/wp-content/uploads/2025/11/mediamasonry-ar-update.jpg"/></a>
+
+Ссылка на игру:
+https://demensdeum.com/demos/masonry-ar/client/
