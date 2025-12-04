@@ -7,4 +7,4 @@ fi
 
 filename=$1
 
-python ./tools/mediaUploader.py --media ./media/"$filename" --blog ./private/wordpress
+python3 ./tools/mediaUploader.py --media ./media/"$filename" --blog ./private/wordpress
