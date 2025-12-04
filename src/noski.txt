@@ -6,3 +6,4 @@ Categories: blog
 Noski — это облегчённая асинхронная реализация SOCKS5-прокси-сервера, написанная на Rust. Она построена с использованием среды выполнения Tokio для высокопроизводительного неблокирующего ввода-вывода. Также существуют механизмы обхода DPI и шифрование с помощью клиента Noski под названием Pyatki.
 
 <a href="https://github.com/demensdeum/Noski"><img src="https://demensdeum.com/blog/wp-content/uploads/2025/12/medianoski-logo.jpg"/></a>
+<a href="https://github.com/demensdeum/Noski" target="_blank"><img src="https://demensdeum.com/blog/wp-content/uploads/2025/12/noski-logo.jpg"/></a>
