@@ -36,12 +36,13 @@ def upload_to_wordpress(file_path, site_url, username, app_password):
         print(f"Error: The file '{file_path}' was not found.", file=sys.stderr)
         return
 
-    print(f"Checking if '{os.path.basename(file_path)}' already exists...", file=sys.stderr)
-    existing_media = check_if_exists(site_url, username, app_password, file_path)
+    if args.override == False:
+        print(f"Checking if '{os.path.basename(file_path)}' already exists...", file=sys.stderr)
+        existing_media = check_if_exists(site_url, username, app_password, file_path)
 
-    if existing_media:
-        print(existing_media['source_url'])
-        return
+        if existing_media:
+            print(existing_media['source_url'])
+            return
 
     print("No duplicate found. Proceeding with upload...", file=sys.stderr)
     url = f'{site_url}/wp-json/wp/v2/media'
@@ -72,6 +73,7 @@ def upload_to_wordpress(file_path, site_url, username, app_password):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Upload any file to WordPress with duplicate checking.')
     parser.add_argument('media', type=str, help='The path of the file to upload')
+    parser.add_argument('--override', action='store_true', help='Enable override mode to bypass duplicate checking')
     args = parser.parse_args()
 
     site_url = os.environ["SITE_URL"]
