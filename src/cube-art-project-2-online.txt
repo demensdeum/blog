@@ -1,0 +1,27 @@
+Format: Fall24-October10
+Language: ru
+Title: Cube Art Project 2 Online
+Slug: cube-art-project-2-online
+Categories: software,games
+
+Встречайте Cube Art Project 2 Online — лёгкий, быстрый, и полностью переписанный редактор воксельной графики, который работает прямо в браузере. Теперь с возможностью совместного творчества!
+
+Это не просто инструмент, а эксперимент с цветом, геометрией и медитативным 3D-творчеством, к которому вы можете подключить друзей. Проект создан на чистом JavaScript и Three.js без фреймворков и WebAssembly, демонстрируя возможности WebGL и шейдеров.
+
+<a href="https://demensdeum.com/software/cube-art-project-2-online"><img src="https://demensdeum.com/blog/wp-content/uploads/2025/04/mediacube-art-project-screenshot-300x248.png"></a>
+
+Новое: Мультиплеер! Сотрудничайте с другими пользователями в режиме реального времени. Все изменения, добавление и раскраска кубиков, синхронизируются мгновенно, позволяя вам создавать воксельные шедевры вместе.
+
+Управление:
+— WASD — перемещение камеры
+— Мышь — вращение
+— GUI — настройка цвета
+
+Онлайн:
+https://demensdeum.com/software/cube-art-project-2-online/
+
+Исходники на GitHub:
+https://github.com/demensdeum/cube-art-project-2-online
+
+Проект написан на чистом JavaScript с использованием Three.js.
+Без фреймворков, без сборщиков, без WebAssembly — только WebGL, шейдеры и немного любви к пиксельной геометрии.
