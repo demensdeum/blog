@@ -6,6 +6,10 @@ import sys
 import argparse
 import base64
 import time
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 parser = argparse.ArgumentParser(description="Upload or update a WordPress post.")
 parser.add_argument("--post", required=True, help="Path to the post file.")
@@ -15,30 +19,22 @@ args = parser.parse_args()
 file_path = args.post
 auth_file = args.blog
 
-with open(auth_file, "r", encoding="utf-8") as file:
-    lines = file.readlines()
-    if len(lines) != 3:
-        print("Auth file must contain three lines: blog url, login and Application Password.")
-        sys.exit(1)
+REQUEST_TIMEOUT = 5
 
-# Setting a reasonable timeout for all requests
-REQUEST_TIMEOUT = 10  # seconds
-
-site_url = lines[0].strip()
-username = lines[1].strip()
-app_password = lines[2].strip()
+site_url = os.environ["SITE_URL"]
+username = os.environ["SITE_USER"]
+app_password = os.environ["SITE_PASSWORD"]
 
 auth_token = base64.b64encode(f"{username}:{app_password}".encode()).decode()
 
 api_url_posts = f"{site_url}/wp-json/wp/v2/posts"
 api_url_categories = f"{site_url}/wp-json/wp/v2/categories"
-# Headers for GET requests (with Accept header)
+
 auth_headers = {
     "Authorization": f"Basic {auth_token}",
     "Accept": "application/json"
 }
 
-# Headers for POST requests (includes Content-Type)
 post_headers = {
     "Authorization": f"Basic {auth_token}",
     "Content-Type": "application/json"
@@ -47,7 +43,7 @@ post_headers = {
 def get_all_categories():
     categories = []
     page = 1
-    max_pages = 10  # Safety limit to prevent infinite loops
+    max_pages = 10
     
     while page <= max_pages:
         print(f"Fetching categories page {page}...")

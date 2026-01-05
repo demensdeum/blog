@@ -4,6 +4,9 @@
 import argparse
 import re
 import difflib
+import os
+import subprocess
+import sys
 
 def askOllama(prompt):
     import requests
@@ -122,6 +125,10 @@ if slug.startswith("Slug: ") == False:
 title = title[len("Title: "):]
 slug = slug[len("Slug: "):]
 
+directory = "build"
+if not os.path.exists(directory):
+    os.mkdir(directory)
+
 outputFileDescriptor = open(outputFile, "w", encoding="utf-8")
 
 state = "text"
@@ -218,6 +225,27 @@ languageCodes = ["ru", "en", "zh", "de", "ja", "fr", "pt"]
 googleTranslateLanguageCodes = ["ru", "en", "zh-CN", "de", "ja", "fr", "pt"]
 originalLanguageCode = "ru"
 
+def uploadJPG(filename):
+    filename = filename.strip()
+    print(f"Uploading image: {filename}")
+
+    script_path = os.path.join(".", "tools", "mediaUploader.py")
+
+    result = subprocess.run(
+        [sys.executable, script_path, filename],
+        capture_output=True,
+        text=True,
+        check=True
+    )
+
+    uploaded_path = result.stdout.strip()
+
+    if not uploaded_path:
+        print(f"Warning: mediaUploader.py returned empty string for {filename}")
+        return filename
+
+    return uploaded_path
+
 def translateTitle(title):  
     if any(title.startswith(prefix) for prefix in doNotProcessPrefixes):
         if title.startswith("[DO NOT PROCESS LINE]"):
@@ -249,6 +277,17 @@ for languageIndex in range(len(languageCodes)):
     for lineIndex, line in enumerate(inputFileLines):
         if line.startswith("[DO NOT PROCESS LINE]"):
             outputFileDescriptor.write(line[len("[DO NOT PROCESS LINE]"):])
+
+        elif line.strip().endswith(".jpg"):
+            if "|" in line:
+                url_path=line.split("|")[0]
+                jpg_path=uploadJPG(line.split("|")[1])
+                jpgLine=f"<a href=\"{url_path}\" target=\"_blank\"><img src=\"{jpg_path}\"/></a>"
+                outputFileDescriptor.write(jpgLine)
+            else:
+                jpg_path=uploadJPG(line)
+                jpg_line=f"<img src=\"{jpg_path}\"/>"
+                outputFileDescriptor.write(jpg_line)
 
         elif line.startswith("<") and "frame" in line:
             outputFileDescriptor.write(line)

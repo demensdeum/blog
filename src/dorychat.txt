@@ -1,0 +1,11 @@
+Format: Fall24-October10
+Language: ru
+Title: DoryChat
+Slug: dory-chat
+Categories: software
+DoryChat — это безопасная платформа для обмена мгновенными сообщениями с временным хранением данных, построенная на архитектурной модели с нулевым сохранением данных. Сообщения являются временными, зашифрованы сквозным шифрованием и автоматически удаляются через 60 секунд, гарантируя, что разговоры не оставляют следов в центральной инфраструктуре.
+
+https://github.com/demensdeum/DoryChat|dorychat.jpg
+
+https://github.com/demensdeum/DoryChat
+https://mediumdemens.vps.webdock.cloud/dorychat-app
