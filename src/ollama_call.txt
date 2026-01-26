@@ -1,0 +1,52 @@
+Format: Fall24-October10
+Language: ru
+Title: ollama-call
+Slug: ollama-call
+Categories: techie
+Если вы используете <strong>Ollama</strong> и не хотите каждый раз писать собственную обвязку вокруг API,
+проект <strong>ollama_call</strong> заметно упрощает работу.
+<br><br>
+Это небольшая Python-библиотека, которая позволяет отправить запрос к локальной LLM одной функцией
+и сразу получить ответ, в том числе в JSON-формате.
+
+<h3>Установка</h3>
+
+<pre><code>
+pip install ollama-call
+</code></pre>
+
+<h3>Зачем он нужен</h3>
+<ul>
+  <li>минимальный код для работы с моделью;</li>
+  <li>структурированный JSON-ответ для дальнейшей обработки;</li>
+  <li>удобен для быстрых прототипов и MVP;</li>
+  <li>поддерживает потоковый вывод при необходимости.</li>
+</ul>
+
+<h3>Пример использования</h3>
+
+<pre><code>
+from ollama_call import ollama_call
+
+response = ollama_call(
+    user_prompt="Hello, how are you?",
+    format="json",
+    model="gemma3:12b"
+)
+
+print(response)
+</code></pre>
+
+<h3>Когда особенно полезен</h3>
+<ul>
+  <li>вы пишете скрипты или сервисы поверх Ollama;</li>
+  <li>нужен предсказуемый формат ответа;</li>
+  <li>нет желания подключать тяжёлые фреймворки.</li>
+</ul>
+
+<h3>Итог</h3>
+ollama_call — лёгкая и понятная обёртка для работы с Ollama из Python.
+Хороший выбор, если важны простота и быстрый результат.
+
+GitHub
+https://github.com/demensdeum/ollama_call

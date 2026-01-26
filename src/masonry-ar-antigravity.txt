@@ -1,0 +1,12 @@
+Format: Fall24-October10
+Language: ru
+Title: Antigravity
+Slug: antigravity
+Categories: blog
+За пару дней с помощью Antigravity перенес бэк Масоны-ДР (Masonry-AR) с PHP + MySQL на Node.js + MongoDB + Redis -> Docker. Возможности ИИ действительно поражают, помню как в 2022 году через ChatGPT писал простейшие шейдеры на shadertoy.com и казалось что эта игрушка больше ничего не сможет выше.
+https://www.shadertoy.com/view/cs2SWm
+
+Спустя четыре года я смотрю как оно в ~10 промптов играючи перекинула мой проект с одной бэк платформы на другую, добавив контейнеризацию.
+https://mediumdemens.vps.webdock.cloud/masonry-ar/
+
+Круто, действительно круто.
