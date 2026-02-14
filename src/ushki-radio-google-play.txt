@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: Ushki Radio Google Play
+Slug: ushki-radio-google-play
+Categories: software
+Ushki-Radio — это кроссплатформенный радиоплеер для онлайн-радио, сделанный с упором на простоту и удовольствие от прослушивания. Без лишних функций, без перегруженных интерфейсов — просто включил и слушаешь.
+
+Релиз в Google Play:
+https://play.google.com/store/apps/details?id=com.demensdeum.ushkiradio|ushki-radio-logo-2.png
+https://play.google.com/store/apps/details?id=com.demensdeum.ushkiradio

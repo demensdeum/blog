@@ -223,9 +223,9 @@ lastLineIndex = len(inputFileLines) - 1
 
 languageCodes = ["ru", "en", "zh", "de", "ja", "fr", "pt"]
 googleTranslateLanguageCodes = ["ru", "en", "zh-CN", "de", "ja", "fr", "pt"]
-originalLanguageCode = "ru"
+originalLanguageCode = language
 
-def uploadJPG(filename):
+def uploadImage(filename):
     filename = filename.strip()
     print(f"Uploading image: {filename}")
 
@@ -278,16 +278,16 @@ for languageIndex in range(len(languageCodes)):
         if line.startswith("[DO NOT PROCESS LINE]"):
             outputFileDescriptor.write(line[len("[DO NOT PROCESS LINE]"):])
 
-        elif line.strip().endswith(".jpg"):
+        elif line.strip().endswith(".jpg") or line.strip().endswith(".png"):
             if "|" in line:
                 url_path=line.split("|")[0]
-                jpg_path=uploadJPG(line.split("|")[1])
-                jpgLine=f"<a href=\"{url_path}\" target=\"_blank\"><img src=\"{jpg_path}\"/></a>"
-                outputFileDescriptor.write(jpgLine)
+                image_path=uploadImage(line.split("|")[1])
+                imageLine=f"<a href=\"{url_path}\" target=\"_blank\"><img src=\"{image_path}\"/></a>"
+                outputFileDescriptor.write(imageLine)
             else:
-                jpg_path=uploadJPG(line)
-                jpg_line=f"<img src=\"{jpg_path}\"/>"
-                outputFileDescriptor.write(jpg_line)
+                image_path=uploadImage(line)
+                image_line=f"<img src=\"{image_path}\"/>"
+                outputFileDescriptor.write(image_line)
 
         elif line.startswith("<") and "frame" in line:
             outputFileDescriptor.write(line)
