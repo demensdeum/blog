@@ -23,4 +23,4 @@ FLUX — модель крупная, поэтому требования к ж�
 
 Первая генерация может занять время, так как модели будут загружаться в память видеокарты.
 
-https://github.com/comfyanonymous/ComfyUI)
+https://github.com/comfyanonymous/ComfyUI
