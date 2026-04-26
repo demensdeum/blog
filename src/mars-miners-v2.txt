@@ -3,7 +3,7 @@ Language: ru
 Title: Mars Miners v2
 Slug: mars-miners-v2
 Categories: games
-https://mediumdemens.vps.webdock.cloud/mars-miners/|mars-miners-v2.jpg
+https://demensdeum.com/games/mars-miners/|mars-miners-v2.jpg
 
 [Экстренный выпуск: Интерпланетарная служба новостей «Красный Горизонт»]
 
@@ -23,4 +23,4 @@ https://mediumdemens.vps.webdock.cloud/mars-miners/|mars-miners-v2.jpg
 
 Будущее Марса — в ваших руках. Оставайтесь с нами на частоте «Красного Горизонта».
 
-https://mediumdemens.vps.webdock.cloud/mars-miners/
+https://demensdeum.com/games/mars-miners/
