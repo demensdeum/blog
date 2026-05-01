@@ -221,8 +221,8 @@ def processLink(line):
 
 lastLineIndex = len(inputFileLines) - 1
 
-languageCodes = ["ru", "en", "zh", "de", "ja", "fr", "pt"]
-googleTranslateLanguageCodes = ["ru", "en", "zh-CN", "de", "ja", "fr", "pt"]
+languageCodes = ["ru", "en", "zh", "de", "ja", "fr", "pt", "hi"]
+googleTranslateLanguageCodes = ["ru", "en", "zh-CN", "de", "ja", "fr", "pt", "hi"]
 originalLanguageCode = language
 
 def uploadImage(filename):
