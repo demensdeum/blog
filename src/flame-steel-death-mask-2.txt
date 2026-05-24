@@ -3,7 +3,7 @@ Language: en
 Title: Flame Steel: Death Mask 2
 Slug: flame-steel-death-mask-2
 Categories: games
-https://mediumdemens.vps.webdock.cloud/flame-steel-death-mask-2|technomaze.jpg
+https://demensdeum.com/games/flame-steel-death-mask-2|technomaze.jpg
 
 In the dim, neon-flickering depths of the digital underworld, a new challenge awaits. We are excited to pull back the curtain on <strong>Flame Steel: Death Mask 2</strong>, a multiplayer 3D dungeon crawler that blends retro-cyberpunk aesthetics with modern real-time gameplay.
 
@@ -49,6 +49,6 @@ We are just getting started. As an early-access project, <strong>Death Mask 2</s
 
 Want to test your mettle? Enter your codename and initialize your identity today:
 
-👉 <strong><a href="https://mediumdemens.vps.webdock.cloud/flame-steel-death-mask-2/">Play Flame Steel: Death Mask 2</a></strong></p>
+👉 <strong><a href="https://demensdeum.com/games/flame-steel-death-mask-2">Play Flame Steel: Death Mask 2</a></strong></p>
 
 <p>Stay tuned for more updates as we continue to expand the digital frontier. Welcome to the service. It requires you.</p>

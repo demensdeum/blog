@@ -1,0 +1,10 @@
+Format: Fall24-October10
+Language: ru
+Title: [DO NOT PROCESS LINE]RaidenVideoRipper 1.0.3.0
+Slug: raiden-video-ripper-1030
+Categories: software
+Raiden Video Ripper версия 1.0.3.0
+Добавлена фича стабилизации видео с помощью FFmpeg.
+Это экспериментальный релиз перехода с С++ на Python, c Qt на wxWidgets, что позволит быстрее добавлять новые возможности в приложение, упростит разработку. Для воспроизведения видео используется встроенный VLC. Текущий тестовый релиз только для Github, релиз 1.0.4.0 уже будет в Microsoft Store и Github.
+
+https://github.com/zefir1990/RaidenVideoRipper/releases/tag/1.0.3.0

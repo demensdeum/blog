@@ -1,0 +1,52 @@
+Format: Fall24-October10
+Language: en
+Title: flac2mp3 – Batch FLAC to MP3 Converter
+Slug: flac2mp3
+Categories: software,techie
+
+When you have a massive music library in lossless FLAC format and need portable MP3 copies, doing it manually is not an option. <strong>flac2mp3</strong> is a clean Python script that recursively finds all FLAC files and converts them to high-quality MP3 using <strong>ffmpeg</strong>.
+
+<h2>Why flac2mp3?</h2>
+
+The script uses <strong>libmp3lame</strong> encoder with <strong>-q:a 0</strong> — the highest Variable Bit Rate quality setting. The audible difference from the original FLAC is virtually nonexistent, while file sizes drop dramatically.
+
+<h2>Features</h2>
+
+<li><strong>Recursive search</strong>: Walks through all subdirectories, finds every .flac file automatically.</li>
+<li><strong>Multiple export modes</strong>: In-place conversion, mirrored directory tree, or flattened single-folder dump. You can even combine modes in a single run.</li>
+<li><strong>Parallel processing</strong>: Pass <strong>--parallel-run=4</strong> to harness multiple CPU cores and speed up batch conversion significantly.</li>
+<li><strong>Clean handling</strong>: Properly handles file and folder names with spaces and special characters.</li>
+
+<h2>Usage</h2>
+
+The simplest case — convert all FLACs in the current directory in-place:
+
+<pre><code>Language: Bash
+python flac2mp3.py
+</code></pre>
+
+A more advanced real-life example — converting all FLACs from D:\Downloads to D:\mp3s with 4 parallel threads, preserving directory structure:
+
+<pre><code>Language: Bash
+python flac2mp3.py D:\Downloads\ --output-directory-save-directories-tree=D:\mp3s\ --parallel-run=4
+</code></pre>
+
+<h2>Under the Hood</h2>
+
+At its core, the script walks the file system, constructs an ffmpeg command for each file:
+
+<pre><code>Language: Bash
+ffmpeg -i "song.flac" -c:a libmp3lame -q:a 0 "song.mp3"
+</code></pre>
+
+And spawns subprocesses to execute conversions, optionally using a thread pool for concurrency.
+
+<h2>Prerequisites</h2>
+
+
+<li><strong>Python 3.x</strong></li>
+<li><strong>ffmpeg</strong> installed and available in your system PATH</li>
+
+The script has zero additional Python dependencies — pure standard library.
+
+https://github.com/zefir1990/flac2mp3

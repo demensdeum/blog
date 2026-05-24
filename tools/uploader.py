@@ -19,7 +19,7 @@ args = parser.parse_args()
 file_path = args.post
 auth_file = args.blog
 
-REQUEST_TIMEOUT = 5
+REQUEST_TIMEOUT = 60
 
 site_url = os.environ["SITE_URL"]
 username = os.environ["SITE_USER"]
