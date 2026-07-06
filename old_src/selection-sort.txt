@@ -1,0 +1,94 @@
+Format: Fall24-October10
+Language: ru
+Title: Selection Sort
+Slug: selection-sort
+Categories: techie,tutorials
+<p>Selection Sort &#8211; алгоритм сортировки выбором. Выбором чего? А вот минимального числа!!!<br />
+Временная сложность алгоритма &#8211; <strong>О(<i>n</i><sup>2</sup>)</strong></p>
+<p>Алгоритм работает следующим образом:</p>
+<ol>
+<li>Проходим массив циклом слева-направо, запоминаем текущий стартовый индекс и число по индексу, назовем числом A</li>
+<li>Внутри цикла запускаем еще один для прохода слева-направо в поисках меньшего чем A</li>
+<li>Когда находим меньший, запоминаем индекс, теперь меньший становится числом А</li>
+<li>Когда внутренний цикл заканчивается, меняем местами число по стартовому индексу и число А</li>
+<li>После полного прохода верхнего цикла, получаем отсортированный массив</li>
+</ol>
+<p>Пример выполнения алгоритма:</p>
+<pre><code>Round 1
+(29, 49, 66, 35, 7, 12, 80)
+29 &gt; 7
+(7, 49, 66, 35, 29, 12, 80)
+Round 1 ENDED
+Round 2
+(7, 49, 66, 35, 29, 12, 80)
+49 &gt; 35
+35 &gt; 29
+29 &gt; 12
+(7, 12, 66, 35, 29, 49, 80)
+Round 2 ENDED
+Round 3
+(7, 12, 66, 35, 29, 49, 80)
+66 &gt; 35
+35 &gt; 29
+(7, 12, 29, 35, 66, 49, 80)
+Round 3 ENDED
+Round 4
+(7, 12, 29, 35, 66, 49, 80)
+(7, 12, 29, 35, 66, 49, 80)
+Round 4 ENDED
+Round 5
+(7, 12, 29, 35, 66, 49, 80)
+66 &gt; 49
+(7, 12, 29, 35, 49, 66, 80)
+Round 5 ENDED
+Round 6
+(7, 12, 29, 35, 49, 66, 80)
+(7, 12, 29, 35, 49, 66, 80)
+Round 6 ENDED
+Sorted: (7, 12, 29, 35, 49, 66, 80)
+</code></pre>
+<p>Не найдя Objective-C реализации на <a href="https://rosettacode.org/wiki/Sorting_algorithms/Selection_sort#C" target="_blank" rel="noopener">Rosetta Code</a>, написал его сам:</p>
+<pre><code>#include "SelectionSort.h"
+#include &lt;Foundation/Foundation.h&gt;
+
+@implementation SelectionSort
+- (void)performSort:(NSMutableArray *)numbers
+{
+   NSLog(@"%@", numbers);   
+   for (int startIndex = 0; startIndex &lt; numbers.count-1; startIndex++) {
+      int minimalNumberIndex = startIndex;
+      for (int i = startIndex + 1; i &lt; numbers.count; i++) {
+         id lhs = [numbers objectAtIndex: minimalNumberIndex];
+         id rhs = [numbers objectAtIndex: i];
+         if ([lhs isGreaterThan: rhs]) {
+            minimalNumberIndex = i;
+         }
+      }
+      id temporary = [numbers objectAtIndex: minimalNumberIndex];
+      [numbers setObject: [numbers objectAtIndex: startIndex] 
+               atIndexedSubscript: minimalNumberIndex];
+      [numbers setObject: temporary
+               atIndexedSubscript: startIndex];
+   }
+   NSLog(@"%@", numbers);
+}
+
+@end </code></pre>
+<p>Собрать и запустить можно либо на MacOS/Xcode, либо на любой операционной системе поддерживающей GNUstep, например у меня собирается Clang на Arch Linux.<br />
+Скрипт сборки:</p>
+<pre><code>clang SelectionSort.m \
+        main.m \
+        -lobjc \
+        `gnustep-config --objc-flags` \
+        `gnustep-config --objc-libs` \
+        -I /usr/include/GNUstepBase \
+        -I /usr/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include/ \
+        -lgnustep-base \
+        -o SelectionSort \</code></pre>
+<h3>Links</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/selectionSort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/selectionSort</a></p>
+<h3>Sources</h3>
+<p><a href="https://rosettacode.org/wiki/Sorting_algorithms/Selection_sort" target="_blank" rel="noopener">https://rosettacode.org/wiki/Sorting_algorithms/Selection_sort</a><br />
+<a href="https://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%BE%D0%BC">https://ru.wikipedia.org/wiki/Сортировка_выбором</a><br />
+<a href="https://en.wikipedia.org/wiki/Selection_sort" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Selection_sort</a><br />
+<a href="https://www.youtube.com/watch?v=LJ7GYbX7qpM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=LJ7GYbX7qpM</a></p>

@@ -170,6 +170,7 @@ def translate(text, type, source, destination):
         if outputText.strip().lower().startswith("<h3>") and not outputText.strip().lower().endswith("</h3>"):
             outputText += "</h3>"
 
+        outputText = outputText.replace("Ilya", "Ilia")
         return outputText
 
     elif type == "openai":

@@ -1,0 +1,108 @@
+Format: Fall24-October10
+Language: ru
+Title: Quicksort
+Slug: quicksort
+Categories: techie,tutorials
+<p>Quicksort – алгоритм сортировки по методу «разделяй и влавствуй». Рекурсивно, по частям разбираем массив чисел, выставляя числа в меньшем и большем порядке от выбранного опорного элемента, сам опорный элемент вставляем в отсечку между ними. После нескольких рекурсивных итераций получится отсортированный список. Временная сложность O(n<sup>2</sup>).</p>
+<p>Схема:</p>
+<ol>
+<li>Начинаем с того что получаем снаружи список элементов, границы сортировки. На первом шаге границы сортировки будут от начала до конца.</li>
+<li>Проверяем что границы начала и конца не пересекаются, если это произошло, значит пора заканчивать</li>
+<li>Выбираем какой-то элемент из списка, называем его опорным</li>
+<li>Сдвигаем вправо в конец на последний индекс, чтобы не мешался</li>
+<li>Создаем счетчик *меньших чисел* пока равный нулю</li>
+<li>Проходим циклом по списку слева направо, до последнего индекса, где находится опорный элемент, не включительно</li>
+<li>Каждый элемент сравниваем с опорным</li>
+<li>Если он меньше опорного, то меняем его местами по индексу счетчика меньших чисел. Инкрементируем счетчик меньших чисел.</li>
+<li>Когда цикл дойдет до опорного элемента, останавливаемся, меняем местами опорный элемент с элементом по счетчику меньших чисел.</li>
+<li>Запускаем отдельно алгоритм для левой меньшей части списка, и отдельно для правой большей части списка.</li>
+<li>В итоге все рекурсивные итерации начнут останавливаться из-за проверки в пункте 2</li>
+<li>Получим отсортированный список</li>
+</ol>
+<p>Quicksort был придуман ученым Чарльзом Энтони Ричардом Хоаром в МГУ, выучив русский язык, он занимался изучением компьютерного перевода, а также теории вероятностей в школе Колмогорова. В 1960 г. из-за политического кризиса, он покинул Советский Союз.</p>
+<p>Пример реализации на Rust:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-c" data-lang="C"><code>extern crate rand;
+
+use rand::Rng;
+
+fn swap(numbers: &amp;mut [i64], from: usize, to: usize) {
+    let temp = numbers[from];
+    numbers[from] = numbers[to];
+    numbers[to] = temp;
+}
+
+fn quicksort(numbers: &amp;mut [i64], left: usize, right: usize) {
+    if left &gt;= right {
+        return
+    }
+    let length = right - left;
+    if length &lt;= 1 {
+        return
+    }
+    let pivot_index = left + (length / 2);
+    let pivot = numbers[pivot_index];
+
+    let last_index = right - 1;
+    swap(numbers, pivot_index, last_index);
+
+    let mut less_insert_index = left;
+
+    for i in left..last_index {
+        if numbers[i] &lt; pivot {
+            swap(numbers, i, less_insert_index);
+            less_insert_index += 1;
+        }
+    }
+    swap(numbers, last_index, less_insert_index);
+    quicksort(numbers, left, less_insert_index);
+    quicksort(numbers, less_insert_index + 1, right);
+}
+
+fn main() {
+    let mut numbers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let mut reference_numbers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    let mut rng = rand::thread_rng();
+    for i in 0..numbers.len() {
+        numbers[i] = rng.gen_range(-10..10);
+        reference_numbers[i] = numbers[i];
+    }
+
+    reference_numbers.sort();
+
+  println!("Numbers           {:?}", numbers);
+  let length = numbers.len();
+  quicksort(&amp;mut numbers, 0, length);
+  println!("Numbers           {:?}", numbers);
+  println!("Reference numbers {:?}", reference_numbers);
+
+  if numbers != reference_numbers {
+    println!("Validation failed");
+    std::process::exit(1);
+  }
+  else {
+    println!("Validation success!");
+    std::process::exit(0);
+  }
+}
+</code></pre>
+</div>
+<p>Если ничего непонятно, то предлагаю посмотреть видео Роба Эдвардса из университета Сан-Диего <a href="https://www.youtube.com/watch?v=ZHVk2blR45Q" target="_blank" rel="noopener">https://www.youtube.com/watch?v=ZHVk2blR45Q</a> в нем наиболее просто, по шагам, показывается суть и реализация алгоритма.</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/quickSort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/quickSort</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.youtube.com/watch?v=4s-aG6yGGLU" target="_blank" rel="noopener">https://www.youtube.com/watch?v=4s-aG6yGGLU</a><br />
+<a href="https://www.youtube.com/watch?v=ywWBy6J5gz8" target="_blank" rel="noopener">https://www.youtube.com/watch?v=ywWBy6J5gz8</a><br />
+<a href="https://www.youtube.com/watch?v=Hoixgm4-P4M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Hoixgm4-P4M</a><br />
+<a href="https://ru.wikipedia.org/wiki/Быстрая_сортировка" target="_blank" rel="noopener">https://ru.wikipedia.org/wiki/Быстрая_сортировка</a><br />
+<a href="https://www.youtube.com/watch?v=Hoixgm4-P4M" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Hoixgm4-P4M</a><br />
+<a href="https://www.youtube.com/watch?v=XE4VP_8Y0BU" target="_blank" rel="noopener">https://www.youtube.com/watch?v=XE4VP_8Y0BU</a><br />
+<a href="https://www.youtube.com/watch?v=MZaf_9IZCrc" target="_blank" rel="noopener">https://www.youtube.com/watch?v=MZaf_9IZCrc</a><br />
+<a href="https://www.youtube.com/watch?v=ZHVk2blR45Q">https://www.youtube.com/watch?v=ZHVk2blR45Q</a><br />
+<a href="http://rosettacode.org/wiki/Sorting_algorithms/Quicksort" target="_blank" rel="noopener">http://rosettacode.org/wiki/Sorting_algorithms/Quicksort</a><br />
+<a href="https://www.youtube.com/watch?v=4s-aG6yGGLU" target="_blank" rel="noopener">https://www.youtube.com/watch?v=4s-aG6yGGLU</a><br />
+<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" rel="_blank noopener" target="_blank">https://www.youtube.com/watch?v=dQw4w9WgXcQ</a><br />
+<a href="https://www.youtube.com/watch?v=maibrCbZWKw" target="_blank" rel="noopener">https://www.youtube.com/watch?v=maibrCbZWKw</a><br />
+<a href="https://www.geeksforgeeks.org/quick-sort/" target="_blank" rel="noopener">https://www.geeksforgeeks.org/quick-sort/</a><br />
+<a href="https://www.youtube.com/watch?v=uXBnyYuwPe8" target="_blank" rel="noopener">https://www.youtube.com/watch?v=uXBnyYuwPe8</a></p>

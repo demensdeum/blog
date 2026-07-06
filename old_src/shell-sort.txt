@@ -1,0 +1,187 @@
+Format: Fall24-October10
+Language: ru
+Title: Shell Sort
+Slug: shell-sort
+Categories: techie,tutorials
+<p>Shell Sort – вариант сортировки вставками с предварительным причесыванием массива чисел.</p>
+<p>Надо вспомнить как работает сортировка вставками:</p>
+<p>1. Запускается цикл от нуля до конца цикла, таким образом массив разделяется на две части<br />
+2. Для левой части запускается второй цикл, сравнение элементов справа налево, меньший элемент справа опускается пока не найдется меньший элемент слева<br />
+3. По окончанию обоих циклов, получим отсортированный список</p>
+<p>Однажды во времени, информатик Дональд Шелл озадачился как улучшить алгоритм сортировки вставками. Он придумал предварительно проходить также двумя циклами по массиву, но на определенном расстоянии, постепенно уменьшая «расческу» пока она не превратиться в обычный алгоритм сортировки вставками. Всё действительно настолько просто, никаких подводных камней, к двум циклам сверху добавляем еще один, в котором уменьшаем постепенно размер «расчески». Единственное что нужно будет делать – проверять расстояние при сравнении, чтобы оно не вышло за пределы массива.</p>
+<p>По настоящему интересная тема – выбор последовательности изменения длины сравнения на каждой итерации первого цикла. Интересна по той причине, что от этого зависит производительность алгоритма.</p>
+<p>Таблицу известных вариантов и временную сложность можно посмотреть здесь: <a href="https://en.wikipedia.org/wiki/Shellsort#Gap_sequences" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Shellsort#Gap_sequences</a></p>
+<p>Вычислением идеальной дистанции занимались разные люди, настолько, видимо, была им эта тема интересна. Неужели они не могли просто запустить Ruby, вызвать самый быстрый алгоритм sort()?</p>
+<p>В общем эти странные люди писали диссертации на тему вычисления дистанции/зазора «расчески» для алгоритма Шелла. Я же просто воспользовался результатами их труда и проверил 5 типов последовательностей, Хиббарда, Кнута-Пратта, Чиуры, Седжвика.</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-python" data-lang="Python"><code>from typing import List
+import time
+import random
+from functools import reduce
+import math
+
+DEMO_MODE = False
+
+if input("Demo Mode Y/N? ").upper() == "Y":
+    DEMO_MODE = True
+
+class Colors:
+    BLUE = '\033[94m'
+    RED = '\033[31m'
+    END = '\033[0m'
+
+def swap(list, lhs, rhs):
+    list[lhs], list[rhs] = list[rhs], list[lhs]
+    return list
+
+def colorPrintoutStep(numbers: List[int], lhs: int, rhs: int):
+    for index, number in enumerate(numbers):
+        if index == lhs:
+            print(f"{Colors.BLUE}", end = "")
+        elif index == rhs:
+            print(f"{Colors.RED}", end = "")
+        print(f"{number},", end = "")
+        if index == lhs or index == rhs:
+            print(f"{Colors.END}", end = "")
+        if index == lhs or index == rhs:
+            print(f"{Colors.END}", end = "")
+    print("\n")
+    input("&gt;")
+
+def ShellSortLoop(numbers: List[int], distanceSequence: List[int]):
+    distanceSequenceIterator = reversed(distanceSequence)
+    while distance:= next(distanceSequenceIterator, None):
+        for sortArea in range(0, len(numbers)):
+            for rhs in reversed(range(distance, sortArea + 1)):
+                lhs = rhs - distance
+                if DEMO_MODE:
+                    print(f"Distance: {distance}")
+                    colorPrintoutStep(numbers, lhs, rhs)
+                if numbers[lhs] &gt; numbers[rhs]:
+                    swap(numbers, lhs, rhs)
+                else:
+                    break
+
+def ShellSort(numbers: List[int]):
+    global ShellSequence
+    ShellSortLoop(numbers, ShellSequence)
+
+def HibbardSort(numbers: List[int]):
+    global HibbardSequence
+    ShellSortLoop(numbers, HibbardSequence)
+
+def ShellPlusKnuttPrattSort(numbers: List[int]):
+    global KnuttPrattSequence
+    ShellSortLoop(numbers, KnuttPrattSequence)
+
+def ShellPlusCiuraSort(numbers: List[int]):
+    global CiuraSequence
+    ShellSortLoop(numbers, CiuraSequence)
+
+def ShellPlusSedgewickSort(numbers: List[int]):
+    global SedgewickSequence
+    ShellSortLoop(numbers, SedgewickSequence)
+
+def insertionSort(numbers: List[int]):
+    global insertionSortDistanceSequence
+    ShellSortLoop(numbers, insertionSortDistanceSequence)
+
+def defaultSort(numbers: List[int]):
+    numbers.sort()
+
+def measureExecution(inputNumbers: List[int], algorithmName: str, algorithm):
+    if DEMO_MODE:
+        print(f"{algorithmName} started")
+    numbers = inputNumbers.copy()
+    startTime = time.perf_counter()
+    algorithm(numbers)
+    endTime = time.perf_counter()
+    print(f"{algorithmName} performance: {endTime - startTime}")
+
+def sortedNumbersAsString(inputNumbers: List[int], algorithm) -&gt; str:
+    numbers = inputNumbers.copy()
+    algorithm(numbers)
+    return str(numbers)
+
+if DEMO_MODE:
+    maximalNumber = 10
+    numbersCount = 10
+else:
+    maximalNumber = 10
+    numbersCount = random.randint(10000, 20000)
+
+randomNumbers = [random.randrange(1, maximalNumber) for i in range(numbersCount)]
+
+ShellSequenceGenerator = lambda n: reduce(lambda x, _: x + [int(x[-1]/2)], range(int(math.log(numbersCount, 2))), [int(numbersCount / 2)])
+ShellSequence = ShellSequenceGenerator(randomNumbers)
+ShellSequence.reverse()
+ShellSequence.pop()
+
+HibbardSequence = [
+    0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095,
+    8191, 16383, 32767, 65535, 131071, 262143, 524287, 1048575,
+    2097151, 4194303, 8388607, 16777215, 33554431, 67108863, 134217727,
+    268435455, 536870911, 1073741823, 2147483647, 4294967295, 8589934591
+]
+
+KnuttPrattSequence = [
+    1, 4, 13, 40, 121, 364, 1093, 3280, 9841, 29524, 88573, 265720, 
+    797161, 2391484, 7174453, 21523360, 64570081, 193710244, 581130733, 
+    1743392200, 5230176601, 15690529804, 47071589413
+]
+
+CiuraSequence = [
+            1, 4, 10, 23, 57, 132, 301, 701, 1750, 4376, 
+            10941, 27353, 68383, 170958, 427396, 1068491, 
+            2671228, 6678071, 16695178, 41737946, 104344866, 
+            260862166, 652155416, 1630388541
+]
+
+SedgewickSequence = [
+            1, 5, 19, 41, 109, 209, 505, 929, 2161, 3905,
+            8929, 16001, 36289, 64769, 146305, 260609, 587521, 
+            1045505, 2354689, 4188161, 9427969, 16764929, 37730305, 
+            67084289, 150958081, 268386305, 603906049, 1073643521, 
+            2415771649, 4294770689, 9663381505, 17179475969
+]
+
+insertionSortDistanceSequence = [1]
+
+algorithms = {
+    "Default Python Sort": defaultSort,
+    "Shell Sort": ShellSort,
+    "Shell + Hibbard" : HibbardSort,
+    "Shell + Prat, Knutt": ShellPlusKnuttPrattSort,
+    "Shell + Ciura Sort": ShellPlusCiuraSort,
+    "Shell + Sedgewick Sort": ShellPlusSedgewickSort,
+    "Insertion Sort": insertionSort
+}
+
+for name, algorithm in algorithms.items():
+    measureExecution(randomNumbers, name, algorithm)
+
+reference = sortedNumbersAsString(randomNumbers, defaultSort)
+
+for name, algorithm in algorithms.items():
+    if sortedNumbersAsString(randomNumbers, algorithm) != reference:
+        print("Sorting validation failed")
+        exit(1)
+
+print("Sorting validation success")
+exit(0)
+</code></pre>
+</div>
+<p>В моей реализации, для случайного набора числем самыми быстрыми оказываются зазоры Седжвика и Хиббарда.</p>
+<h3>mypy</h3>
+<p>Также хочется упомянуть анализатор статической типизации для Python 3 &#8211; mypy. Помогает справиться с проблемами присущими языкам с динамической типизацией, а именно устраняет возможность просунуть что-то куда не надо.</p>
+<p>Как говорят опытные программисты &#8220;статическая типизация не нужна, когда у тебя есть команда профессионалов&#8221;, когда-нибудь мы все станем профессионалами, будем писать код в полном единении и понимании с машинами, а пока можно пользоваться подобными утилитами и языками со статической типизацией.</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/shellSort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/shellSort</a><br />
+<a href="http://mypy-lang.org/" target="_blank" rel="noopener">http://mypy-lang.org/</a></p>
+<h3>Источники</h3>
+<p><a href="https://dl.acm.org/doi/10.1145/368370.368387" target="_blank" rel="noopener">https://dl.acm.org/doi/10.1145/368370.368387</a><br />
+<a href="https://en.wikipedia.org/wiki/Shellsort" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Shellsort</a><br />
+<a href="http://rosettacode.org/wiki/Sorting_algorithms/Shell_sort" target="_blank" rel="noopener">http://rosettacode.org/wiki/Sorting_algorithms/Shell_sort</a><br />
+<a href="https://ru.wikipedia.org/wiki/Сортировка_Шелла" target="_blank" rel="noopener">https://ru.wikipedia.org/wiki/Сортировка_Шелла</a><br />
+<a href="https://neerc.ifmo.ru/wiki/index.php?title=Сортировка_Шелла" target="_blank" rel="noopener">https://neerc.ifmo.ru/wiki/index.php?title=Сортировка_Шелла</a><br />
+<a href="https://twitter.com/gvanrossum/status/700741601966985216" target="_blank" rel="noopener">https://twitter.com/gvanrossum/status/700741601966985216</a></p>

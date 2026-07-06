@@ -1,0 +1,37 @@
+Format: Fall24-October10
+Language: ru
+Title: Insertion Sort, Merge Sort
+Slug: insertion-sort-merge-sort
+Categories: techie,tutorials
+<h3>Insertion Sort</h3>
+<p>Сортировка вставками &#8211; каждый <strong>элемент</strong> сравнивается с <strong>предыдущими</strong> по списку и <strong>элемент</strong> меняется местами с большим, если таковой имеется, в ином случае внутренний цикл сравнения останавливается. Так как элементы сортируются с первого по последний, то каждый элемент сравнивается с уже отсортированным списком, что *возможно* уменьшит общее время работы. Временная сложность алгоритма O(n^2), то есть идентична баббл сорту.</p>
+<h3>Merge Sort</h3>
+<p>Сортировка слиянием &#8211; список разделяется на группы по одному элементу, затем группы “сливаются” попарно с одновременным сравнением. В моей реализации при слиянии пар элементы слева сравниваются с элементами справа, затем перемещаются в результирующий список, если элементы слева закончились, то происходит добавление всех элементов справа в результирующий список (их дополнительное сравнение излишне, так как все элементы в группах проходят итерации сортировки)<br />
+Работу данного алгоритма очень легко распараллелить, этап слияния пар можно выполнять в потоках, с ожиданием окончания итераций в диспетчере.<br />
+Вывод алгоритма для однопоточного выполнения:</p>
+<pre><code>
+["John", "Alice", "Mike", "#1", "Артем", "20", "60", "60", "DoubleTrouble"]
+[["John"], ["Alice"], ["Mike"], ["#1"], ["Артем"], ["20"], ["60"], ["60"], ["DoubleTrouble"]]
+[["Alice", "John"], ["#1", "Mike"], ["20", "Артем"], ["60", "60"], ["DoubleTrouble"]]
+[["#1", "Alice", "John", "Mike"], ["20", "60", "60", "Артем"], ["DoubleTrouble"]]
+[["#1", "20", "60", "60", "Alice", "John", "Mike", "Артем"], ["DoubleTrouble"]]
+["#1", "20", "60", "60", "Alice", "DoubleTrouble", "John", "Mike", "Артем"]
+
+</code></pre>
+<p>Вывод алгоритма для многопоточного выполнения:</p>
+<pre><code>
+["John", "Alice", "Mike", "#1", "Артем", "20", "60", "60", "DoubleTrouble"]
+[["John"], ["Alice"], ["Mike"], ["#1"], ["Артем"], ["20"], ["60"], ["60"], ["DoubleTrouble"]]
+[["20", "Артем"], ["Alice", "John"], ["60", "60"], ["#1", "Mike"], ["DoubleTrouble"]]
+[["#1", "60", "60", "Mike"], ["20", "Alice", "John", "Артем"], ["DoubleTrouble"]]
+[["DoubleTrouble"], ["#1", "20", "60", "60", "Alice", "John", "Mike", "Артем"]]
+["#1", "20", "60", "60", "Alice", "DoubleTrouble", "John", "Mike", "Артем"]
+
+</code></pre>
+<p>Временная сложность алгоритма O(n*log(n)), что немного лучше чем O(n^2)</p>
+<h3>Источники</h3>
+<p><a href="https://en.wikipedia.org/wiki/Insertion_sort" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Insertion_sort</a><br />
+<a href="https://en.wikipedia.org/wiki/Merge_sort" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Merge_sort</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/insertionSort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/insertionSort</a><br />
+<a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/mergeSort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/mergeSort</a></p>

@@ -1,0 +1,89 @@
+Format: Fall24-October10
+Language: ru
+Title: С++ плагины
+Slug: %d1%81-application-plugins
+Categories: techie,tutorials
+<p></p>
+<p>В этой заметке я опишу пример добавления функционала в C++ приложение с помощью плагинов. Описана практическая часть реализации для Linux, с теорией можно будет ознакомиться по ссылкам в конце статьи.</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<figure class="wp-block-image"><a href="https://twitter.com/iamdevloper" target="_blank" rel="noreferrer noopener"><img loading="lazy" decoding="async" width="1024" height="617" class="wp-image-1615" src="https://demensdeum.com/blog/wp-content/uploads/2019/03/iamdev-1024x617.png" alt="" srcset="https://demensdeum.com/blog/wp-content/uploads/2019/03/iamdev-1024x617.png 1024w, https://demensdeum.com/blog/wp-content/uploads/2019/03/iamdev-300x181.png 300w, https://demensdeum.com/blog/wp-content/uploads/2019/03/iamdev-768x462.png 768w, https://demensdeum.com/blog/wp-content/uploads/2019/03/iamdev.png 1440w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></a>
+<figcaption>Composition over inheritance!</figcaption>
+</figure>
+<p></p>
+<p></p>
+<p>Для начала напишем плагин &#8211; функцию которую будем вызывать:</p>
+<p></p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #557799;">#include "iostream"</span>
+
+<span style="color: #008800; font-weight: bold;">using</span> <span style="color: #008800; font-weight: bold;">namespace</span> std;
+
+<span style="color: #008800; font-weight: bold;">extern</span> <span style="background-color: #fff0f0;">"C"</span> <span style="color: #333399; font-weight: bold;">void</span> extensionEntryPoint() {
+	cout <span style="color: #333333;">&lt;&lt;</span> <span style="background-color: #fff0f0;">"Extension entry point called"</span> <span style="color: #333333;">&lt;&lt;</span> endl;
+};
+</pre>
+</div>
+<p></p>
+<p>Далее соберем плагин как динамическую библиотеку<strong> &#8220;extension.so&#8221;</strong>, которую и будем подключать в дальнейшем:<br /><strong>clang++ -shared -fPIC extension.cpp -o extension.so</strong></p>
+<p></p>
+<p></p>
+<p>Напишем основое приложение, которое будет загружать файл &#8220;extension.so&#8221;, искать там указатель на функцию &#8220;extensionEntryPoint&#8221;, и вызывать его, печатая ошибки при необходимости:</p>
+<p></p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #557799;">#include "iostream"</span>
+<span style="color: #557799;">#include "dlfcn.h"</span>
+
+<span style="color: #008800; font-weight: bold;">using</span> <span style="color: #008800; font-weight: bold;">namespace</span> std;
+
+<span style="color: #008800; font-weight: bold;">typedef</span> <span style="color: #0066bb; font-weight: bold;">void</span> (<span style="color: #333333;">*</span>VoidFunctionPointer)();	
+
+<span style="color: #333399; font-weight: bold;">int</span> <span style="color: #0066bb; font-weight: bold;">main</span> (<span style="color: #333399; font-weight: bold;">int</span> argc, <span style="color: #333399; font-weight: bold;">char</span> <span style="color: #333333;">*</span>argv[]) {
+
+	cout <span style="color: #333333;">&lt;&lt;</span> <span style="background-color: #fff0f0;">"C++ Plugins Example"</span> <span style="color: #333333;">&lt;&lt;</span> endl;
+
+	<span style="color: #008800; font-weight: bold;">auto</span> extensionHandle <span style="color: #333333;">=</span> dlopen(<span style="background-color: #fff0f0;">"./extension.so"</span>, RTLD_LAZY);
+	<span style="color: #008800; font-weight: bold;">if</span> (<span style="color: #333333;">!</span>extensionHandle) {
+		string errorString <span style="color: #333333;">=</span> dlerror();
+		<span style="color: #008800; font-weight: bold;">throw</span> runtime_error(errorString);
+	}
+
+	<span style="color: #008800; font-weight: bold;">auto</span> functionPointer <span style="color: #333333;">=</span> VoidFunctionPointer();
+	functionPointer <span style="color: #333333;">=</span> (VoidFunctionPointer) dlsym(extensionHandle, <span style="background-color: #fff0f0;">"extensionEntryPoint"</span>);
+	<span style="color: #008800; font-weight: bold;">auto</span> dlsymError <span style="color: #333333;">=</span> dlerror();
+ 	<span style="color: #008800; font-weight: bold;">if</span> (dlsymError) {
+		string errorString <span style="color: #333333;">=</span> dlerror();
+		<span style="color: #008800; font-weight: bold;">throw</span> runtime_error(errorString);
+ 	}
+
+	functionPointer();
+
+	exit(<span style="color: #0000dd; font-weight: bold;">0</span>);
+} 
+</pre>
+</div>
+<p></p>
+<p>Функция dlopen возвращает хэндлер для работы с динамической библиотекой; функция dlsym возвращает указатель на необходимую функцию по строке; dlerror содержит указатель на строку с текстом ошибки, если таковая имеется.</p>
+<p></p>
+<p></p>
+<p>Далее собираем основное приложение, копируем файл динамической библиотеки в папку с ним и запускаем. На выходе должен быть вывод <strong>&#8220;Extension entry point called&#8221;</strong></p>
+<p></p>
+<p></p>
+<p>К сложным моментам можно отнести отсутствие единого стандарта работы с динамическими библиотеками, из-за этого есть необходимость экспорта функции в относительно <em>глобальную область видимости</em> с <strong>extern C</strong>; разница в работе с разными операционными системами, связанные с этим тонкости работы; отсутствие C++ интерфейса для реализации ООП подхода к работе с динамическими библиотеками, однако существуют open-source врапперы, например <a href="https://github.com/m-renaud/libdlibxx" target="_blank" rel="noreferrer noopener" aria-label="m-renaud/libdlibxx (opens in a new tab)">m-renaud/libdlibxx</a></p>
+<p></p>
+<p></p>
+<h2 class="wp-block-heading">Исходный код примера</h2>
+<p></p>
+<p></p>
+<p><a href="https://gitlab.com/demensdeum/cpppluginsexample" target="_blank" rel="noreferrer noopener" aria-label=" (opens in a new tab)">https://gitlab.com/demensdeum/cpppluginsexample</a></p>
+<p></p>
+<p></p>
+<h2 class="wp-block-heading">Источники</h2>
+<p></p>
+<p></p>
+<p><a href="http://man7.org/linux/man-pages/man3/dlopen.3.html" target="_blank" rel="noreferrer noopener" aria-label=" (opens in a new tab)">http://man7.org/linux/man-pages/man3/dlopen.3.htm</a><br /><a href="https://gist.github.com/tailriver/30bf0c943325330b7b6a" target="_blank" rel="noreferrer noopener" aria-label="https://gist.github.com/tailriver/30bf0c943325330b7b6a (opens in a new tab)">https://gist.github.com/tailriver/30bf0c943325330b7b6a</a><br /><a href="https://stackoverflow.com/questions/840501/how-do-function-pointers-in-c-work" target="_blank" rel="noreferrer noopener" aria-label="https://stackoverflow.com/questions/840501/how-do-function-pointers-in-c-work (opens in a new tab)">https://stackoverflow.com/questions/840501/how-do-function-pointers-in-c-work</a></p>
+<p></p>

@@ -1,0 +1,70 @@
+Format: Fall24-October10
+Language: ru
+Title: Hello World x86_64 ассемблер
+Slug: hello-world-x86_64-assembly
+Categories: techie,tutorials
+<p>В данной заметке я опишу процесс настройки IDE, написание первого Hello World на ассемблере x86_64 для операционной системы Ubuntu Linux.<br />
+Начнем с установки IDE SASM, ассемблера nasm:</p>
+<pre><code>sudo apt install sasm nasm</code></pre>
+<p>Далее запустим SASM и напишем Hello World:</p>
+<pre><code>global main
+
+section .text
+
+main:
+    mov rbp, rsp      ; for correct debugging
+    mov rax, 1        ; write(
+    mov rdi, 1        ;   STDOUT_FILENO,
+    mov rsi, msg      ;   "Hello, world!\n",
+    mov rdx, msglen   ;   sizeof("Hello, world!\n")
+    syscall           ; );
+
+    mov rax, 60       ; exit(
+    mov rdi, 0        ;   EXIT_SUCCESS
+    syscall           ; );
+
+section .rodata
+    msg: db "Hello, world!"
+    msglen: equ $-msg
+</code></pre>
+<p>Код Hello World взят из блога <a href="https://jameshfisher.com/2018/03/10/linux-assembly-hello-world/" target="_blank" rel="noopener noreferrer">Джеймса Фишера</a>, адаптирован для сборки и отладки в SASM. В документации SASM указано что точкой входа должна быть функция с именем main, иначе отладка и компиляция кода будет некорректной.<br />
+Что мы сделали в данном коде? Произвели вызов syscall &#8211; обращение к ядру операционной системы Linux с корректными аргументами в регистрах, указателем на строку в секции данных.</p>
+<h3>Под лупой</h3>
+<p>Рассмотрим код подробнее:</p>
+<pre><code>global main</code></pre>
+<p>global &#8211; директива ассемблера позволяющая задавать глобальные символы со строковыми именами. Хорошая аналогия &#8211; интерфейсы заголовочных файлов языков C/C++. В данном случае мы задаем символ main для функции входа.</p>
+<pre><code>section .text</code></pre>
+<p>section &#8211; директива ассемблера позволяющая задавать секции (сегменты) кода. Директивы section или segment равнозначны. В секции .text помещается код программы.</p>
+<pre><code>main:</code></pre>
+<p>Обьявляем начало функции main. В ассемблере функции называются подпрограммами (subroutine)</p>
+<pre><code>mov rbp, rsp</code></pre>
+<p>Первая машинная команда mov &#8211; помещает значение из аргумента 1 в аргумент 2. В данном случае мы переносим значение регистра rbp в rsp. Из комментария можно понять что эту строку добавил SASM для упрощения отладки. Видимо это личные дела между SASM и дебаггером gdb.</p>
+<p>Далее посмотрим на код до сегмента данных .rodata, два вызова syscall, первый выводит строку Hello World, второй обеспечивает выход из приложения с корректным кодом 0.</p>
+<p>Представим себе что регистры это переменные с именами rax, rdi, rsi, rdx, r10, r8, r9. По аналогии с высокоуровневыми языками, перевернем вертикальное представление ассемблера в горизонтальное, тогда вызов syscall будет выглядеть так:</p>
+<pre><code>syscall(rax, rdi, rsi, rdx, r10, r8, r9)</code></pre>
+<p>Тогда вызов печати текста:</p>
+<pre><code>syscall(1, 1, msg, msglen)</code></pre>
+<p>Вызов exit с корректным кодом 0:</p>
+<pre><code>syscall(60, 0)</code></pre>
+<p>Рассмотрим аргументы подробнее, в заголовочном файле asm/unistd_64.h находим номер функции __NR_write – 1, далее в документации смотрим аргументы для write:<br />
+ssize_t write(int fd, const void *buf, size_t count);</p>
+<p>Первый аргумент &#8211; файловый дескриптор, второй &#8211; буфер с данными, третий &#8211; счетчик байт для записи в дескриптор. Ищем номер файлового дескриптора для стандартного вывода, в мануале по stdout находим код 1. Далее дело за малым, передать указатель на буфер строки Hello World из секции данных .rodata &#8211; msg, счетчик байт &#8211; msglen, передать в регистры rax, rdi, rsi, rdx корректные аргументы и вызвать syscall.</p>
+<p>Обозначение константных строк и длины описывается в мануале nasm:</p>
+<pre><code>message db 'hello, world'
+msglen equ $-message</code></pre>
+<p>Достаточно просто да?</p>
+<h3>Источники</h3>
+<p><a href="https://github.com/Dman95/SASM" target="_blank" rel="noopener">https://github.com/Dman95/SASM</a><br />
+<a href="https://www.nasm.us/xdoc/2.15.05/html/nasmdoc0.html" target="_blank" rel="noopener noreferrer">https://www.nasm.us/xdoc/2.15.05/html/nasmdoc0.html</a><br />
+<a href="http://acm.mipt.ru/twiki/bin/view/Asm/HelloNasm" target="_blank" rel="noopener noreferrer">http://acm.mipt.ru/twiki/bin/view/Asm/HelloNasm</a><br />
+<a href="https://jameshfisher.com/2018/03/10/linux-assembly-hello-world/" target="_blank" rel="noopener noreferrer">https://jameshfisher.com/2018/03/10/linux-assembly-hello-world/</a><br />
+<a href="http://www.ece.uah.edu/~milenka/cpe323-10S/labs/lab3.pdf" target="_blank" rel="noopener noreferrer">http://www.ece.uah.edu/~milenka/cpe323-10S/labs/lab3.pdf</a><br />
+<a href="https://c9x.me/x86/html/file_module_x86_id_176.html" target="_blank" rel="noopener noreferrer">https://c9x.me/x86/html/file_module_x86_id_176.html</a><br />
+<a href="https://www.recurse.com/blog/7-understanding-c-by-learning-assembly" target="_blank" rel="noopener noreferrer">https://www.recurse.com/blog/7-understanding-c-by-learning-assembly</a><br />
+<a href="https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D0%BB%D0%BE%D0%B3_%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D0%B4%D1%83%D1%80%D1%8B" target="_blank" rel="noopener noreferrer">https://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D0%BB%D0%BE%D0%B3_%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D0%B4%D1%83%D1%80%D1%8B</a><br />
+<a href="https://www.tutorialspoint.com/assembly_programming/assembly_basic_syntax.html" target="_blank" rel="noopener noreferrer">https://www.tutorialspoint.com/assembly_programming/assembly_basic_syntax.html</a><br />
+<a href="https://nekosecurity.com/x86-64-assembly/part-3-nasm-anatomy-syscall-passing-argument" target="_blank" rel="noopener noreferrer">https://nekosecurity.com/x86-64-assembly/part-3-nasm-anatomy-syscall-passing-argument</a><br />
+<a href="https://man7.org/linux/man-pages/man2/syscall.2.html" target="_blank" rel="noopener noreferrer">https://man7.org/linux/man-pages/man2/syscall.2.html</a><br />
+<a href="https://en.wikipedia.org/wiki/Write_(system_call)" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Write_(system_call)</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/assembly-playground" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/assembly-playground</a></p>

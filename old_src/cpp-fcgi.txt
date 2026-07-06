@@ -1,0 +1,35 @@
+Format: Fall24-October10
+Language: ru
+Title: Пишем бэкенд сервер на C++ FCGI
+Slug: cpp-fcgi
+Categories: techie,tutorials
+<p>Краткая заметка о том как я писал серверную часть для 3д редактора Cube Art Project, сервер должен сохранять и выводить работы пользователей веб версии, отдавая им короткие URL по кнопке сохранения. Сначала я хотел использовать Swift/PHP/Ruby/JS или какой-то подобный современный язык для бэкэнда, но посмотрев на характеристики моей VPS было принято решение написать сервер на C/C++.<br />
+Для начала нужно установить на сервере libfcgi и модуль поддержки fcgi для вашего вебсервера, пример для Ubuntu и Apache:</p>
+<pre><code>
+sudo apt install libfcgi libapache2-mod-fcgid
+
+</code></pre>
+<p>Далее настраиваем модуль в конфиге:<br />
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-2556" src="https://demensdeum.com/blog/wp-content/uploads/2020/02/module.png" alt="" width="545" height="119" srcset="https://demensdeum.com/blog/wp-content/uploads/2020/02/module.png 545w, https://demensdeum.com/blog/wp-content/uploads/2020/02/module-300x66.png 300w" sizes="auto, (max-width: 545px) 100vw, 545px" /><br />
+FcgidMaxProcessesPerClass &#8211; максимальное количество процессов на класс, я поставил 1 процесс так как не расчитываю на большую нагрузку.<br />
+AddHandler fcgid-script .fcgi &#8211; расширение файла с которым должен стартовать модуль fcgi.<br />
+Добавляем в конфиг папку из которой будут запускаться cgi приложения:<br />
+<img loading="lazy" decoding="async" class="alignnone size-full wp-image-2557" src="https://demensdeum.com/blog/wp-content/uploads/2020/02/execgi.png" alt="" width="545" height="82" srcset="https://demensdeum.com/blog/wp-content/uploads/2020/02/execgi.png 545w, https://demensdeum.com/blog/wp-content/uploads/2020/02/execgi-300x45.png 300w" sizes="auto, (max-width: 545px) 100vw, 545px" /><br />
+Далее пишем приложение на C/C++ с поддержкой fcgi, собираем его, и копируем в папку /var/www/html/cgi-bin.<br />
+Примеры кода и скрипта сборки:<br />
+<a href="https://gitlab.com/demensdeum/cube-art-project-server/-/blob/master/src/cubeArtProjectServer.cpp" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/cube-art-project-server/-/blob/master/src/cubeArtProjectServer.cpp</a><br />
+<a href="https://gitlab.com/demensdeum/cube-art-project-server/-/blob/master/src/build.sh" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/cube-art-project-server/-/blob/master/src/build.sh</a><br />
+После этого нужно будет перезапустить ваш вебсервер:</p>
+<pre><code>
+systemctl restart apache2
+
+</code></pre>
+<p>Далее проставьте необходимые права на выполение папки cgi-bin через chmod.<br />
+После этого ваша cgi программа должна работать через браузер по ссылке, пример для сервера Cube Art Project:<br />
+<a href="http://192.243.103.70/cgi-bin/cubeArtProject/cubeArtProjectServer.fcgi" target="_blank" rel="noopener noreferrer">http://192.243.103.70/cgi-bin/cubeArtProject/cubeArtProjectServer.fcgi</a><br />
+Если что-то не получается, то смотрите логи вебсервера, либо подключайтесь дебаггером к запущенному процессу, процесс отладки не должен отличаться от процесса отладки обычного клиентского приложения.</p>
+<h3>Источники</h3>
+<p><a href="https://habr.com/ru/post/154187/" target="_blank" rel="noopener">https://habr.com/ru/post/154187/</a><br />
+<a href="http://chriswu.me/blog/writing-hello-world-in-fcgi-with-c-plus-plus/" target="_blank" rel="noopener">http://chriswu.me/blog/writing-hello-world-in-fcgi-with-c-plus-plus/</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/cube-art-project-server" target="_blank" rel="noopener">https://gitlab.com/demensdeum/cube-art-project-server</a></p>

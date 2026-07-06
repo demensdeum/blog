@@ -1,0 +1,74 @@
+Format: Fall24-October10
+Language: ru
+Title: Bogosort
+Slug: bogosort
+Categories: techie,tutorials
+<p>Псевдо-сортировка или болотная сортировка, один из самых бесполезных алгоритмов сортировки.</p>
+<p>Работает он так:<br />
+1. На вход подается массив из чисел<br />
+2. Массив из чисел перемешивается случайным образом (shuffle)<br />
+3. Проверяется отсортирован ли массив<br />
+4. Если не отсортирован, то массив перемешивается заново<br />
+5. Все это действо повторяется до тех пор, пока массив не отсортируется случайным образом.</p>
+<p>Как можно увидеть – производительность этого алгоритма ужасна, умные люди считают что даже O(n * n!) т.е. есть шанс завязнуть кидая кубики во славу бога хаоса очень много лет, массив так и не отсортируется, <strong><em>а может отсортируется?</em></strong></p>
+<h3>Реализация</h3>
+<p>Для реализации на TypeScript мне понадобилось реализовать следующие функции:<br />
+1. Перемешивание массива объектов<br />
+2. Сравнение массивов<br />
+3. Генерация случайного числа в диапазоне от нуля до числа (sic!)<br />
+4. Печать прогресса, т.к. кажется что сортировка выполняется бесконечно</p>
+<p>Ниже код реализации на TypeScript:</p>
+<pre><code>const printoutProcess = (numbers: number[], sortedNumbers: number[], numberOfRuns: number) =&gt; console.log(`Still trying to sort: ${numbers}, current shuffle ${sortedNumbers}, try number: ${numberOfRuns}`);
+const randomInteger = (maximal: number) =&gt; Math.floor(Math.random() * maximal);
+const isEqual = (lhs: any[], rhs: any[]) =&gt; lhs.every((val, index) =&gt; val === rhs[index]);
+const shuffle = (array: any[]) =&gt; {
+    for (var i = 0; i &lt; array.length; i++) { var destination = randomInteger(array.length-1); var temp = array[i]; array[i] = array[destination]; array[destination] = temp; } } let numbers: number[] = Array.from({length: 10}, ()=&gt;randomInteger(10));
+const originalNumbers = [...numbers];
+const sortedNumbers = [...numbers].sort();
+
+let numberOfRuns = 1;
+
+do {
+    if (numberOfRuns % 1000 == 0) {
+        printoutProcess(originalNumbers, numbers, numberOfRuns);
+    }
+    shuffle(numbers);
+    numberOfRuns++;
+} while (isEqual(numbers, sortedNumbers) == false)
+
+console.log(`Success!`);
+console.log(`Run number: ${numberOfRuns}`)
+console.log(`Original numbers: ${originalNumbers}`);
+console.log(`Current numbers: ${originalNumbers}`);
+console.log(`Sorted numbers: ${sortedNumbers}`);</code></pre>
+<p>Для отладки можно использовать VSCode и плагин TypeScript Debugger от kakumei.</p>
+<h3>Как долго</h3>
+<p>Вывод работы алгоритма:</p>
+<pre><code>Still trying to sort: 5,4,8,7,5,0,2,9,7,2, current shuffle 2,9,7,8,0,7,4,5,2,5, try number: 144000
+src/bogosort.ts:1
+Still trying to sort: 5,4,8,7,5,0,2,9,7,2, current shuffle 8,7,0,2,4,7,2,5,9,5, try number: 145000
+src/bogosort.ts:2
+Still trying to sort: 5,4,8,7,5,0,2,9,7,2, current shuffle 7,5,2,4,9,8,0,5,2,7, try number: 146000
+src/bogosort.ts:2
+Still trying to sort: 5,4,8,7,5,0,2,9,7,2, current shuffle 0,2,7,4,9,5,7,5,8,2, try number: 147000
+src/bogosort.ts:2
+Still trying to sort: 5,4,8,7,5,0,2,9,7,2, current shuffle 5,9,7,8,5,4,2,7,0,2, try number: 148000
+src/bogosort.ts:2
+Success!
+src/bogosort.ts:24
+Run number: 148798
+src/bogosort.ts:25
+Original numbers: 5,4,8,7,5,0,2,9,7,2
+src/bogosort.ts:26
+Current numbers: 5,4,8,7,5,0,2,9,7,2
+src/bogosort.ts:27
+Sorted numbers: 0,2,2,4,5,5,7,7,8,9</code></pre>
+<p>Для массива из 10 чисел Богосорт перемешивал исходный массив 148798 раз, <em><strong>многовато да?</strong></em><br />
+Алгоритм можно использовать как учебный, для понимания возможностей языка с которым предстоит работать на рынке. Лично я был удивлен узнав что в ванильных JS и TS до сих пор нет своего алгоритма перемешивания массивов, генерации целого числа в диапазоне, доступа к хэшам объектов для быстрого сравнения.</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/bogosort" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/tree/master/sortAlgorithms/bogosort</a><br />
+<a href="https://www.typescriptlang.org/" target="_blank" rel="noopener">https://www.typescriptlang.org/</a><br />
+<a href="https://marketplace.visualstudio.com/items?itemName=kakumei.ts-debug" target="_blank" rel="noopener">https://marketplace.visualstudio.com/items?itemName=kakumei.ts-debug</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.youtube.com/watch?v=r2N3scbd_jg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=r2N3scbd_jg</a><br />
+<a href="https://en.wikipedia.org/wiki/Bogosort" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Bogosort</a></p>

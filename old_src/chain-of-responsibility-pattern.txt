@@ -1,0 +1,91 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Цепочка Обязанностей
+Slug: chain-of-responsibility-pattern
+Categories: techie,tutorials
+<p>Цепочка обязанностей относится к поведенческим шаблонам проектирования.</p>
+<p><a href="https://www.flickr.com/photos/122565603@N02/13689239584/" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2025" src="https://demensdeum.com/blog/wp-content/uploads/2019/05/13689239584_12c1c20ebc_z1.jpg" alt="" width="427" height="640" /></a><br />
+<a class="owner-name truncate no-outline" title="Go to Ганна Долбієва's photostream" href="https://www.flickr.com/photos/122565603@N02/" target="_blank" rel="noopener" data-track="attributionNameClick">Ганна Долбієва</a></p>
+<p>Кинокомпания Джа-пикчерс сняла фильм документальный фильм про коммунистов-растаманов из Либерии под названием “Красная заря Марли”. Фильм очень долгий (8 часов), интересный, однако перед отправкой в прокат оказалось что в некоторых странах кадры и фразы из фильмы могут счесть ересью и не дать прокатной лицензии. Продюсеры киноленты решают вырезать моменты содержащие сомнительные фразы из фильма, в ручном и в автоматическом режиме. Двойная проверка нужна для того чтобы представителей прокатчика банально не расстреляли в некоторых странах, в случае ошибки при ручном отсмотре и монтаже.<br />
+Страны делятся на четыре группы &#8211; страны без цензуры, с умеренной, средней и очень строгой цензурой. Принимается решение использовать нейросети для классификации уровня ереси в отсматриевом фрагменте фильма. Для проекта закупаются очень дорогие state-of-art нейронки обученные на разные уровни цензуры, задача разработчика &#8211; разбить фильм на фрагменты и передавать их по цепочке нейросетей, от вольной до строгой, пока одна из них не обнаружит ересь, дальше фрагмент передается на ручной отсмотр для дальнейшего монтажа. Делать проход по всем нейронкам нельзя, т.к. на их работу затрачивается слишком много вычислительных мощностей (нам ведь еще за свет платить) достаточно остановиться на первой сработавшей.<br />
+Наивная имлементация псевдокодом:</p>
+<pre><code>
+import StateOfArtCensorshipHLNNClassifiers
+
+protocol MovieCensorshipClassifier {
+    func shouldBeCensored(movieChunk: MovieChunk) -&gt; Bool
+}
+
+class CensorshipClassifier: MovieCensorshipClassifier {
+
+    let hnnclassifier: StateOfArtCensorshipHLNNClassifier
+
+    init(_ hnnclassifier: StateOfArtCensorshipHLNNClassifier) {
+        self.hnnclassifier = hnnclassifier
+    }
+    
+    func shouldBeCensored(_ movieChunk: MovieChunk) -&gt; Bool {
+        return hnnclassifier.shouldBeCensored(movieChunk)
+    }
+}
+
+let lightCensorshipClassifier = CensorshipClassifier(StateOfArtCensorshipHLNNClassifier("light"))
+let normalCensorshipClassifier = CensorshipClassifier(StateOfArtCensorshipHLNNClassifier("normal"))
+let hardCensorshipClassifier = CensorshipClassifier(StateOfArtCensorshipHLNNClassifier("hard"))
+
+let classifiers = [lightCensorshipClassifier, normalCensorshipClassifier, hardCensorshipClassifier]
+
+let movie = Movie("Red Jah rising")
+for chunk in movie.chunks {
+    for classifier in classifiers {
+        if classifier.shouldBeCensored(chunk) == true {
+            print("Should censor movie chunk: \(chunk), reported by \(classifier)")
+        }
+   }
+}
+</code></pre>
+<p>Вообщем и целом решение с массивом классификаторов не такое уж и плохое, Однако! представим что мы не можем создавать массив, нам доступна возможность создавать только одну сущность классификатора, который уже определяет тип цензуры для фрагмента фильма. Такие ограничения возможны при разработки библиотеки расширяющей функционал приложения (плагин).<br />
+Воспользуемся паттерном декоратор &#8211; добавим в класс классификатора референс на следующий классификатор в цепочке, будем останавливать процесс проверки на первой успешной классификации.<br />
+Таким образом мы реализуем паттерн Цепочка Обязанности:</p>
+<pre><code>
+import StateOfArtCensorshipHLNNClassifiers
+
+protocol MovieCensorshipClassifier {
+    func shouldBeCensored(movieChunk: MovieChunk) -&gt; Bool
+}
+
+class CensorshipClassifier: MovieCensorshipClassifier {
+
+    let nextClassifier: CensorshipClassifier?
+    let hnnclassifier: StateOfArtCensorshipHLNNClassifier
+
+    init(_ hnnclassifier: StateOfArtCensorshipHLNNClassifier, nextClassifier: CensorshipClassifiers?) {
+            self.nextClassifier = nextClassifier
+            self.hnnclassifier = hnnclassifier
+    }
+    
+    func shouldBeCensored(_ movieChunk: MovieChunk) -&gt; Bool {
+        let result = hnnclassifier.shouldBeCensored(movieChunk)
+        
+        print("Should censor movie chunk: \(movieChunk), reported by \(self)")
+        
+        if result == true {
+                return true
+        }
+        else {
+                return nextClassifier?.shouldBeCensored(movieChunk) ?? false
+        }
+    }
+}
+
+let censorshipClassifier = CensorshipClassifier(StateOfArtCensorshipHLNNClassifier("light"), nextClassifier: CensorshipClassifier(StateOfArtCensorshipHLNNClassifier("normal", nextClassifier: CensorshipClassifier(StateOfArtCensorshipHLNNClassifier("hard")))))
+
+let movie = Movie("Red Jah rising")
+for chunk in movie.chunks {
+    censorshipClassifier.shouldBeCensored(chunk)
+}
+</code></pre>
+<h3>References</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/chain-of-responsibility" target="_blank" rel="noopener noreferrer">https://refactoring.guru/ru/design-patterns/chain-of-responsibility</a></p>
+<h3>Source Code</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns/" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/patterns/</a></p>

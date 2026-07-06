@@ -1,0 +1,62 @@
+Format: Fall24-October10
+Language: ru
+Title: Сборка C++ SDL приложения для iOS на Linux
+Slug: linux-to-ios-crosscompile-sdl
+Categories: techie,tutorials
+<p>В данной заметке я опишу процедуру сборки C++ SDL приложения для iOS на Linux, подпись ipa архива без платной подписки Apple Developer и установку на чистое устройство (iPad) с помощью macOS без Jailbreak.</p>
+<p><iframe loading="lazy" title="1984 Apple&#039;s Macintosh Commercial (HD)" width="620" height="465" src="https://www.youtube.com/embed/VtvjbmoDx-I?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></p>
+<p>Для начала установим тулчейн сборки для Linux:<br />
+<a href="https://github.com/tpoechtrager/cctools-port" target="_blank" rel="noopener noreferrer">https://github.com/tpoechtrager/cctools-port</a></p>
+<p>Тулчейн нужно выгрузить из репозитория, далее по инструкции на сайте Godot Engine закончить установку:<br />
+<a href="https://docs.godotengine.org/ru/latest/development/compiling/cross-compiling_for_ios_on_linux.html" target="_blank" rel="noopener noreferrer">https://docs.godotengine.org/ru/latest/development/compiling/cross-compiling_for_ios_on_linux.html</a></p>
+<p>На данный момент требуется скачать Xcode dmg и скопировать оттуда sdk для сборки cctools-port. Данный этап проще проходить на macOS, достаточно скопировать из установленного Xcode необходимые файлы sdk. После успешной сборки, в терминале будет путь к тулчейну кросскомпилятора.</p>
+<p>Далее можно приступать к сборке SDL приложения для iOS. Откроем cmake и добавим необходимые изменения для сборки C++ кода:</p>
+<pre><code>
+SET(CMAKE_SYSTEM_NAME Darwin)
+SET(CMAKE_C_COMPILER arm-apple-darwin11-clang)
+SET(CMAKE_CXX_COMPILER arm-apple-darwin11-clang++)
+SET(CMAKE_LINKER arm-apple-darwin11-ld)
+
+</code></pre>
+<p>Теперь можно собирать с помощью cmake и make, но не забудьте прописать $PATH к тулчейну кросскомпилятора:</p>
+<pre><code>
+
+PATH=$PATH:~/Sources/cctools-port/usage_examples/ios_toolchain/target/bin
+
+</code></pre>
+<p>Для корректной линковки с фреймворками и SDL прописываем их в cmake, зависимости игры Space Jaguar для примера:</p>
+<pre><code>
+
+target_link_libraries(
+${FSEGT_PROJECT_NAME}
+${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/libclang_rt.ios.a
+${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/libSDL2.a
+${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/libSDL2_mixer.a
+${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/libSDL2_image.a
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/CoreServices.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/ImageIO.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/Metal.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/AVFoundation.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/GameController.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/CoreMotion.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/CoreGraphics.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/AudioToolbox.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/CoreAudio.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/QuartzCore.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/OpenGLES.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/UIKit.framework"
+"${FLAME_STEEL_PROJECT_ROOT_DIRECTORY}/scripts/buildScripts/ios/resources/libs/Foundation.framework"
+)
+
+</code></pre>
+<p>В моем случае библиотеки SDL, SDL_Image, SDL_mixer скомпилированы в Xcode на macOS заранее для статичной линковки; Фреймворки скопированы из Xcode. Также добавлена библиотека libclang_rt.ios.a, которая включает в себя специфические рантайм вызовы iOS, например isOSVersionAtLeast. Включен макрос для работы с OpenGL ES, отключение неподдерживаемых функций в мобильной версии, по аналогии с Android.</p>
+<p>После решения всех проблем сборки, вы должны получить собранный binary для arm. Далее рассмотрим запуск собранного бинарика на устройстве без Jailbreak.</p>
+<p>На macOS произведите установку Xcode, зарегистрируйтесь на портале Apple, без оплаты программы для разработчиков. Добавьте аккаунт в Xcode -&gt; Preferences -&gt; Accounts, создайте пустое приложение и соберите на реальном устройстве. Во время сборки устройство будет добавлено к бесплатному аккаунту разработчика. После сборки и запуска, нужно произвести сборку архива, для этого выберете Generic iOS Device и Product -&gt; Archive. По окончанию сборки архива достаньте из него файлы embedded.mobileprovision, PkgInfo. Из лога сборки на устройство найдите строку codesign с корректным ключом подписи, путь к файлу entitlements с расширением app.xcent, скопируйте его.</p>
+<p>Скопируйте папку .app из архива, замените бинарик в архиве на собранный кросскомпилятором в линуксе (например SpaceJaguar.app/SpaceJaguar), далее добавляем в .app необходимые ресурсы, проверьте сохранность PkgInfo и embedded.mobileprovision файлов в .app из архива, скопируйте заново если необходимо. Переподписываем .app с помощью команды codesign &#8211; codesign требует на вход ключ для sign, путь к файлу entitlements (можно переименовать с расширением .plist)</p>
+<p>После переподписывания создайте папку Payload, перенесите туда папку с расширением .app, создайте zip архив с Payload в корне, переименуйте архив с расширением .ipa. После этого в Xcode откройте список устройств и сделайте Drag’n’Drop нового ipa в список приложений устройства; Установка через Apple Configurator 2 для данного способа не работает. Если переподписывание произведено корректно, то приложение с новым бинариком будет установлено на iOS устройство (например iPad) с 7 дневным сертификатом, на период тестирования этого достаточно.</p>
+<h3>Источники</h3>
+<p><a href="https://github.com/tpoechtrager/cctools-port" target="_blank" rel="noopener noreferrer">https://github.com/tpoechtrager/cctools-port</a><br />
+<a href="https://docs.godotengine.org/ru/latest/development/compiling/cross-compiling_for_ios_on_linux.html" target="_blank" rel="noopener noreferrer">https://docs.godotengine.org/ru/latest/development/compiling/cross-compiling_for_ios_on_linux.html</a><br />
+<a href="https://jonnyzzz.com/blog/2018/06/13/link-error-3/" target="_blank" rel="noopener noreferrer">https://jonnyzzz.com/blog/2018/06/13/link-error-3/</a><br />
+<a href="https://stackoverflow.com/questions/6896029/re-sign-ipa-iphone" target="_blank" rel="noopener noreferrer">https://stackoverflow.com/questions/6896029/re-sign-ipa-iphone</a><br />
+<a href="https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html" target="_blank" rel="noopener noreferrer">https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html</a></p>

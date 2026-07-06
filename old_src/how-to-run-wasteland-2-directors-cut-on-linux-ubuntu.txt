@@ -1,0 +1,11 @@
+Format: Fall24-October10
+Language: ru
+Title: Юнити, почему Wasteland 2 не работает на моей убунте?
+Slug: how-to-run-wasteland-2-directors-cut-on-linux-ubuntu
+Categories: techie
+<p>Я горжусь тем что являюсь бакером игры Wasteland 2. Сегодня захотел запустить ее на убунте, но мне это не удалось. Однако после часа гугления все получилось. Оказывается у юнити нехилые проблемы с линуксом, но с помощью использования определенных костылей игру можно запустить:</p>
+<pre style="color: #000000; background: #ffffff;">ulimit -Sn 65536
+~/.local/share/Steam/steamapps/common/Wasteland\ 2\ Director\'s\ Cut/Linux/WL2
+</pre>
+<p>Рецепт отсюда:<br />
+<a href="https://forums.inxile-entertainment.com/viewtopic.php?t=15505" target="_blank">https://forums.inxile-entertainment.com/viewtopic.php?t=15505</a></p>

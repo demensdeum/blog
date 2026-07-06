@@ -1,0 +1,78 @@
+Format: Fall24-October10
+Language: ru
+Title: Квантовый генератор чисел и хак IBM Quantum Experience
+Slug: ibm-quantum-experience-number-generator
+Categories: blog,techie,tutorials
+<p><strong><em>Эта заметка увеличит длину вашего резюме на 5 см!</em></strong></p>
+<p>Без лишних слов о крутости квантовых компьютеров и всего такого, сегодня я покажу как сделать генератор чисел на реальном квантовом процессоре IBM.<br />
+Для этого мы будем использовать всего один <a href="https://ru.wikipedia.org/wiki/%D0%9A%D1%83%D0%B1%D0%B8%D1%82" target="_blank" rel="noopener">кубит</a>, фреймворк для разработки квантового ПО для python &#8211; <a href="https://github.com/ProjectQ-Framework/ProjectQ" target="_blank" rel="noopener">ProjectQ</a>, и 16 кубитовый процессор от IBM, онлайн доступ к которому открыт любому желающему по программе <a href="https://quantumexperience.ng.bluemix.net/qx/community">IBM Quantum Experience</a>.</p>
+<h3>Установка ProjectQ</h3>
+<p>Для начала у вас должен быть <a href="https://ru.wikipedia.org/wiki/Ubuntu" target="_blank" rel="noopener">Linux</a>, <a href="https://ru.wikipedia.org/wiki/Python" target="_blank" rel="noopener">Python</a> и <a href="https://en.wikipedia.org/wiki/Pip_(package_manager)" target="_blank" rel="noopener">pip</a>. Какие либо инструкции по установке этих базовых вещей приводить бесполезно, т.к. в любом случае инструкции устареют через неделю, поэтому просто найдите гайд по установке на официальном сайте. Далее устанавливаем <a href="https://github.com/ProjectQ-Framework/ProjectQ" target="_blank" rel="noopener">ProjectQ</a>, гайд по установке приведен в <a href="http://projectq.readthedocs.io/en/latest/tutorials.html" target="_blank" rel="noopener">документации</a>. На данный момент все свелось к установке пакета ProjectQ через pip, одной командой: <strong>python -m pip install &#8211;user projectq</strong></p>
+<h3>Ставим кубит в суперпозицию</h3>
+<p>Создаем файл <strong>quantumNumberGenerator.py</strong> и берем <a href="http://projectq.readthedocs.io/en/latest/examples.html#quantum-random-numbers" target="_blank" rel="noopener">пример генератора бинарного числа</a> из документации ProjectQ, просто добавляем в него цикл на 32 шага, собираем бинарную строку и переводим в 32-битное число:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #008800; font-weight: bold;">import</span> <span style="color: #0e84b5; font-weight: bold;">projectq.setups.ibm</span>
+<span style="color: #008800; font-weight: bold;">from</span> <span style="color: #0e84b5; font-weight: bold;">projectq.ops</span> <span style="color: #008800; font-weight: bold;">import</span> H, Measure
+<span style="color: #008800; font-weight: bold;">from</span> <span style="color: #0e84b5; font-weight: bold;">projectq</span> <span style="color: #008800; font-weight: bold;">import</span> MainEngine
+<span style="color: #008800; font-weight: bold;">from</span> <span style="color: #0e84b5; font-weight: bold;">projectq.backends</span> <span style="color: #008800; font-weight: bold;">import</span> IBMBackend
+
+binaryString <span style="color: #333333;">=</span> <span style="background-color: #fff0f0;">""</span>
+
+eng <span style="color: #333333;">=</span> MainEngine()
+
+<span style="color: #008800; font-weight: bold;">for</span> i <span style="color: #000000; font-weight: bold;">in</span> <span style="color: #007020;">range</span>(<span style="color: #0000dd; font-weight: bold;">1</span>, <span style="color: #0000dd; font-weight: bold;">33</span>):
+
+ qubit <span style="color: #333333;">=</span> eng<span style="color: #333333;">.</span>allocate_qubit()
+
+ H <span style="color: #333333;">|</span> qubit
+
+ Measure <span style="color: #333333;">|</span> qubit
+
+ eng<span style="color: #333333;">.</span>flush()
+
+ binaryString <span style="color: #333333;">=</span> binaryString <span style="color: #333333;">+</span> <span style="color: #007020;">str</span>(<span style="color: #007020;">int</span>(qubit))
+
+ <span style="color: #008800; font-weight: bold;">print</span>(<span style="background-color: #fff0f0;">"Step "</span> <span style="color: #333333;">+</span> <span style="color: #007020;">str</span>(i))
+
+number <span style="color: #333333;">=</span> <span style="color: #007020;">int</span>(binaryString, <span style="color: #0000dd; font-weight: bold;">2</span>)
+
+<span style="color: #008800; font-weight: bold;">print</span>(<span style="background-color: #fff0f0;">"</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0;">\n</span><span style="background-color: #fff0f0;">--- Quantum 32-Bit Number Generator by demensdeum@gmail.com (2017) ---</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0;">\n</span><span style="background-color: #fff0f0;">"</span>)
+<span style="color: #008800; font-weight: bold;">print</span>(<span style="background-color: #fff0f0;">"Binary: "</span> <span style="color: #333333;">+</span> binaryString)
+<span style="color: #008800; font-weight: bold;">print</span>(<span style="background-color: #fff0f0;">"Number: "</span> <span style="color: #333333;">+</span> <span style="color: #007020;">str</span>(number))
+<span style="color: #008800; font-weight: bold;">print</span>(<span style="background-color: #fff0f0;">"</span><span style="color: #666666; font-weight: bold; background-color: #fff0f0;">\n</span><span style="background-color: #fff0f0;">---"</span>)
+</pre>
+</div>
+<p>Запускаем и получаем число из квантового симулятора с помощью команды <strong>python quantumNumberGenerator.py</strong></p>
+<p>Незнаю как вы, но я получил вывод и число <strong>3974719468</strong>:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">--- Quantum 32-Bit Number Generator by demensdeum@gmail.com <span style="color: #333333;">(</span>2017<span style="color: #333333;">)</span> ---
+
+Binary: 11101100111010010110011111101100
+Number: 3974719468
+
+---
+</pre>
+</div>
+<p>Хорошо, теперь мы запустим наш генератор на реальном квантовом процессоре IBM.</p>
+<h3>Хакаем IBM</h3>
+<p>Проходим <a href="https://quantumexperience.ng.bluemix.net/qx/signup" target="_blank" rel="noopener">регистрацию</a> на сайте IBM Quantum Experience, подтверждаем email, в итоге должен остаться email и пароль для доступа.<br />
+Далее включаем айбиэмовский движок, меняем строку <strong>eng = MainEngine()</strong> -&gt; <strong>eng = MainEngine(IBMBackend())<br />
+</strong>В теории после этого вы запускаете код снова и теперь он работает на реальном квантовом процессоре, используя один кубит. <em>Однако</em> после запуска вам придется 32 раза набрать свой email и пароль при каждой аллокации реального кубита. Обойти это можно прописав свой email и пароль прямо в библиотеки ProjectQ.</p>
+<p>Заходим в папку где лежит фреймворк ProjectQ, ищем файл с помощью grep по строке <strong>IBM QE user (e-mail).<br />
+</strong>В итоге я исправил строки в файле<strong> projectq/backends/_ibm/_ibm_http_client.py</strong>:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #996633;">email</span> <span style="color: #333333;">=</span> input_fun<span style="color: #333333;">(</span><span style="background-color: #fff0f0;">'IBM QE user (e-mail) &gt; '</span><span style="color: #333333;">)</span> -&gt; <span style="color: #996633;">email</span> <span style="color: #333333;">=</span> <span style="background-color: #fff0f0;">"quantumPsycho@aport.ru"</span>
+
+<span style="color: #996633;">password</span> <span style="color: #333333;">=</span> getpass.getpass<span style="color: #333333;">(</span><span style="color: #996633;">prompt</span><span style="color: #333333;">=</span><span style="background-color: #fff0f0;">'IBM QE password &gt; '</span><span style="color: #333333;">)</span> -&gt; <span style="color: #996633;">password</span> <span style="color: #333333;">=</span> <span style="background-color: #fff0f0;">"ilovequbitsandicannotlie"</span>
+</pre>
+</div>
+<p>Напишите свой email и password со-но.</p>
+<p>После этого IBM будет отправлять результаты работы с кубитом онлайн прямо в ваш скрипт, процесс генерации занимает около 20 секунд.</p>
+<p>Возможно в дальнейшем я доберусь до работы квантового регистра, и возможно будет туториал, но это не обязательно.<br />
+Да прибудет с вами запутанность.</p>
+<p>Статья на похожую тему:<br />
+<a href="https://medium.com/@decodoku/introducing-the-worlds-first-game-for-a-quantum-computer-50640e3c22e4" target="_blank" rel="noopener">Introducing the world’s first game for a quantum computer</a></p>
+<p><!-- HTML generated using hilite.me --></p>

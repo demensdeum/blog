@@ -1,0 +1,25 @@
+Format: Fall24-October10
+Language: ru
+Title: Потерянные исключения Emscripten и проблемы regex
+Slug: webassembly-lost-exceptions-and-regex-troubles
+Categories: dev-diary,hints,techie
+<h3>Потерянные exception</h3>
+<p>Интересная особенность Emscripten, при запуске игрового цикла через emscripten_set_main_loop, следует помнить о том что хэндлинг исключений должен быть заново добавлен через try catch прямо в методе цикла, т.к. рантайм теряет блок try catch извне.<br />
+Проще всего выводить текст ошибки силами браузера, используя javascript alert:</p>
+<pre><code>
+            catch (const std::exception &exc)
+            {
+                const char *errorText = exc.what();
+                cout << "Exception: " << errorText << "; Stop execution" << endl;
+
+                EM_ASM_(
+                {
+                    var errorText = UTF8ToString($0);
+                    alert(errorText);
+
+                }, errorText);
+
+                abort();
+</code></pre>
+<h3>Слишком сложный regexp</h3>
+<p>Релизация regex в std может кинуть исключение error_complexity, если посчитает регулярное выражение слишком сложным. Такое происходит в текущей реализации emscripten, так что предлагаю вам реализовать тесты для парсинга через регулярки, либо использовать сторонние реализации regex.</p>

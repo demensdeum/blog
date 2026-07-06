@@ -1,0 +1,8 @@
+Format: Fall24-October10
+Language: ru
+Title: Swift 4.2.3 &#8211; Ubuntu 18.10
+Slug: swift-4-2-3-ubuntu-18-10
+Categories: software
+<p></p>
+<p>Сборка Swift с необходимыми библотеками для запуска на Ubuntu 18.10. Последняя доступная версия на сайте Apple &#8211; для Ubuntu 18.04. Основана на сборке с официального сайта с добавлением библиотек из Ubuntu 18.04. Также добавлен пример скрипта для добавления PATH и LD_LIBRARY_PATH для терминала bash:<br /><a href="https://www.mediafire.com/file/5rk4vkzo4vq6w52/swift4.2.3.ubuntu.18.10.x86_64.tar.gz/file" target="_blank" rel="noreferrer noopener" aria-label=" (opens in a new tab)">http://www.mediafire.com/file/lrs74mvoj3fti03/swift4.2.3.ubuntu.18.10.x86_64.tar.gz/file</a></p>
+<p></p>

@@ -1,0 +1,41 @@
+Format: Fall24-October10
+Language: ru
+Title: Shared Library CMake C++
+Slug: shared-library-cmake-c
+Categories: techie,tutorials
+<p>Недавно решил сделать все части FlameSteelFramework отдельными shared библиотеками, далее покажу пример CMakeLists.txt файла для <a href="https://gitlab.com/demensdeum/FlameSteelCore" target="_blank" rel="noopener noreferrer">FlameSteelCore</a>:</p>
+<pre><code class="language-bash">
+cmake_minimum_required(VERSION 3.5)
+
+project (FlameSteelCore)
+set(CMAKE_BUILD_TYPE Release)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+file(GLOB_RECURSE SOURCE_FILES
+    "src/FlameSteelCore/*.cpp"
+)
+
+add_library(FlameSteelCore SHARED ${SOURCE_FILES})
+
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/src/FlameSteelCore"
+        DESTINATION include/FlameSteelFramework
+        FILES_MATCHING
+        PATTERN "*.h"
+)
+
+install(TARGETS FlameSteelCore DESTINATION lib)
+</code></pre>
+<p>Команды которые выполняет CMake: собирает все файлы с расширением *.cpp из директории src/FlameSteelCore/ в shared library, копирует все хидеры с расширением *.h из src/FlameSteelCore в include/FlameSteelFramework (в моем случае это /usr/local/include/FlameSteelFramework), копирует shared lib в директорию lib (/usr/local/lib)<br />
+После установки возможно будет необходимо обновить кэш LD &#8211; sudo ldconfig.<br />
+Для сборки и установки на Ubuntu (при наличии корректного тулчейна сборки) достаточно выполнить команды:</p>
+<pre><code class="language-bash">
+cmake . && make && sudo make install
+</code></pre>
+<p>Для проверки процесса установки я передаю make prefix в локальную папку makeInstallTestPlayground:</p>
+<pre><code class="language-bash">
+cmake -DCMAKE_INSTALL_PREFIX:PATH=/home/demensdeum/makeInstallTestPlayground . && make && make install
+</code></pre>
+<h3>References</h3>
+<p><a href="https://stackoverflow.com/questions/17511496/how-to-create-a-shared-library-with-cmake" target="_blank" rel="noopener noreferrer">https://stackoverflow.com/questions/17511496/how-to-create-a-shared-library-with-cmake</a><br />
+<a href="https://stackoverflow.com/questions/6003374/what-is-cmake-equivalent-of-configure-prefix-dir-make-all-install" target="_blank" rel="noopener noreferrer">https://stackoverflow.com/questions/6003374/what-is-cmake-equivalent-of-configure-prefix-dir-make-all-install</a></p>

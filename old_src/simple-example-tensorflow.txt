@@ -1,0 +1,125 @@
+Format: Fall24-October10
+Language: ru
+Title: Простой пример TensorFlow
+Slug: simple-example-tensorflow
+Categories: techie,tutorials
+<p>Представляю вашему вниманию простейший пример работы с фреймворком для работы с Deep Learning &#8211; TensorFlow. В этом примере мы научим нейросеть определять положительние, отрицательные числа и ноль. Установку <a href="https://www.tensorflow.org/" target="_blank" rel="noopener">TensorFlow</a> и <a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">CUDA</a> я поручаю вам, эта задачка действительно не из легких)</p>
+<p>Для решения задач классификации используются <a href="https://ru.wikipedia.org/wiki/%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0_%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D0%B8" target="_blank" rel="noopener">классификаторы</a>. <a href="https://www.tensorflow.org/" target="_blank" rel="noopener">TensorFlow</a> имеет несколько готовых высокоуровневых классификаторов, которые требуют минимальной конфигурации для работы. Сначала мы потренируем <a href="https://www.tensorflow.org/versions/master/api_docs/python/tf/estimator/DNNClassifier" target="_blank" rel="noopener">DNNClassifier</a> с помощью датасета с положительными, отрицательными числами и нулем &#8211; с корректными &#8220;лейблами&#8221;. На человеческом уровне датасет представляет из себя набор чисел с результатом классификации (лейблами):</p>
+<p><strong><em>10 &#8211; положительное</em></strong><br />
+<strong><em>-22 &#8211; отрицательное</em></strong><br />
+<strong><em>0 &#8211; ноль</em></strong><br />
+<strong><em>42 &#8211; положительное<br />
+&#8230; другие числа с классификацией<br />
+</em></strong><br />
+Далее запускается обучение, после окончания которого можно подавать на вход числа которые даже не входили в датасет &#8211; нейросеть должна корректно их определять.<br />
+Ниже приведен полный код классификатора с генератором датасета для обучения и входных данных:<br />
+<!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #008800; font-weight: bold;">import</span> <span style="color: #0e84b5; font-weight: bold;">tensorflow</span>
+<span style="color: #008800; font-weight: bold;">import</span> <span style="color: #0e84b5; font-weight: bold;">itertools</span>
+<span style="color: #008800; font-weight: bold;">import</span> <span style="color: #0e84b5; font-weight: bold;">random</span>
+
+<span style="color: #008800; font-weight: bold;">from</span> <span style="color: #0e84b5; font-weight: bold;">time</span> <span style="color: #008800; font-weight: bold;">import</span> time
+
+<span style="color: #008800; font-weight: bold;">class</span> <span style="color: #bb0066; font-weight: bold;">ClassifiedNumber</span>:
+    
+    __number <span style="color: #333333;">=</span> <span style="color: #0000dd; font-weight: bold;">0</span>
+    __classifiedAs <span style="color: #333333;">=</span> <span style="color: #0000dd; font-weight: bold;">3</span>
+    
+    <span style="color: #008800; font-weight: bold;">def</span> <span style="color: #0066bb; font-weight: bold;">__init__</span>(<span style="color: #007020;">self</span>, number):
+        
+        <span style="color: #007020;">self</span><span style="color: #333333;">.</span>__number <span style="color: #333333;">=</span> number
+        
+        <span style="color: #008800; font-weight: bold;">if</span> number <span style="color: #333333;">==</span> <span style="color: #0000dd; font-weight: bold;">0</span>:
+            <span style="color: #007020;">self</span><span style="color: #333333;">.</span>__classifiedAs <span style="color: #333333;">=</span> <span style="color: #0000dd; font-weight: bold;">0</span> <span style="color: #888888;"># zero</span>
+            
+        <span style="color: #008800; font-weight: bold;">elif</span> number <span style="color: #333333;">&gt;</span> <span style="color: #0000dd; font-weight: bold;">0</span>:
+            <span style="color: #007020;">self</span><span style="color: #333333;">.</span>__classifiedAs <span style="color: #333333;">=</span> <span style="color: #0000dd; font-weight: bold;">1</span> <span style="color: #888888;"># positive</span>
+            
+        <span style="color: #008800; font-weight: bold;">elif</span> number <span style="color: #333333;">&lt;</span> <span style="color: #0000dd; font-weight: bold;">0</span>:
+            <span style="color: #007020;">self</span><span style="color: #333333;">.</span>__classifiedAs <span style="color: #333333;">=</span> <span style="color: #0000dd; font-weight: bold;">2</span> <span style="color: #888888;"># negative</span>
+            
+    <span style="color: #008800; font-weight: bold;">def</span> <span style="color: #0066bb; font-weight: bold;">number</span>(<span style="color: #007020;">self</span>):
+        <span style="color: #008800; font-weight: bold;">return</span> <span style="color: #007020;">self</span><span style="color: #333333;">.</span>__number
+    
+    <span style="color: #008800; font-weight: bold;">def</span> <span style="color: #0066bb; font-weight: bold;">classifiedAs</span>(<span style="color: #007020;">self</span>):
+        <span style="color: #008800; font-weight: bold;">return</span> <span style="color: #007020;">self</span><span style="color: #333333;">.</span>__classifiedAs
+    
+<span style="color: #008800; font-weight: bold;">def</span> <span style="color: #0066bb; font-weight: bold;">classifiedAsString</span>(classifiedAs):
+    
+    <span style="color: #008800; font-weight: bold;">if</span> classifiedAs <span style="color: #333333;">==</span> <span style="color: #0000dd; font-weight: bold;">0</span>:
+        <span style="color: #008800; font-weight: bold;">return</span> <span style="background-color: #fff0f0;">"Zero"</span>
+    
+    <span style="color: #008800; font-weight: bold;">elif</span> classifiedAs <span style="color: #333333;">==</span> <span style="color: #0000dd; font-weight: bold;">1</span>:
+        <span style="color: #008800; font-weight: bold;">return</span> <span style="background-color: #fff0f0;">"Positive"</span>
+    
+    <span style="color: #008800; font-weight: bold;">elif</span> classifiedAs <span style="color: #333333;">==</span> <span style="color: #0000dd; font-weight: bold;">2</span>:
+        <span style="color: #008800; font-weight: bold;">return</span> <span style="background-color: #fff0f0;">"Negative"</span>
+
+<span style="color: #008800; font-weight: bold;">def</span> <span style="color: #0066bb; font-weight: bold;">trainDatasetFunction</span>():
+    
+    trainNumbers <span style="color: #333333;">=</span> []
+    trainNumberLabels <span style="color: #333333;">=</span> []
+    
+    <span style="color: #008800; font-weight: bold;">for</span> i <span style="color: #000000; font-weight: bold;">in</span> <span style="color: #007020;">range</span>(<span style="color: #333333;">-</span><span style="color: #0000dd; font-weight: bold;">1000</span>, <span style="color: #0000dd; font-weight: bold;">1001</span>):    
+        number <span style="color: #333333;">=</span> ClassifiedNumber(i)
+        trainNumbers<span style="color: #333333;">.</span>append(number<span style="color: #333333;">.</span>number())
+        trainNumberLabels<span style="color: #333333;">.</span>append(number<span style="color: #333333;">.</span>classifiedAs())
+    
+    <span style="color: #008800; font-weight: bold;">return</span> ( {<span style="background-color: #fff0f0;">"number"</span> : trainNumbers } , trainNumberLabels )
+
+<span style="color: #008800; font-weight: bold;">def</span> <span style="color: #0066bb; font-weight: bold;">inputDatasetFunction</span>():
+    
+    <span style="color: #008800; font-weight: bold;">global</span> randomSeed
+    random<span style="color: #333333;">.</span>seed(randomSeed) <span style="color: #888888;"># to get same result</span>
+    
+    numbers <span style="color: #333333;">=</span> []
+    
+    <span style="color: #008800; font-weight: bold;">for</span> i <span style="color: #000000; font-weight: bold;">in</span> <span style="color: #007020;">range</span>(<span style="color: #0000dd; font-weight: bold;">0</span>, <span style="color: #0000dd; font-weight: bold;">4</span>):
+        numbers<span style="color: #333333;">.</span>append(random<span style="color: #333333;">.</span>randint(<span style="color: #333333;">-</span><span style="color: #0000dd; font-weight: bold;">9999999</span>, <span style="color: #0000dd; font-weight: bold;">9999999</span>))
+    
+    <span style="color: #008800; font-weight: bold;">return</span> {<span style="background-color: #fff0f0;">"number"</span> : numbers }
+    
+<span style="color: #008800; font-weight: bold;">def</span> <span style="color: #0066bb; font-weight: bold;">main</span>():
+    
+    <span style="color: #007020;">print</span>(<span style="background-color: #fff0f0;">"TensorFlow Positive-Negative-Zero numbers classifier test by demensdeum 2017 (demensdeum@gmail.com)"</span>)
+    
+    maximalClassesCount <span style="color: #333333;">=</span> <span style="color: #007020;">len</span>(<span style="color: #007020;">set</span>(trainDatasetFunction()[<span style="color: #0000dd; font-weight: bold;">1</span>])) <span style="color: #333333;">+</span> <span style="color: #0000dd; font-weight: bold;">1</span>
+    
+    numberFeature <span style="color: #333333;">=</span> tensorflow<span style="color: #333333;">.</span>feature_column<span style="color: #333333;">.</span>numeric_column(<span style="background-color: #fff0f0;">"number"</span>)
+    classifier <span style="color: #333333;">=</span> tensorflow<span style="color: #333333;">.</span>estimator<span style="color: #333333;">.</span>DNNClassifier(feature_columns <span style="color: #333333;">=</span> [numberFeature], hidden_units <span style="color: #333333;">=</span> [<span style="color: #0000dd; font-weight: bold;">10</span>, <span style="color: #0000dd; font-weight: bold;">20</span>, <span style="color: #0000dd; font-weight: bold;">10</span>], n_classes <span style="color: #333333;">=</span> maximalClassesCount)
+    generator <span style="color: #333333;">=</span> classifier<span style="color: #333333;">.</span>train(input_fn <span style="color: #333333;">=</span> trainDatasetFunction, steps <span style="color: #333333;">=</span> <span style="color: #0000dd; font-weight: bold;">1000</span>)<span style="color: #333333;">.</span>predict(input_fn <span style="color: #333333;">=</span> inputDatasetFunction)
+    
+    inputDataset <span style="color: #333333;">=</span> inputDatasetFunction()
+    
+    results <span style="color: #333333;">=</span> <span style="color: #007020;">list</span>(itertools<span style="color: #333333;">.</span>islice(generator, <span style="color: #007020;">len</span>(inputDatasetFunction()[<span style="background-color: #fff0f0;">"number"</span>])))
+    
+    i <span style="color: #333333;">=</span> <span style="color: #0000dd; font-weight: bold;">0</span>
+    <span style="color: #008800; font-weight: bold;">for</span> result <span style="color: #000000; font-weight: bold;">in</span> results:
+        <span style="color: #007020;">print</span>(<span style="background-color: #fff0f0;">"number: %d classified as %s"</span> <span style="color: #333333;">%</span> (inputDataset[<span style="background-color: #fff0f0;">"number"</span>][i], classifiedAsString(result[<span style="background-color: #fff0f0;">"class_ids"</span>][<span style="color: #0000dd; font-weight: bold;">0</span>])))
+        i <span style="color: #333333;">+=</span> <span style="color: #0000dd; font-weight: bold;">1</span>
+
+randomSeed <span style="color: #333333;">=</span> time()
+
+main()
+</pre>
+</div>
+<p>Все начинается в методе main(), мы задаем числовую колонку с которой будет работать классификатор &#8211; <strong>tensorflow.feature_column.numeric_column(&#8220;number&#8221;)</strong> далее задаются параметры классификатора. Описывать текущие аргументы инициализации бесполезно, так как API меняется каждый день, и обязательно нужно смотреть документацию именно установленной версии TensorFlow, не полагаться на устаревшие мануалы.</p>
+<p>Далее запускается обучение с указанием на функцию которая возвращает датасет из чисел от -1000 до 1000 (<strong>trainDatasetFunction</strong>), с правильной классификацией этих чисел по признаку положительного, отрицательного либо нуля. Следом подаем на вход числа которых не было в обучающем датасете &#8211; случайные от -9999999 до 9999999 (<strong>inputDatasetFunction</strong>) для их классификации.</p>
+<p>В финале запускаем итерации по количеству входных данных (<strong>itertools.islice</strong>) печатаем результат, запускаем и удивляемся:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">number: 4063470 classified as Positive
+number: 6006715 classified as Positive
+number: -5367127 classified as Negative
+number: -7834276 classified as Negative
+</pre>
+</div>
+<blockquote class="imgur-embed-pub" lang="en" data-id="mTS5bXR"><p><a href="//imgur.com/mTS5bXR">iT&#8217;S ALIVE</a></p></blockquote>
+<p><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></p>
+<p>Честно говоря я до сих пор немного удивлен что классификатор *понимает* даже те числа которым я его не обучал. Надеюсь в дальнейшем я разберусь более подробно с темой машинного обучения и будут еще туториалы.</p>
+<p>GitLab:<br />
+<a href="https://gitlab.com/demensdeum/MachineLearning" target="_blank" rel="noopener">https://gitlab.com/demensdeum/MachineLearning</a></p>
+<p>Ссылки:<br />
+<a href="https://developers.googleblog.com/2017/09/introducing-tensorflow-datasets.html" target="_blank" rel="noopener">https://developers.googleblog.com/2017/09/introducing-tensorflow-datasets.html</a><br />
+<a href="https://www.tensorflow.org/versions/master/api_docs/python/tf/estimator/DNNClassifier" target="_blank" rel="noopener">https://www.tensorflow.org/versions/master/api_docs/python/tf/estimator/DNNClassifier</a></p>

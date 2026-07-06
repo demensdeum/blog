@@ -1,0 +1,47 @@
+Format: Fall24-October10
+Language: ru
+Title: Пишем на Ассемблере для Sega Genesis #1
+Slug: writing-stuff-in-assembly-for-sega-genesis-1
+Categories: techie,tutorials
+<p>Первая статья посвященная написанию игр для классической приставки Sega Genesis на Ассемблере Motorola 68000.</p>
+<p>Напишем простейший бесконечный цикл для Сеги. Для этого нам понадобятся: ассемблер, эмулятор с дизассемблером, любимый текстовый редактор, базовое понимание строения рома Сеги.</p>
+<p>Для разработки я использую собственный ассемблер/дизассемблер Gen68KryBaby:</p>
+<p><a href="https://gitlab.com/demensdeum/gen68krybaby/" target="_blank" rel="noopener">https://gitlab.com/demensdeum/gen68krybaby/</a></p>
+<p>Тул разработан на языке Python 3, для сборки на вход подается файл с расширением .asm либо .gen68KryBabyDisasm, на выходе получается файл с расширением.gen68KryBabyAsm.bin, который можно запустить в эмуляторе, либо на реальной приставке (осторожно, отойдите подальше, приставка может взорваться!)</p>
+<p>Также поддерживается дизассемблинг ромов, для этого на вход надо подать файл рома, вне расширений .asm или .gen68KryBabyDisasm. Поддержка опкодов будет увеличиваться или уменьшаться в зависимости от моего интереса к теме, участия контрибьютеров.</p>
+<h3>Структура</h3>
+<p>Заголовок рома Сеги занимает первые 512 байт. В нем содержится информация об игре, название, поддерживаемая периферия, чексумма, прочие системные флаги. Предполагаю, что без заголовка приставка даже не будет смотреть на ром, подумав, что он некорректный, мол “что вы мне тут даете?”</p>
+<p>После заголовка идет сабрутина/подпрограмма Reset, с нее начинается работа процессора m68K. Хорошо, дело за малым &#8211; найти опкоды (коды операций), а именно выполнение ничего(!) и переход на сабрутину по адресу в памяти. Погуглив, можно найти опкод NOP, которые не делает ничего и опкод JSR который осуществляет безусловный переход на адрес аргумент, то есть просто двигает каретку туда куда мы его просим, без всяких капризов.</p>
+<h3>Собираем все вместе</h3>
+<p>Донором заголовка для рома выступила одна из игр в Beta версии, на данный момент записывается в виде hex данных.</p>
+<pre><code>ROM HEADER: 
+
+ 00 ff 2b 52 00 00 02 00 00 00 49 90 00 00 49 90 00 00 49 90 00...и т.д. </code></pre>
+<p>Код программы со-но представляет из себя объявление сабрутины Reset/EntryPoint в 512 (0x200) байте, NOP, возврат каретки к 0x00000200, таким образом мы получим бесконечный цикл.</p>
+<p>Ассемблерный код сабрутины Reset/EntryPoint:</p>
+<pre><code>SUBROUTINE_EntryPoint:
+    NOP
+    NOP
+    NOP 
+    NOP
+    NOP
+    JSR 0x00000200  
+</code></pre>
+<p>Полный пример вместе с заголовком рома:</p>
+<p><a href="https://gitlab.com/demensdeum/segagenesissamples/-/blob/main/1InfiniteLoop/1infiniteloop.asm" rel="noopener" target="_blank">https://gitlab.com/demensdeum/segagenesissamples/-/blob/main/1InfiniteLoop/1infiniteloop.asm</a></p>
+<p>Далее собираем:</p>
+<pre><code>python3 gen68krybaby.py 1infiniteloop.asm</code></pre>
+<p>Запускаем ром 1infiniteloop.asm.gen68KryBabyAsm.bin в режиме дебаггера эмулятора Exodus/Gens, смотрим что m68K корректно считывает NOP, и бесконечно прыгает к EntryPoint в 0x200 на JSR</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2933" src="https://demensdeum.com/blog/wp-content/uploads/2021/07/JSR.jpg" alt="" width="804" height="652" srcset="https://demensdeum.com/blog/wp-content/uploads/2021/07/JSR.jpg 804w, https://demensdeum.com/blog/wp-content/uploads/2021/07/JSR-300x243.jpg 300w, https://demensdeum.com/blog/wp-content/uploads/2021/07/JSR-768x623.jpg 768w" sizes="auto, (max-width: 804px) 100vw, 804px" /></p>
+<p>Здесь должен быть Соник показывающий V, но он уехал на <a href="https://www.wacken.com" target="_blank" rel="noopener">Вакен</a>.</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/gen68krybaby/" target="_blank" rel="noopener">https://gitlab.com/demensdeum/gen68krybaby/</a></p>
+<p><a href="https://gitlab.com/demensdeum/segagenesissamples" target="_blank" rel="noopener">https://gitlab.com/demensdeum/segagenesissamples</a></p>
+<p><a href="https://www.exodusemulator.com/downloads/release-archive" target="_blank" rel="noopener">https://www.exodusemulator.com/downloads/release-archive</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.youtube.com/watch?v=mrKFbZGTnNk" target="_blank" rel="noopener">ROM Hacking Demo &#8211; Genesis and SNES games in 480i</a></p>
+<p><a href="http://68k.hax.com/" target="_blank" rel="noopener">http://68k.hax.com/</a></p>
+<p><a href="https://www.chibiakumas.com/68000/genesis.php" target="_blank" rel="noopener">https://www.chibiakumas.com/68000/genesis.php</a></p>
+<p><a href="https://plutiedev.com/rom-header" target="_blank" rel="noopener">https://plutiedev.com/rom-header</a></p>
+<p><a href="https://blog.bigevilcorporation.co.uk/2012/02/28/sega-megadrive-1-getting-started/" target="_blank" rel="noopener">https://blog.bigevilcorporation.co.uk/2012/02/28/sega-megadrive-1-getting-started/</a></p>
+<p><a href="https://opensource.apple.com/source/cctools/cctools-836/as/m68k-opcode.h.auto.html" target="_blank" rel="noopener">https://opensource.apple.com/source/cctools/cctools-836/as/m68k-opcode.h.auto.html</a></p>

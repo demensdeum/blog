@@ -1,0 +1,22 @@
+Format: Fall24-October10
+Language: ru
+Title: Можно ли&#8230;
+Slug: sharedemons
+Categories: misc
+<p><em>Вопрос: &#8220;Можно ли мне скопировать игру <a href="http://demensdeum.com/games/demonsCave/" target="_blank">Demon&#8217;s Cave</a> на свой сайт, или блог, или на свою страницу между умилительными котятами и цитатами Коэльо / Стэтхэма?&#8221;<br />
+</em><strong>Нельзя</strong>, я запрещаю лично. Шучу, не лично. Просто скопируй и вставь HTML код:</p>
+<pre style="color: #000000; background: #ffffff;"><span style="color: #a65700;"><</span><span style="color: #800000; font-weight: bold;">iframe</span> <span style="color: #074726;">width</span><span style="color: #808030;">=</span><span style="color: #0000e6;">"640"</span> <span style="color: #074726;">height</span><span style="color: #808030;">=</span><span style="color: #0000e6;">"384"
+</span><span style="color: #074726;">src</span><span style="color: #808030;">=</span><span style="color: #0000e6;">"https://mocha2005.mochahost.com/~demens/games/demonsCave/"</span><span style="color: #a65700;">></span><span style="color: #a65700;">
+<</span><span style="color: #800000; font-weight: bold;">/iframe</span><span style="color: #a65700;">></span>
+</pre>
+<p>Ссылка на jsfiddle с примером: <a href="https://jsfiddle.net/ovL04dqL/3/" target="_blank">https://jsfiddle.net/ovL04dqL/3/</a></p>
+<p><em>Вопрос: &#8220;Я хочу повесить <a href="http://demensdeum.com/games/demonsCave/" target="_blank">Demon&#8217;s Cave</a> на страницу с рекламой, можно?&#8221;</em><br />
+Да, тебе все можно.</p>
+<p><em>Вопрос: &#8220;Я хочу продавать игру <a href="http://demensdeum.com/games/demonsCave/" target="_blank">Demon&#8217;s Cave</a>, можно?&#8221;<br />
+</em>Можешь делать с движком игры <strong>fsagamelibrary.js</strong> что угодно, только оставь линк на <a href="http://demensdeum.com" target="_blank">demensdeum.com<br />
+</a>А вот графику и музыку надо либо купить (та что платная), либо использовать свою. Подробнее список ресурсов <a href="http://demensdeum.com/games/demonsCave/info.html" target="_blank">тут</a>.<br />
+Если ты не оставишь ссылку на главный сайт, то <strong>демон придет в твои сны.</strong></p>
+<p><em>Вопрос: &#8220;Я хочу сделать мод игры <a href="http://demensdeum.com/games/demonsCave/" target="_blank">Demon&#8217;s Cave</a>, или вообще сделать ее в 3д на юнити, можно я потом ссылку кину тебе?&#8221;<br />
+</em>Конечно<em>. </em>Кидай <em><a href="http://vk.com/demensdeum" target="_blank">вк</a>.<br />
+</em></p>
+<p>Страница с указанием авторов ресурсов, перечисление лицензий <a href="http://demensdeum.com/games/demonsCave/info.html" target="_blank">demensdeum.com/games/demonsCave/info.html</a></p>

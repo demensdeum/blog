@@ -1,0 +1,68 @@
+Format: Fall24-October10
+Language: ru
+Title: Binary Insertion Sort
+Slug: binary-insertion-sort
+Categories: techie,tutorials
+<p>Binary Insertion Sort – вариант сортировки вставками, в котором позицию для вставки определяют с помощью двоичного поиска. Временная сложность алгоритма O(n<sup>2</sup>)</p>
+<p>Алгоритм работает так:</p>
+<ol>
+<li>Запускается цикл от нуля до конца списка</li>
+<li>В цикле выбирается число для сортировки, число сохраняется в отдельную переменную</li>
+<li>Бинарным поиском ищется индекс для вставки этого числа по сравнению с числами слева</li>
+<li>После нахождения индекса, числа слева сдвигаются на одну позицию вправо, начиная с индекса вставки. В процессе будет стерто число которое нужно отсортировать.</li>
+<li>Сохраненное ранее число вставляется по индексу вставки</li>
+<li>По окончанию цикла весь список будет отсортирован</li>
+</ol>
+<p>Во время выполнения бинарного поиска, возможна ситуация когда число не будет найдено, со-но не возвращен индекс. Из-за особенности работы бинарного поиска, будет найдено число наиболее близкое к искомому, тогда для возврата индекса нужно будет сравнить его с искомым, если искомое меньше, то искомое должно быть по индексу слева, а если больше или равно то справа.</p>
+<p>Код на Go:</p>
+<div class="hcb_wrap">
+<pre class="prism line-numbers lang-c" data-lang="C"><code>package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+const numbersCount = 20
+const maximalNumber = 100
+
+func binarySearch(numbers []int, item int, low int, high int) int {
+	for high &gt; low {
+		center := (low + high) / 2
+		if numbers[center] &lt; item { low = center + 1 } else if numbers[center] &gt; item {
+			high = center - 1
+		} else {
+			return center
+		}
+	}
+
+	if numbers[low] &lt; item {
+		return low + 1
+	} else {
+		return low
+	}
+}
+
+func main() {
+	rand.Seed(time.Now().Unix())
+	var numbers [numbersCount]int
+	for i := 0; i &lt; numbersCount; i++ {
+		numbers[i] = rand.Intn(maximalNumber)
+	}
+	fmt.Println(numbers)
+
+	for i := 1; i &lt; len(numbers); i++ { searchAreaLastIndex := i - 1 insertNumber := numbers[i] insertIndex := binarySearch(numbers[:], insertNumber, 0, searchAreaLastIndex) for x := searchAreaLastIndex; x &gt;= insertIndex; x-- {
+			numbers[x+1] = numbers[x]
+		}
+		numbers[insertIndex] = insertNumber
+	}
+	fmt.Println(numbers)
+}
+</code></pre>
+</div>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/algorithms/-/blob/master/sortAlgorithms/binaryInsertionSort/binaryInsertionSort.go" target="_blank" rel="noopener">https://gitlab.com/demensdeum/algorithms/-/blob/master/sortAlgorithms/binaryInsertionSort/binaryInsertionSort.go</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.geeksforgeeks.org/binary-insertion-sort/" target="_blank" rel="noopener">https://www.geeksforgeeks.org/binary-insertion-sort/</a><br />
+<a href="https://www.youtube.com/watch?v=-OVB5pOZJug" target="_blank" rel="noopener">https://www.youtube.com/watch?v=-OVB5pOZJug</a></p>

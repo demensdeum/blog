@@ -1,0 +1,94 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Стратегия
+Slug: strategy-pattern
+Categories: techie,tutorials
+<p>Паттерн &#8220;Стратегия&#8221; позволяет выбирать тип алгоритма, который реализует общий интерфейс, прямо во время работы приложения.<br />
+Данный паттерн относится к поведенческим шаблонам проектирования.</p>
+<figure id="attachment_1899" aria-describedby="caption-attachment-1899" style="width: 366px" class="wp-caption alignnone"><a href="https://commons.wikimedia.org/wiki/File:Enchoen27n3200.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" decoding="async" class=" wp-image-1899" src="https://demensdeum.com/blog/wp-content/uploads/2019/04/suntzu.jpg" alt="" width="366" height="550" /></a><figcaption id="caption-attachment-1899" class="wp-caption-text"><a href="https://commons.wikimedia.org/wiki/File:Enchoen27n3200.jpg" target="_blank" rel="noopener noreferrer">Сунь Цзы</a></figcaption></figure>
+<p>Допустим мы разрабатываем музыкальный плеер со встроенными кодеками. Под встроенными кодеками подразумеваяется чтение музыкальных форматов без использования внешних источников операционной системы (кодеков), плеер должен уметь читать треки разных форматов и воспроизводить их. Такими возможностями обладает плеер VLC, он поддерживает разные типы видео и аудио форматов, запускается на популярных и не очень операционных системах.</p>
+<p>Представим как выглядит наивная имплементация плеера:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;"><span style="color: #008800; font-weight: bold;">var</span> player: MusicPlayer?
+
+func <span style="color: #0066bb; font-weight: bold;">play</span>(filePath: String) {
+    let extension = filePath.pathExtension
+
+    <span style="color: #008800; font-weight: bold;">if</span> extension == <span style="background-color: #fff0f0;">"mp3"</span> {
+        playMp3(filePath)
+    }
+    <span style="color: #008800; font-weight: bold;">else</span> <span style="color: #008800; font-weight: bold;">if</span> extension == <span style="background-color: #fff0f0;">"ogg"</span> {
+        playOgg(filePath)
+    }
+}
+
+func <span style="color: #0066bb; font-weight: bold;">playMp3</span>(_ filePath: String) {
+    player = MpegPlayer()
+    player?.playMp3(filePath)
+}
+
+func <span style="color: #0066bb; font-weight: bold;">playOgg</span>(_ filePath: String) {
+    player = VorbisPlayer()
+    player?.playMusic(filePath)
+}
+</pre>
+</div>
+<p>Далее мы добавляем несколько форматов, что приводит к необходимости написания дополнительных методов. Плюс плеер обязан поддерживать подключаемые библиотеки, с новыми форматами аудио, которые будут появляться в последствии. Налицо существует потребность в переключении алгоритма проигрывания музыки, для решения этой задачи используется паттерн Стратегия.</p>
+<p>Создадим общий протокол MusicPlayerCodecAlgorithm, напишем реализацию протокола в двух классах MpegMusicPlayerCodecAlgorithm и VorbisMusicPlayerCodecAlgorithm, для проигрывания mp3 и ogg файлов со-но. Создадим класс MusicPlayer, который будет содержать референс на алгоритм который необходимо переключать, далее по расширению файла реализуем переключение типа кодека:</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff; overflow: auto; width: auto; border: solid gray; border-width: .1em .1em .1em .8em; padding: .2em .6em;">
+<pre style="margin: 0; line-height: 125%;">import Foundation
+
+<span style="color: #008800; font-weight: bold;">class</span> <span style="color: #bb0066; font-weight: bold;">MusicPlayer</span> {
+    <span style="color: #008800; font-weight: bold;">var</span> playerCodecAlgorithm: MusicPlayerCodecAlgorithm?
+    
+	func <span style="color: #0066bb; font-weight: bold;">play</span>(_ filePath: String) {
+            playerCodecAlgorithm?.play(filePath)
+	}
+}
+
+protocol MusicPlayerCodecAlgorithm {
+    func <span style="color: #0066bb; font-weight: bold;">play</span>(_ filePath: String)
+}
+
+<span style="color: #008800; font-weight: bold;">class</span> <span style="color: #bb0066; font-weight: bold;">MpegMusicPlayerCodecAlgorithm</span>: MusicPlayerCodecAlgorithm {
+	func <span style="color: #0066bb; font-weight: bold;">play</span>(_ filePath: String) {
+		debugPrint(<span style="background-color: #fff0f0;">"mpeg codec - play"</span>)
+	}
+}
+
+<span style="color: #008800; font-weight: bold;">class</span> <span style="color: #bb0066; font-weight: bold;">VorbisMusicPlayerCodecAlgorithm</span>: MusicPlayerCodecAlgorithm {
+	func <span style="color: #0066bb; font-weight: bold;">play</span>(_ filePath: String) {
+		debugPrint(<span style="background-color: #fff0f0;">"vorbis codec - play"</span>)	
+	}
+}
+
+func <span style="color: #0066bb; font-weight: bold;">play</span>(fileAtPath path: String) {
+	guard let url = URL(string: path) <span style="color: #008800; font-weight: bold;">else</span> { <span style="color: #008800; font-weight: bold;">return</span> }
+	let fileExtension = url.pathExtension
+		
+	let musicPlayer = MusicPlayer()
+	<span style="color: #008800; font-weight: bold;">var</span> playerCodecAlgorithm: MusicPlayerCodecAlgorithm? 
+		
+	<span style="color: #008800; font-weight: bold;">if</span> fileExtension == <span style="background-color: #fff0f0;">"mp3"</span> {
+                playerCodecAlgorithm = MpegMusicPlayerCodecAlgorithm()
+	}
+	<span style="color: #008800; font-weight: bold;">else</span> <span style="color: #008800; font-weight: bold;">if</span> fileExtension == <span style="background-color: #fff0f0;">"ogg"</span> {
+                playerCodecAlgorithm = VorbisMusicPlayerCodecAlgorithm()
+	}
+		
+	musicPlayer.playerCodecAlgorithm = playerCodecAlgorithm
+	musicPlayer.playerCodecAlgorithm?.play(path)
+}
+
+play(fileAtPath: <span style="background-color: #fff0f0;">"Djentuggah.mp3"</span>)
+play(fileAtPath: <span style="background-color: #fff0f0;">"Procrastinallica.ogg"</span>)
+</pre>
+</div>
+<p>В приведенном выше примере также показан простейший пример фабрики (переключение типа кодека от расширения файла)<br />
+Важно отметить что паттерн Стратегия не создает объекты, только лишь описывает способ создания общего интерфейса для переключения семейства алгоритмов.</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/strategy" target="_blank" rel="noopener noreferrer">https://refactoring.guru/ru/design-patterns/strategy</a></p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns/" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/patterns/</a></p>

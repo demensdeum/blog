@@ -1,0 +1,192 @@
+Format: Fall24-October10
+Language: ru
+Title: Паттерн Интерпретатор
+Slug: pattern-interpreter
+Categories: techie,tutorials
+<h3>Что входит</h3>
+<p>Паттерн Интерпретатор относится к Поведенческим паттернам проектирования. Данный паттерн позволяет реализовать свой язык программирования, путем работы с AST древом, вершины которого представляют из себя терминальные и нетерминальные выражения, реализующие метод Interpret, обеспечивающий функционал языка.</p>
+<ul>
+<li>Терминальное выражение – например константа строки &#8211; &#8220;Hello World&#8221;</li>
+<li>Нетерминальное выражение – например Print(&#8220;Hello World&#8221;), содержит Print и аргумент из Терминального выражения &#8220;Hello World&#8221;</li>
+</ul>
+<p>В чем разница? Разница в том что интерпретирование на терминальных выражениях заканчивается, а для нетерминальных продолжается вглубь по всем входящим вершинам/аргументам. Если бы AST древо состояло только из нетерминальных выражений, то выполнение приложения никогда бы не завершилось, т.к. требуется некая конечность любого процесса, этой конечность и выступают терминальные выражения, они обычно содержат данные, например строки.</p>
+<p>Пример AST древа ниже:</p>
+<p><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3143" src="https://demensdeum.com/blog/wp-content/uploads/2022/06/ast.png" alt="" width="512" height="578" srcset="https://demensdeum.com/blog/wp-content/uploads/2022/06/ast.png 512w, https://demensdeum.com/blog/wp-content/uploads/2022/06/ast-266x300.png 266w" sizes="auto, (max-width: 512px) 100vw, 512px" /><br />
+Dcoetzee, CC0, via Wikimedia Commons</p>
+<p>Как можно увидеть, терминальные выражения – constant и variable, нетерминальные – остальные.</p>
+<h3>Что не входит</h3>
+<p>В реализацию Интерпретатора не входит парсинг строкового ввода языка в AST-древо. Достаточно реализовать классы терминальных, нетерминальных выражений, методы Interpret с аргументом Контекст на входе, оформить AST древо из выражений, запустить у корневого выражения метод Interpret. Контекст можно использовать для того чтобы хранить состояние приложения во время выполнения.</p>
+<h3>Реализация</h3>
+<p>В паттерне участвуют:</p>
+<ul>
+<li>Клиент – отдает AST-древо и запускает Interpret(context) для корневой вершины (Client)</li>
+<li>Контекст – содержит состояние приложения, передается выражениям при интерпретации (Context)</li>
+<li>Абстрактное выражение – абстрактный класс содержащий метод Interpret(context) (Expression)</li>
+<li>Терминальное выражение – конечное выражение, потомок абстрактного выражения (TerminalExpression)</li>
+<li>Нетерминальное выражение – не конечное выражение, содержит указатели на вершины вглубь AST-древа, подчиненные вершины обычно влияют на результат интерпретации нетерминального выражения (NonTerminalExpression)</li>
+</ul>
+<p>Пример Клиента на C#</p>
+<pre><code>class Application {
+        static void Main(string[] args)
+        {
+            var context = new Context();
+            var initialProgram = new PerformExpression(
+                new IExpression[] {
+                    new SetExpression("alpha", "1"),
+                    new GetExpression("alpha"),
+                    new PrintExpression(
+                        new IExpression[] {
+                            new ConstantExpression("Hello Interpreter Pattern")
+                        }
+                    )
+                }
+            );
+            System.Console.WriteLine(initialProgram.interpret(context));
+        }
+}
+</code></pre>
+<p>Пример Абстрактного выражения на C#</p>
+<pre><code>interface IExpression
+{
+    String interpret(Context context);
+}
+</code></pre>
+<p>Пример Терминального выражения на C# (Строковая константа)</p>
+<pre><code>class ConstantExpression : TerminalExpression
+{
+    private String constant;
+
+    public ConstantExpression(String constant) {
+        this.constant = constant;
+    }
+
+    override public String interpret(Context context) {
+        return constant;
+    }
+}
+</code></pre>
+<p>Пример Нетерминального выражения на C# (Запуск и конкатенация результатов подчиненных вершин, с использованием разделителя «;»</p>
+<pre><code>class PerformExpression : NonTerminalExpression
+{
+    public PerformExpression(IExpression[] leafs) : base(leafs) {
+        this.leafs = leafs;
+    }
+    
+    override public String interpret(Context context) {
+        var output = "";
+        foreach (var leaf in leafs) {
+            output += leaf.interpret(context) + ";";
+        }
+        return output;
+    }
+}
+</code></pre>
+<h3>Функционально сможешь?</h3>
+<p>Как известно все Тьюринг-полные языки эквивалентны. Можно ли перенести Объектно-Ориентированный паттерн на язык Функционального программирования?</p>
+<p>Можно, для эксперимента возьмем ФП язык для веба под названием Elm. В Elm нет классов, но есть Записи (Records) и Типы (Types) поэтому в реализации участвуют следующие записи и типы:</p>
+<ul>
+<li>Выражение – перечисление всех возможных выражений языка (Expression)</li>
+<li>Подчиненное выражение – выражение являющееся подчиненным по отношению к Нетерминальному выражению (ExpressionLeaf)</li>
+<li>Контекст – запись хранящая состояние приложения (Context)</li>
+<li>Функции реализующие методы Interpret(context) – все необходимые функции реализующие функционал Терминальных, Нетерминальных выражений</li>
+<li>Вспомогательные записи состояния Интерпретатора – необходимы для корректной работы Интерпретатора, хранят состояние Интерпретатора, контекст</li>
+</ul>
+<p>Пример функции реализующей интерпретацию для всего набора возможных выражений на Elm:</p>
+<pre><code>run input = 
+  case input.expression of
+    Constant text -&gt;
+      { 
+        output = text, 
+        context = input.context 
+      }
+    Perform leafs -&gt;
+      let inputs = List.map (\leaf -&gt; { expressionLeaf = leaf, context = input.context } ) leafs in
+        let startLeaf = { expressionLeaf = (Node (Constant "")), context = { variables = Dict.empty } } in
+          let outputExpressionInput = List.foldl mergeContextsAndRunLeafs startLeaf inputs in
+            {
+              output = (runExpressionLeaf outputExpressionInput).output,
+              context = input.context
+            }
+    Print printExpression -&gt;
+      run 
+      { 
+        expression = printExpression, 
+        context = input.context 
+      }
+    Set key value -&gt;
+      let variables = Dict.insert key value input.context.variables in
+      {
+        output = "OK",
+        context = { variables = variables }
+      }
+    Get key -&gt;
+      {
+        output = Maybe.withDefault ("No value for key: " ++ key) (Dict.get key input.context.variables),
+        context = input.context
+      }
+</code></pre>
+<h3>А парсить?</h3>
+<p>Парсинг исходного кода в AST-древо не входит в паттерн Интерпретатор, существует несколько подходов для парсинга исходного кода, но об этом как-нибудь в другой раз.<br />
+В реализации Интерпретатора для Elm я написал простейший парсер в AST-древо, состоящий из двух функций – парсинг вершины, парсинг подчиненных вершин.</p>
+<pre><code>parseLeafs: ParseLeafsState -&gt; ParseLeafsState
+parseLeafs state =
+    let tokensQueue = state.tokensQueue in
+        let popped = pop state.tokensQueue in
+            let tokensQueueTail = tail state.tokensQueue in
+                if popped == "Nothing" then
+                    state
+                else if popped == "Perform(" then
+                    {
+                        tokensQueue = tokensQueue,
+                        result = (state.result ++ [Node (parse tokensQueue)])
+                    }
+                else if popped == ")" then
+                    parseLeafs {
+                        tokensQueue = tokensQueueTail,
+                        result = state.result
+                    }
+                else if popped == "Set" then
+                    let key = pop tokensQueueTail in
+                        let value = pop (tail tokensQueueTail) in
+                            parseLeafs {
+                                tokensQueue = tail (tail tokensQueueTail),
+                                result = (state.result ++ [Node (Set key value)])
+                            }
+                else if popped == "Get" then
+                    let key = pop tokensQueueTail in
+                        parseLeafs {
+                            tokensQueue = tail tokensQueueTail,
+                            result = (state.result ++ [Node (Get key)])
+                        }
+                else 
+                    parseLeafs {
+                        tokensQueue = tokensQueueTail,
+                        result = (state.result ++ [Node (Constant popped)])
+                    }
+
+parse tokensQueue =
+    let popped = pop tokensQueue in
+        let tokensQueueTail = tail tokensQueue in
+            if popped == "Perform(" then
+                Perform (
+                    parseLeafs {
+                        tokensQueue = tokensQueueTail, 
+                        result = []
+                    }
+                ).result
+            else if popped == "Set" then
+                let key = pop tokensQueueTail in
+                    let value = pop (tail tokensQueueTail) in
+                        Set key value
+            else if popped == "Print" then
+                Print (parse tokensQueueTail)
+            else
+                Constant popped
+</code></pre>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/patterns/-/tree/master/interpreter/elm" target="_blank" rel="noopener">https://gitlab.com/demensdeum/patterns/-/tree/master/interpreter/elm</a><br />
+<a href="https://gitlab.com/demensdeum/patterns/-/tree/master/interpreter/csharp" target="_blank" rel="noopener">https://gitlab.com/demensdeum/patterns/-/tree/master/interpreter/csharp</a></p>
+<h3>Источники</h3>
+<p><a href="https://en.wikipedia.org/wiki/Interpreter_pattern" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Interpreter_pattern</a><br />
+<a href="https://elm-lang.org/" target="_blank" rel="noopener">https://elm-lang.org/</a><br />
+<a href="https://docs.microsoft.com/en-us/dotnet/csharp/" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/dotnet/csharp/</a></p>

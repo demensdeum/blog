@@ -1,0 +1,135 @@
+Format: Fall24-October10
+Language: ru
+Title: Бомбе Тьюринга
+Slug: turing-bombe
+Categories: techie,tutorials
+<p>В 1936 году ученый Алан Тьюринг в своей публикации &#8220;On Computable Numbers, With An Application to Entscheidungsproblem” описывает использование универсальной вычислительной машины которая смогла бы поставить точку в вопросе проблемы разрешимости в математике. По итогу он приходит к выводу что такая машина ничего бы не смогла решить корректно, если бы результат ее работы инвертировали и зациклили бы на саму себя. Получается что *идеальный* антивирус невозможно создать, *идеальный* плиткоукладчик тоже, программу которая подсказывает идеальные фразы для твоего краша и т.д. Парадокс-с!</p>
+<p>Однако данную универсальную вычислительную машину можно использовать для реализации любого алгоритма, чем и воспользовалась разведка Британии, взяв Тьюринга на работу и разрешив создать “Bombe” машину для дешифровки немецких сообщений во время второй мировой войны.</p>
+<p>Далее приводится ООП моделирование одноленточного вычислителя на языке Dart, с опорой на оригинальный документ.</p>
+<p>Машина Тьюринга состоит из пленки, разбитой на секции, в каждой секции находится символ, символы можно считывать или записывать. Пример класса пленки:</p>
+<pre><code>class MapInfiniteTape implements InfiniteTape { 
+final _map = Map&lt;int, String&gt;(); 
+
+  String read({required int at}) { 
+    return _map[at] ?? ""; 
+  } 
+
+  void write({required String symbol, required int at}) { 
+    _map[at] = symbol; 
+  } 
+}
+</code></pre>
+<p>Также существует “сканирующий квадрат”, он может перемещаться по пленке, считывать или записывать информацию, на современном языке &#8211; магнитная головка. Пример класса магнитной головки:</p>
+<pre><code>class TapeHead { 
+  int _index = 0; 
+  InfiniteTape _infiniteTape; 
+  TapeHead(this._infiniteTape) {} 
+
+  String next() { 
+    _index += 1; 
+    move(to: _index); 
+    final output = read(); 
+    return output; 
+  } 
+
+  String previous() { 
+    _index -= 1; 
+    move(to: _index); 
+    final output = read(); 
+    return output; 
+  } 
+
+  void move({required int to}) { 
+    this._index = to; 
+  } 
+
+  String read() { 
+    return _infiniteTape.read(at: this._index); 
+  } 
+
+  void write(String symbol) { 
+    _infiniteTape.write(symbol: symbol, at: this._index); 
+  } 
+
+  int index() { 
+    return _index; 
+  } 
+} 
+</code></pre>
+<p>Машина содержит “m-конфигурации” по которым может решать что делать дальше. На современном языке &#8211; состояния и обработчики состояний. Пример обработчика состояний:</p>
+<pre><code>class FiniteStateControl { 
+  FiniteStateControlDelegate? delegate = null; 
+
+  void handle({required String symbol}) { 
+    if (symbol == OPCODE_PRINT) { 
+      final argument = delegate?.nextSymbol(); 
+      print(argument);
+    } 
+    else if (symbol == OPCODE_GENERATE_RANDOM_NUMBER_FROM_ZERO_TO_AND_WRITE_AFTER) { 
+      final to = int.tryParse(delegate!.nextSymbol())!; 
+      final value = new Random().nextInt(to); 
+      delegate!.nextSymbol(); 
+      delegate!.write(value.toString()); 
+    } 
+    else if (symbol == OPCODE_INPUT_TO_NEXT) { 
+      final input = stdin.readLineSync()!; 
+      delegate?.nextSymbol(); 
+      delegate?.write(input); 
+    } 
+    else if (symbol == OPCODE_COPY_FROM_TO) { 
+      final currentIndex = delegate!.index(); 
+
+и т.д. 
+</code></pre>
+<p>После этого нужно создать “конфигурации”, на современном языке это коды операций (опкоды), их обработчики. Пример опкодов:</p>
+<pre><code>const OPCODE_STOP = "stop"; 
+const OPCODE_PRINT = "print"; 
+const OPCODE_INCREMENT_NEXT = "increment next"; 
+const OPCODE_DECREMENT_NEXT = "decrement next"; 
+const OPCODE_IF_PREVIOUS_NOT_EQUAL = "if previous not equal"; 
+const OPCODE_MOVE_TO_INDEX = "move to index"; 
+const OPCODE_COPY_FROM_TO = "copy from index to index"; 
+const OPCODE_INPUT_TO_NEXT = "input to next"; 
+const OPCODE_GENERATE_RANDOM_NUMBER_FROM_ZERO_TO_AND_WRITE_AFTER = "generate random number from zero to next and write after"; 
+</code></pre>
+<p><strong>Не забудьте создать опкод и обработчик останова, иначе не сможете доказать либо не доказать (sic!) проблему разрешения.</strong></p>
+<p>Теперь, используя паттерн “медиатор”, соединяем все классы в классе Машине Тьюринга, создаем экземпляр класса, записываем через магнитофон на пленку программы, загружаем кассету и можно пользоваться!</p>
+<p><em>Лично для меня остался интересен вопрос, что было первично &#8211; создание универсального вычислителя или доказательство “Entscheidungsproblem” в результате которого, как побочный продукт, появился вычислитель.</em></p>
+<h3>Кассеты</h3>
+<p>Развлечения ради я записал несколько кассет-программ для своего варианты машины.</p>
+<p><strong>Hello World</strong></p>
+<pre><code>print 
+hello world 
+stop</code></pre>
+<p><strong>Считаем до 16-ти</strong></p>
+<pre><code>increment next
+0
+if previous not equal
+16
+copy from index to index
+1
+8
+print
+?
+move to index
+0
+else
+copy from index to index
+1
+16
+print
+?
+print
+Finished!
+stop</code></pre>
+<p>Самой интересной задачей было написание Quine программы, которая печатает свой исходный код, для одноленточной машины. Первые 8 часов мне казалось что эта задача не решаема с таким малым количеством опкодов, однако всего через 16 часов оказалось что я был не прав.</p>
+<p>Реализация и примеры кассет, источники ниже.</p>
+<h3>Ссылки</h3>
+<p><a href="https://gitlab.com/demensdeum/turing-machine" target="_blank" rel="noopener">https://gitlab.com/demensdeum/turing-machine</a></p>
+<h3>Источники</h3>
+<p><a href="https://www.astro.puc.cl/~rparra/tools/PAPERS/turing_1936.pdf" target="_blank" rel="noopener">https://www.astro.puc.cl/~rparra/tools/PAPERS/turing_1936.pdf</a><br />
+<a href="https://kpolyakov.spb.ru/prog/turing.htm" target="_blank" rel="noopener">https://kpolyakov.spb.ru/prog/turing.htm</a><br />
+<a href="https://www.youtube.com/watch?v=dNRDvLACg5Q" target="_blank" rel="noopener">https://www.youtube.com/watch?v=dNRDvLACg5Q</a><br />
+<a href="https://www.youtube.com/watch?v=jP3ceURvIYc" target="_blank" rel="noopener">https://www.youtube.com/watch?v=jP3ceURvIYc</a><br />
+<a href="https://www.youtube.com/watch?v=9QCJj5QzETI" target="_blank" rel="noopener">https://www.youtube.com/watch?v=9QCJj5QzETI</a><br />
+<a href="https://www.youtube.com/watch?v=HeQX2HjkcNo&amp;t=0s" target="_blank" rel="noopener">https://www.youtube.com/watch?v=HeQX2HjkcNo&amp;t=0s</a></p>

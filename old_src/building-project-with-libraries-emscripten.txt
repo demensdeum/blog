@@ -1,0 +1,30 @@
+Format: Fall24-October10
+Language: ru
+Title: Сборка проекта с зависимостями для Emscripten
+Slug: building-project-with-libraries-emscripten
+Categories: techie,tutorials
+<p>В этой заметке я опишу сборку проекта состоящего из нескольких библиотек с помощью Emscripten.<br />
+На данный момент Emscripten не поддерживает сборку shared библиотек, поэтому первым делом переводим все библиотеки из Shared в Static. Emscripten работает со своими include файлами, поэтому нужно решить вопрос с видимостью заголовочных файлов, я решил это с помощью проброса симлинка из системной директории в тулчейн Emscripten:</p>
+<pre><code>
+ln -s /usr/local/include/FlameSteelFramework $EMSDK/fastcomp/emscripten/system/include/FlameSteelFramework
+</code></pre>
+<p>Если вы используете CMake, то нужно поменять SHARED->STATIC в CMakeLists.txt файле метода add_library. Собрать библиотеку/приложение для дальнейшей статической линковки можно с помощью команд:</p>
+<pre><code>
+emcmake cmake .
+emmake make
+</code></pre>
+<p>Далее нужно будет собрать основное приложение с указанием *.a файлов библиотек на этапе линковки. Относительный путь указать мне не удалось, сборка завершилась корректно только после указания полных путей в файле CMakeLists.txt:</p>
+<pre><code>
+elseif(EMSCRIPTEN)
+target_link_libraries(${FSEGT_PROJECT_NAME} GL GLEW 
+/home/demensdeum/Sources/cube-art-project-bootstrap/cube-art-project/sharedLib/libCubeArtProject.a 
+/home/demensdeum/Sources/cube-art-project-bootstrap/FlameSteelFramework/FlameSteelEngineGameToolkitFSGL/libFlameSteelEngineGameToolkitFSGL.a 
+/home/demensdeum/Sources/cube-art-project-bootstrap/FlameSteelFramework/FlameSteelEngineGameToolkit/libFlameSteelEngineGameToolkit.a 
+/home/demensdeum/Sources/cube-art-project-bootstrap/FlameSteelFramework/FlameSteelCore/libFlameSteelCore.a 
+/home/demensdeum/Sources/cube-art-project-bootstrap/FlameSteelFramework/FlameSteelBattleHorn/libFlameSteelBattleHorn.a 
+/home/demensdeum/Sources/cube-art-project-bootstrap/FlameSteelFramework/FSGL/libFSGL.a 
+/home/demensdeum/Sources/cube-art-project-bootstrap/FlameSteelFramework/FlameSteelCommonTraits/libFlameSteelCommonTraits.a)
+else()
+</code></pre>
+<h3>Источники</h3>
+<p><a href="https://emscripten.org/docs/compiling/Building-Projects.html#using-libraries" rel="noopener noreferrer" target="_blank">https://emscripten.org/docs/compiling/Building-Projects.html#using-libraries</a></p>

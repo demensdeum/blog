@@ -1,0 +1,54 @@
+Format: Fall24-October10
+Language: ru
+Title: Фабричный Метод
+Slug: factory-method-pattern
+Categories: techie,tutorials
+<p><a href="https://pxhere.com/en/photo/1070638" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-2346" src="https://demensdeum.com/blog/wp-content/uploads/2019/11/crates.jpg" alt="" width="520" height="375" srcset="https://demensdeum.com/blog/wp-content/uploads/2019/11/crates.jpg 520w, https://demensdeum.com/blog/wp-content/uploads/2019/11/crates-300x216.jpg 300w" sizes="auto, (max-width: 520px) 100vw, 520px" /></a></p>
+<p>Паттерн <b>Фабричный Метод</b> относится к порождающим паттернам проектирования.<br />
+Данный паттерн описывает создание интерфейса для создания объекта конкретного класса. Вроде просто да?</p>
+<h3>В теории</h3>
+<p>Допустим мы разрабатываем фреймворк для работы с AR очками, при наклоне головы на бок, перед глазами пользователя должно появляться меню доступных приложений. Приложения будут разрабатывать сторонние компании, клиенты нашего фреймворка. Естественно мы не знаем какие именно приложения, значки, названия должны появляться, поэтому мы должны предоставить интерфейс для реализации значка и сопутствующей информации о приложении. Назовем его <b>Продуктом:</b></p>
+<pre><code>
+protocol Product {
+ var name: String { get }
+ var image: Image { get }
+ var executablePath: String { get }
+}
+</code></pre>
+<p>Далее нам нужно предоставить интерфейс для того чтобы наши клиенты реализовали выдачу массива приложений своего <b>Конкретного Продукта</b> &#8211; массив значков приложений с названиями, который мы уже отрисуем во фреймворке.</p>
+<p>Напишем этот интерфейс &#8211; интерфейс <b>Создателя</b>, содержащий <b>Фабричный Метод</b>, отдающий массив <b>Продуктов</b>.</p>
+<pre><code>
+protocol Creator {
+ func factoryMethod() -> [Product]
+}
+</code></pre>
+<h3>На практике</h3>
+<p>Первым клиентом нашего AR фреймворка стала компания 7Б &#8211; ведущий поставщик софта для кофеварок в <em>Гондурасе</em>. Они хотят продавать очки дополненной реальности с возможностью заваривать кофе, проверять заполненность воды/зерен, указывать дорогу к их ближайшей кофеварке в режиме indoor карт.</p>
+<p>Разработку софта они берут на себя, от нас требуется только предоставить документацию по интерфейсам <b>Создателя</b> и <b>Продукта</b>, для корректного вывода списка приложений и их дальнейшего запуска.</p>
+<p>После передачи документации, компания 7Б используя интерфейс <b>Создателя </b>реализует <b>Конкретного Создателя </b>&#8211; класс возвращающий массив приложений-значков. Сами приложения-значки представляют из себя классы <b>Конкретного Продукта</b> имплементирующие интерфейс <b>Продукта</b>.</p>
+<p>Пример кода <b>Конкретных Продуктов</b>:</p>
+<pre><code>
+class CoffeeMachineLocator: implements Product {
+ let name = “7B Coffee Machine Locator v.3000”
+ let image = Image.atPath(“images/locator.tga”)
+ let executablePath = “CoffeeMachineLocator.wasm”
+}
+
+class iPuchinno: implements Product {
+ let name = “iPuchinno 1.0.3”
+ let image = Image.atPath(“images/puchino.pvrtc”)
+ let executablePath = “neutron/ipuchBugFixFinalNoFreezeFixAlpha4.js”
+}
+</code></pre>
+<p>Класс <b>Конкретного Создателя</b>, отдающий массив из двух приложений:</p>
+<pre><code>
+class 7BAppsCreator: implements Creator {
+ func factoryMethod() -> [Product] {
+  return [CoffeeMachineLocator(), iPuchinno()]
+ }
+}
+</code></pre>
+<p>После этого компания 7Б компилирует библиотеку <b>Конкретных Продуктов</b>, <b>Конкретного Создателя</b> и совмещает ее с нашим фреймворком, начинает продавать AR очки для своих кофеварок, <em>доработок с нашей стороны не потребуется</em>.</p>
+<h3>Источники</h3>
+<p><a href="https://refactoring.guru/ru/design-patterns/command" target="_blank" rel="noopener">https://refactoring.guru/ru/design-patterns/command</a><br />
+<a href="https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612" target="_blank" rel="noopener">https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612</a></p>

@@ -1,0 +1,148 @@
+Format: Fall24-October10
+Language: ru
+Title: Портируем C++ SDL приложение на Android
+Slug: porting-cpp-sdl-app-on-android
+Categories: techie,tutorials
+<p>В данной заметке я опишу свой опыт портирования прототипа 3D редактора <a href="https://gitlab.com/demensdeum/cube-art-project-bootstrap" target="_blank" rel="noopener noreferrer">Cube Art Project</a> на Android.<br />
+Сначала посмотрим на результат, в эмуляторе запущен редактор с 3D курсором куба красного цвета:</p>
+<p><img loading="lazy" decoding="async" class="alignnone wp-image-2509" src="https://demensdeum.com/blog/wp-content/uploads/2020/01/emulator.png" alt="" width="460" height="265" srcset="https://demensdeum.com/blog/wp-content/uploads/2020/01/emulator.png 959w, https://demensdeum.com/blog/wp-content/uploads/2020/01/emulator-300x173.png 300w, https://demensdeum.com/blog/wp-content/uploads/2020/01/emulator-768x442.png 768w" sizes="auto, (max-width: 460px) 100vw, 460px" /></p>
+<p>Для успешной сборки нужно было сделать следующее:</p>
+<ol>
+<li>Установить последний Android SDK и NDK (версию ндк чем свежее тем лучше).</li>
+<li>Загрузить исходный код SDL2, взять оттуда шаблон для сборки андроид приложения.</li>
+<li>Добавить SDL Image, SDL Mixer к сборке.</li>
+<li>Добавить библиотеки моего игрового движка и тулкита, их зависимости (GLM, JSON for Modern C++)</li>
+<li>Адаптировать файлы сборок для Gradle.</li>
+<li>Адаптировать C++ код для совместимости с Android, изменения коснулись платформозависимых компонентов (OpenGL ES, инициализация графического контекста)</li>
+<li>Собрать и проверить проект на эмуляторе.</li>
+</ol>
+<h3>Шаблон проекта</h3>
+<p>Загружаем исходники SDL, SDL Image, SDL Mixer:<br />
+<a href="https://www.libsdl.org/download-2.0.php" target="_blank" rel="noopener noreferrer">https://www.libsdl.org/download-2.0.php</a><br />
+В папке docs есть подробная инструкция по работе с шаблоном андроид проекта; скопируем директорию android-project в отдельную папку, сделаем симлинк или скопируем папку SDL в android-project/app/jni.<br />
+Подставляем правильный идентификатор для флага avd, запускаем эмулятор андроида из директории Sdk:</p>
+<pre><code>
+cd ~/Android/Sdk/emulator
+./emulator -avd Pixel_2_API_24
+
+</code></pre>
+<p>Указываем пути в скрипте, собираем проект:</p>
+<pre><code>
+rm -rf app/build || true
+export ANDROID_HOME=/home/demensdeum/Android/Sdk/
+export ANDROID_NDK_HOME=/home/demensdeum/Android/android-ndk-r21-beta2/
+./gradlew clean build
+./gradlew installDebug
+
+</code></pre>
+<p>Должен собраться шаблон проекта SDL с кодом на Си из файла</p>
+<pre><code>
+android-sdl-test-app/cube-art-project-android/app/jni/src/YourSourceHere.c
+
+</code></pre>
+<h3>Зависимости</h3>
+<p>Загружаем исходный код в архивах для SDL_image, SDL_mixer:<br />
+<a href="https://www.libsdl.org/projects/SDL_image/" target="_blank" rel="noopener noreferrer">https://www.libsdl.org/projects/SDL_image/</a><br />
+<a href="https://www.libsdl.org/projects/SDL_mixer/" target="_blank" rel="noopener noreferrer">https://www.libsdl.org/projects/SDL_mixer/</a></p>
+<p>Загружаем зависимости вашего проекта, для примера мои shared библиотеки:<br />
+<a href="https://gitlab.com/demensdeum/FlameSteelCore/" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/FlameSteelCore/</a><br />
+<a href="https://gitlab.com/demensdeum/FlameSteelCommonTraits" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/FlameSteelCommonTraits</a><br />
+<a href="https://gitlab.com/demensdeum/FlameSteelBattleHorn" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/FlameSteelBattleHorn</a><br />
+<a href="https://gitlab.com/demensdeum/FlameSteelEngineGameToolkit/" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/FlameSteelEngineGameToolkit/</a><br />
+<a href="https://gitlab.com/demensdeum/FlameSteelEngineGameToolkitFSGL" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/FlameSteelEngineGameToolkitFSGL</a><br />
+<a href="https://gitlab.com/demensdeum/FSGL" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/FSGL</a><br />
+<a href="https://gitlab.com/demensdeum/cube-art-project" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/cube-art-project</a></p>
+<p>Все это выгружаем в app/jni, каждый “модуль” в отдельную папку, например app/jni/FSGL. Далее у вас есть вариант найти рабочие генераторы для файлов Application.mk и Android.mk, я не нашел, однако возможно есть простое решение на основе CMake. Переходим по ссылкам и начинаем знакомиться с форматом файлов сборки для Android NDK:<br />
+<a href="https://developer.android.com/ndk/guides/application_mk" target="_blank" rel="noopener noreferrer">https://developer.android.com/ndk/guides/application_mk</a><br />
+<a href="https://developer.android.com/ndk/guides/android_mk" target="_blank" rel="noopener noreferrer">https://developer.android.com/ndk/guides/android_mk</a></p>
+<p>Также следует прочитать про разные APP_STL реализации в NDK:<br />
+<a href="https://developer.android.com/ndk/guides/cpp-support.html" target="_blank" rel="noopener noreferrer">https://developer.android.com/ndk/guides/cpp-support.html</a></p>
+<p>После ознакомления создаем для каждого “модуля” файл Android.mk, далее пример файл сборки shared библиотеки Cube-Art-Project:</p>
+<pre><code>
+LOCAL_PATH := $(call my-dir)
+include $(CLEAR_VARS)
+
+APP_STL := c++_static
+APP_CPPFLAGS := -fexceptions
+LOCAL_MODULE := CubeArtProject
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/src $(LOCAL_PATH)/../include $(LOCAL_PATH)/../include/FlameSteelCommonTraits/src/FlameSteelCommonTraits
+LOCAL_EXPORT_C_INCLUDES = $(LOCAL_PATH)/src/
+
+define walk
+$(wildcard $(1)) $(foreach e, $(wildcard $(1)/*), $(call walk, $(e)))
+endef
+
+ALLFILES = $(call walk, $(LOCAL_PATH)/src)
+FILE_LIST := $(filter %.cpp, $(ALLFILES))
+$(info CubeArtProject source code files list)
+$(info $(FILE_LIST))
+LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
+
+LOCAL_SHARED_LIBRARIES += FlameSteelCore
+LOCAL_SHARED_LIBRARIES += FlameSteelBattleHorn
+LOCAL_SHARED_LIBRARIES += FlameSteelCommonTraits
+LOCAL_SHARED_LIBRARIES += FlameSteelEngineGameToolkit
+LOCAL_SHARED_LIBRARIES += FlameSteelEngineGameToolkitFSGL
+LOCAL_SHARED_LIBRARIES += FSGL
+LOCAL_SHARED_LIBRARIES += SDL2
+LOCAL_SHARED_LIBRARIES += SDL2_image
+
+LOCAL_LDFLAGS := -static-libstdc++
+include $(BUILD_SHARED_LIBRARY)
+
+</code></pre>
+<p>Любой опытный CMake пользователь поймет этот конфиг с первых строк, форматы очень похожи, в Android.mk отсутствует GLOB_RECURSIVE, поэтому приходится рекурсивно искать исходные файлы с помощью функции walk.</p>
+<p>Меняем Application.mk, Android.mk со-но для сборки C++ а не Си кода:</p>
+<pre><code>
+APP_ABI := armeabi-v7a arm64-v8a x86 x86_64
+APP_PLATFORM=android-16
+APP_STL := c++_static
+APP_CPPFLAGS := -fexceptions
+
+</code></pre>
+<p>Переименовываем YourSourceHere.c -> YourSourceHere.cpp, grep’аем по вхождениям, меняем путь в сборке, например:</p>
+<pre><code>
+app/jni/src/Android.mk:LOCAL_SRC_FILES := YourSourceHere.cpp
+
+</code></pre>
+<p>Далее попробуйте собрать проект, если вы увидете ошибки от компилятора об отсутствии хидеров, то проверьте корректность путей в Android.mk; если ошибки будут от линковщика вида “undefined reference”, то проверьте корректность указания файлов исходного кода в сборках, оттрейсить списки можно через указание $(info $(FILE_LIST)) в Android.mk файле. Не забудьте о двойном механизме линковки, с помощью модулей в ключе LOCAL_SHARED_LIBRARIES и корректной линковке через LD, например для FSGL:</p>
+<pre><code>
+LOCAL_LDLIBS := -lEGL -lGLESv2
+
+</code></pre>
+<h3>Адаптация и запуск</h3>
+<p>Пришлось поменять некоторые вещи, например убрать GLEW из сборок для iOS и Android, переименовать часть вызовов OpenGL, добавив постфикс EOS (glGenVertexArrays -> glGenVertexArraysOES), включать макрос отсутствующих модерновых функций дебага, вишенка на торте это неявный инклуд GLES2 хидеров с указанием макроса GL_GLEXT_PROTOTYPES 1:</p>
+<pre><code>
+#define GL_GLEXT_PROTOTYPES 1
+#include "SDL_opengles2.h"
+
+</code></pre>
+<p>Также наблюдал черный экран на первых запусках с ошибкой вида “E/libEGL: validate_display:255 error 3008 (EGL_BAD_DISPLAY)”, поменял инициализацию окна SDL, профайла OpenGL и все заработало:</p>
+<pre><code>
+SDL_DisplayMode mode;
+SDL_GetDisplayMode(0,0,&mode);
+int width = mode.w;
+int height = mode.h;
+
+window = SDL_CreateWindow(
+            title,
+            0,
+            0,
+            width,
+            height,
+            SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE
+        );
+
+SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES );
+</code></pre>
+<p>На эмуляторе приложение по умолчанию устанавливается с иконкой SDL и именем &#8220;Game&#8221;.</p>
+<p>Мне осталось исследовать возможность автоматической генерации файлов сборки на основе CMake, либо же мигрировать сборки для всех платформ на Gradle; однако CMake остается выбором дефакто для текущей разработки на C++.</p>
+<h3>Исходный код</h3>
+<p><a href="https://gitlab.com/demensdeum/android-sdl-test-app" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/android-sdl-test-app</a><br />
+<a href="https://gitlab.com/demensdeum/android-sdl-test-app/tree/master/cube-art-project-android" target="_blank" rel="noopener noreferrer">https://gitlab.com/demensdeum/android-sdl-test-app/tree/master/cube-art-project-android</a></p>
+<h3>Источники</h3>
+<p><a href="https://developer.android.com/ndk/guides/cpp-support.html" target="_blank" rel="noopener noreferrer">https://developer.android.com/ndk/guides/cpp-support.html</a><br />
+<a href="https://developer.android.com/ndk/guides/application_mk" target="_blank" rel="noopener noreferrer">https://developer.android.com/ndk/guides/application_mk</a><br />
+<a href="https://developer.android.com/ndk/guides/android_mk" target="_blank" rel="noopener noreferrer">https://developer.android.com/ndk/guides/android_mk</a><br />
+<a href="https://lazyfoo.net/tutorials/SDL/52_hello_mobile/android_windows/index.php" target="_blank" rel="noopener noreferrer">https://lazyfoo.net/tutorials/SDL/52_hello_mobile/android_windows/index.php</a><br />
+<a href="https://medium.com/androiddevelopers/getting-started-with-c-and-android-native-activities-2213b402ffff" target="_blank" rel="noopener noreferrer">https://medium.com/androiddevelopers/getting-started-with-c-and-android-native-activities-2213b402ffff</a></p>
