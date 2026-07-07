@@ -1,0 +1,21 @@
+Format: Fall24-October10
+Language: ru
+Title: Ghost Contacts
+Slug: ghost-contacts
+Categories: software
+https://demensdeum.com/software/ghost-contacts/|ghost-contacts-2.jpg
+<strong>Ghost Contacts</strong> — это простое веб-приложение, созданное с целью скрыть ваши контакты от стандартных системных API и телефонных книг. Вся информация хранится исключительно локально в вашем браузере и не передается на внешние сервера.
+
+<h2>Основные возможности</h2>
+
+<ul>
+<li><strong>Скрытие от системных API:</strong> Ваши контакты не синхронизируются со стандартными системными API контактов и телефонной книгой устройства.</li>
+<li><strong>Экстренный пароль (Panic Password):</strong> Специальный пароль, при вводе которого вся база контактов моментально и безвозвратно удаляется.</li>
+<li><strong>Импорт и экспорт:</strong> Удобный перенос базы контактов через файлы формата CSV для создания резервных копий.</li>
+</ul>
+
+Приложение онлайн:
+https://demensdeum.com/software/ghost-contacts/
+
+GitHub:
+https://github.com/demensdeum/GhostContacts

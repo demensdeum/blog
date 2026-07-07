@@ -1,0 +1,15 @@
+Format: Fall24-October10
+Language: ru
+Title: [DO NOT PROCESS LINE]Raiden Video Ripper
+Slug: raiden-video-ripper
+Categories: software
+
+Raiden Video Ripper - это проект с открытым исходным кодом, предназначенный для редактирования видео и конвертации форматов. Он создан с использованием Qt 6 (Qt Creator) и позволяет осуществлять монтаж и конвертировать видео в форматы MP4, GIF и WebM. Вы также можете извлекать аудио из видео и конвертировать его в формат MP3.
+
+https://apps.microsoft.com/detail/9nvzjs98smgc/|rvr.jpg
+
+Microsoft Store:
+https://apps.microsoft.com/detail/9nvzjs98smgc
+
+GitHub:
+https://github.com/demensdeum/RaidenVideoRipper/releases
