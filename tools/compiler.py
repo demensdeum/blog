@@ -245,6 +245,8 @@ def uploadImage(filename):
         print(f"Warning: mediaUploader.py returned empty string for {filename}")
         return filename
 
+    print(f"uploaded_path: {uploaded_path}")
+
     return uploaded_path
 
 def translateTitle(title):  
@@ -284,10 +286,12 @@ for languageIndex in range(len(languageCodes)):
                 url_path=line.split("|")[0]
                 image_path=uploadImage(line.split("|")[1])
                 imageLine=f"<a href=\"{url_path}\" target=\"_blank\"><img src=\"{image_path}\"/></a>"
+                print(imageLine)
                 outputFileDescriptor.write(imageLine)
             else:
                 image_path=uploadImage(line)
                 image_line=f"<img src=\"{image_path}\"/>"
+                print(imageLine)
                 outputFileDescriptor.write(image_line)
 
         elif line.startswith("<") and "frame" in line:
