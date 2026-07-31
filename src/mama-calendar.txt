@@ -42,5 +42,5 @@ Node.js версия является основной, но PHP вариант 
 Mama Calendar — это полнофункциональное кроссплатформенное приложение, которое покрывает полный цикл: от мобильного и веб-фронтенда на React Native до двух вариантов серверной части. Проект интересен своей архитектурой, использованием современных возможностей Expo SDK и двойной реализацией бэкенда.
 
 <h2>Ссылки</h2>
-https://github.com/demensdeum/Mama-Calendar
+https://github.com/zefir1990/Mama-Calendar
 https://demensdeum.com/software/mama-calendar/events
